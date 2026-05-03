@@ -385,7 +385,7 @@ body.is-editor .editor-only-input { pointer-events: auto; opacity: 1; }
         </div>
         <div class="pledge-col-header">🎉 Desserts · Drinks · Snacks</div>
         <div id="pledge-bring"></div>
-        <button type="button" class="btn-add-pledge" onclick="addPledgeRow('bring')">+ Add your pledge</button>
+        <button type="button" class="btn-add-pledge" onclick="addPledgeRow()">+ Add your pledge</button>
       </div>
     </div>
 
@@ -498,16 +498,67 @@ const DATE_OPTS = ['jun13','jun20','jun27'];
 const VENUE_OPTS = ['v1','v2','v3','v4'];
 let currentUser = null;
 
-// Storage
-const _mem = {};
-async function storeGet(key) {
-  try { const r = await window.storage.get(key, true); return r ? JSON.parse(r.value) : null; }
-  catch(e) { return _mem[key] || null; }
-}
-async function storeSet(key, val) {
-  try { await window.storage.set(key, JSON.stringify(val), true); }
-  catch(e) { _mem[key] = val; }
-}
+// ── SUPABASE CONFIG ────────────────────────────────────────
+const SB_URL = 'https://auhkazxubjczgcusamxq.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF1aGthenh1YmpjemdjdXNhbXhxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4MTc5MjQsImV4cCI6MjA5MzM5MzkyNH0.NBnbhPKJi_VbRcDJTo1NCEzHmPZr4mYuYRwj7a6EZh0';
+
+const sb = {
+  headers: {
+    'apikey': SB_KEY,
+    'Authorization': 'Bearer ' + SB_KEY,
+    'Content-Type': 'application/json',
+    'Prefer': 'return=representation'
+  },
+
+  async get(table, params='') {
+    try {
+      const r = await fetch(`${SB_URL}/rest/v1/${table}?${params}`, { headers: this.headers });
+      return r.ok ? await r.json() : [];
+    } catch(e) { console.error('sb.get', e); return []; }
+  },
+
+  async upsert(table, body) {
+    try {
+      const r = await fetch(`${SB_URL}/rest/v1/${table}`, {
+        method: 'POST',
+        headers: { ...this.headers, 'Prefer': 'resolution=merge-duplicates,return=representation' },
+        body: JSON.stringify(body)
+      });
+      return r.ok ? await r.json() : null;
+    } catch(e) { console.error('sb.upsert', e); return null; }
+  },
+
+  async delete(table, params) {
+    try {
+      const r = await fetch(`${SB_URL}/rest/v1/${table}?${params}`, {
+        method: 'DELETE', headers: this.headers
+      });
+      return r.ok;
+    } catch(e) { console.error('sb.delete', e); return false; }
+  },
+
+  async insert(table, body) {
+    try {
+      const r = await fetch(`${SB_URL}/rest/v1/${table}`, {
+        method: 'POST',
+        headers: this.headers,
+        body: JSON.stringify(body)
+      });
+      return r.ok ? await r.json() : null;
+    } catch(e) { console.error('sb.insert', e); return null; }
+  },
+
+  async update(table, params, body) {
+    try {
+      const r = await fetch(`${SB_URL}/rest/v1/${table}?${params}`, {
+        method: 'PATCH',
+        headers: this.headers,
+        body: JSON.stringify(body)
+      });
+      return r.ok;
+    } catch(e) { console.error('sb.update', e); return false; }
+  }
+};
 
 // Name selection
 function selectName(name) {
@@ -534,31 +585,37 @@ function switchUser() {
   window.scrollTo(0, 0);
 }
 
-// Date poll
-const DATE_KEY = 'reunion_date_poll_v2';
+// ── DATE POLL ──────────────────────────────────────────────
 async function loadDatePoll() {
-  let d = await storeGet(DATE_KEY) || {votes:{jun13:[],jun20:[],jun27:[]}};
-  renderDatePoll(d);
+  const rows = await sb.get('date_votes');
+  renderDatePollFromRows(rows || []);
 }
+
 function renderVoterThumbs(names) {
   const colors = ['#b8860b','#5a6e4a','#8b3a2a','#4a6e8a','#7a5c8a','#6e7a4a','#8a6e3a'];
   return '<div class="voter-thumbs">' + names.map((n,i) => {
-    const ini = n.split(/[\s-]/).map(w=>w[0]||'').join('').toUpperCase().slice(0,2);
-    const col = colors[i%colors.length];
+    const ini = n.split(/[\s-]/).map(w=>w[0]||'').join('').toUpperCase().slice(0,2) || n[0].toUpperCase();
+    const col = colors[i % colors.length];
     const me = n === currentUser;
     return '<span class="voter-thumb' + (me?' voter-thumb-me':'') + '" style="background:' + col + '" title="' + n + '">' + ini + '</span>';
   }).join('') + '</div>';
 }
-function renderDatePoll(d) {
-  const totals = DATE_OPTS.map(k => (d.votes[k]||[]).length);
+
+function renderDatePollFromRows(rows) {
+  const voteMap = {};
+  DATE_OPTS.forEach(k => voteMap[k] = []);
+  rows.forEach(r => {
+    if (voteMap[r.date_key]) voteMap[r.date_key].push(r.name);
+  });
+  const totals = DATE_OPTS.map(k => voteMap[k].length);
   const max = Math.max(...totals, 1);
   DATE_OPTS.forEach(k => {
-    const names = d.votes[k]||[];
+    const names = voteMap[k];
     const n = names.length;
     const iVoted = currentUser && names.includes(currentUser);
     document.getElementById('count-'+k).textContent = n + (n===1?' vote':' votes');
     document.getElementById('bar-'+k).style.width = (n/max*100)+'%';
-    document.getElementById('voters-'+k).innerHTML = names.length ? renderVoterThumbs(names) : '';
+    document.getElementById('voters-'+k).innerHTML = n ? renderVoterThumbs(names) : '';
     const btn = document.getElementById('vbtn-'+k);
     const opt = document.getElementById('opt-'+k);
     btn.disabled = !currentUser;
@@ -571,32 +628,40 @@ function renderDatePoll(d) {
   if (totals[mi]>0 && totals.filter(t=>t===totals[mi]).length===1)
     document.getElementById('opt-'+DATE_OPTS[mi]).classList.add('leading');
 }
+
 async function castDateVote(key) {
   if (!currentUser) return;
-  let d = await storeGet(DATE_KEY) || {votes:{jun13:[],jun20:[],jun27:[]}};
-  if (!d.votes[key]) d.votes[key]=[];
-  const already = d.votes[key].includes(currentUser);
-  if (already) d.votes[key] = d.votes[key].filter(n=>n!==currentUser);
-  else d.votes[key].push(currentUser);
-  await storeSet(DATE_KEY, d); renderDatePoll(d);
+  const rows = await sb.get('date_votes', `name=eq.${encodeURIComponent(currentUser)}&date_key=eq.${key}`);
+  const already = rows && rows.length > 0;
+  if (already) {
+    await sb.delete('date_votes', `name=eq.${encodeURIComponent(currentUser)}&date_key=eq.${key}`);
+  } else {
+    await sb.upsert('date_votes', { name: currentUser, date_key: key });
+  }
+  loadDatePoll();
 }
 
-// Venue poll
-const VENUE_KEY = 'reunion_venue_poll_v2';
+// ── VENUE POLL ─────────────────────────────────────────────
 async function loadVenuePoll() {
-  let d = await storeGet(VENUE_KEY) || {votes:{v1:[],v2:[],v3:[],v4:[]}};
-  renderVenuePoll(d);
+  const rows = await sb.get('venue_votes');
+  renderVenuePollFromRows(rows || []);
 }
-function renderVenuePoll(d) {
-  const totals = VENUE_OPTS.map(k => (d.votes[k]||[]).length);
+
+function renderVenuePollFromRows(rows) {
+  const voteMap = {};
+  VENUE_OPTS.forEach(k => voteMap[k] = []);
+  rows.forEach(r => {
+    if (voteMap[r.venue_key]) voteMap[r.venue_key].push(r.name);
+  });
+  const totals = VENUE_OPTS.map(k => voteMap[k].length);
   const max = Math.max(...totals, 1);
   VENUE_OPTS.forEach(k => {
-    const names = d.votes[k]||[];
+    const names = voteMap[k];
     const n = names.length;
     const iVoted = currentUser && names.includes(currentUser);
     document.getElementById('vcount-'+k).textContent = n + (n===1?' vote':' votes');
     document.getElementById('vbar-'+k).style.width = (n/max*100)+'%';
-    document.getElementById('vvoters-'+k).innerHTML = names.length ? renderVoterThumbs(names) : '';
+    document.getElementById('vvoters-'+k).innerHTML = n ? renderVoterThumbs(names) : '';
     const btn = document.getElementById('vvbtn-'+k);
     const opt = document.getElementById('vopt-'+k);
     btn.disabled = !currentUser;
@@ -609,108 +674,122 @@ function renderVenuePoll(d) {
   if (totals[mi]>0 && totals.filter(t=>t===totals[mi]).length===1)
     document.getElementById('vopt-'+VENUE_OPTS[mi]).classList.add('leading');
 }
+
 async function castVenueVote(key) {
   if (!currentUser) return;
-  let d = await storeGet(VENUE_KEY) || {votes:{v1:[],v2:[],v3:[],v4:[]}};
-  if (!d.votes[key]) d.votes[key]=[];
-  const already = d.votes[key].includes(currentUser);
-  if (already) d.votes[key] = d.votes[key].filter(n=>n!==currentUser);
-  else d.votes[key].push(currentUser);
-  await storeSet(VENUE_KEY, d); renderVenuePoll(d);
+  const rows = await sb.get('venue_votes', `name=eq.${encodeURIComponent(currentUser)}&venue_key=eq.${key}`);
+  const already = rows && rows.length > 0;
+  if (already) {
+    await sb.delete('venue_votes', `name=eq.${encodeURIComponent(currentUser)}&venue_key=eq.${key}`);
+  } else {
+    await sb.upsert('venue_votes', { name: currentUser, venue_key: key });
+  }
+  loadVenuePoll();
 }
 
-// Pledge
-const PLEDGE_KEY = 'reunion_pledge_v1';
+// ── PLEDGES ────────────────────────────────────────────────
 async function loadPledges() {
-  const d = await storeGet(PLEDGE_KEY) || {bring:[]};
-  renderPledges('bring', d.bring||[]);
+  const rows = await sb.get('pledges', 'order=id.asc');
+  renderPledgesFromRows(rows || []);
 }
-function renderPledges(side, items) {
-  const c = document.getElementById('pledge-'+side);
+
+function renderPledgesFromRows(rows) {
+  const c = document.getElementById('pledge-bring');
   if (!c) return;
   c.innerHTML = '';
-  items.forEach((item,idx) => c.appendChild(makePledgeRow(side, item.name||'', item.item||'', idx)));
-}
-function makePledgeRow(side, name, item, idx) {
-  const row = document.createElement('div');
-  row.className = 'pledge-row';
-  row.innerHTML = '<input type="text" placeholder="Your name" value="' + name + '" oninput="updatePledge(\'' + side + '\',' + idx + ',\'name\',this.value)"><input type="text" placeholder="What are you bringing?" value="' + item + '" oninput="updatePledge(\'' + side + '\',' + idx + ',\'item\',this.value)"><button type="button" class="pledge-del" onclick="deletePledge(\'' + side + '\',' + idx + ')">×</button>';
-  return row;
-}
-async function addPledgeRow(side) {
-  const d = await storeGet(PLEDGE_KEY) || {bring:[]};
-  if (!d[side]) d[side]=[];
-  d[side].push({name: currentUser||'', item:''});
-  await storeSet(PLEDGE_KEY, d);
-  renderPledges(side, d[side]);
-  const c = document.getElementById('pledge-'+side);
-  const rows = c.querySelectorAll('.pledge-row');
-  const last = rows[rows.length-1];
-  if (last) { const inputs = last.querySelectorAll('input'); (inputs[1]||inputs[0]).focus(); }
-}
-async function updatePledge(side, idx, field, value) {
-  const d = await storeGet(PLEDGE_KEY) || {bring:[]};
-  if (!d[side]) d[side]=[];
-  if (!d[side][idx]) d[side][idx]={};
-  d[side][idx][field] = value;
-  await storeSet(PLEDGE_KEY, d);
-}
-async function deletePledge(side, idx) {
-  const d = await storeGet(PLEDGE_KEY) || {bring:[]};
-  d[side].splice(idx, 1);
-  await storeSet(PLEDGE_KEY, d);
-  renderPledges(side, d[side]);
+  rows.forEach(row => c.appendChild(makePledgeRow(row.id, row.name||'', row.item||'')));
 }
 
-// Suggestions
-const SUGG_KEY = 'reunion_suggestions_v1';
-async function loadSuggestions() {
-  const d = await storeGet(SUGG_KEY) || {items:[]};
-  renderSuggestions(d.items||[]);
+function makePledgeRow(id, name, item) {
+  const row = document.createElement('div');
+  row.className = 'pledge-row';
+  row.dataset.id = id;
+  row.innerHTML = '<input type="text" placeholder="Your name" value="' + name + '" onblur="updatePledge(' + id + ',\'name\',this.value)"><input type="text" placeholder="What are you bringing?" value="' + item + '" onblur="updatePledge(' + id + ',\'item\',this.value)"><button type=\"button\" class=\"pledge-del\" onclick=\"deletePledge(' + id + ',this)\">×</button>';
+  return row;
 }
-function renderSuggestions(items) {
+
+async function addPledgeRow() {
+  const rows = await sb.insert('pledges', { name: currentUser||'', item: '' });
+  if (rows && rows[0]) {
+    const c = document.getElementById('pledge-bring');
+    const newRow = makePledgeRow(rows[0].id, currentUser||'', '');
+    c.appendChild(newRow);
+    const inputs = newRow.querySelectorAll('input');
+    (inputs[1]||inputs[0]).focus();
+  }
+}
+
+async function updatePledge(id, field, value) {
+  await sb.update('pledges', `id=eq.${id}`, { [field]: value });
+}
+
+async function deletePledge(id, btn) {
+  await sb.delete('pledges', `id=eq.${id}`);
+  btn.closest('.pledge-row').remove();
+}
+
+// ── SUGGESTIONS ────────────────────────────────────────────
+async function loadSuggestions() {
+  const rows = await sb.get('suggestions', 'order=created_at.desc');
+  renderSuggestionsFromRows(rows || []);
+}
+
+function renderSuggestionsFromRows(rows) {
   const list = document.getElementById('suggList');
   if (!list) return;
-  if (!items.length) { list.innerHTML = '<div style="font-size:11px;color:rgba(26,18,8,0.3);font-style:italic;">No suggestions yet.</div>'; return; }
-  list.innerHTML = [...items].reverse().map(s =>
-    '<div class="sugg-entry"><div style="display:flex;justify-content:space-between;align-items:baseline;"><span class="sugg-author">' + s.author + '</span><span class="sugg-time">' + s.time + '</span></div><div class="sugg-text">' + s.text + '</div></div>'
-  ).join('');
+  if (!rows.length) {
+    list.innerHTML = '<div style="font-size:11px;color:rgba(26,18,8,0.3);font-style:italic;">No suggestions yet.</div>';
+    return;
+  }
+  list.innerHTML = rows.map(s => {
+    const d = new Date(s.created_at);
+    const time = d.toLocaleDateString('en-PH', {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'});
+    return '<div class="sugg-entry"><div style="display:flex;justify-content:space-between;align-items:baseline;"><span class="sugg-author">' + s.author + '</span><span class="sugg-time">' + time + '</span></div><div class="sugg-text">' + s.text + '</div></div>';
+  }).join('');
 }
+
 async function submitSuggestion() {
   const input = document.getElementById('suggInput');
   const text = input ? input.value.trim() : '';
   if (!text || !currentUser) return;
-  let d = await storeGet(SUGG_KEY) || {items:[]};
-  const now = new Date();
-  d.items.push({author: currentUser, text, time: now.toLocaleDateString('en-PH', {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})});
-  await storeSet(SUGG_KEY, d);
+  await sb.insert('suggestions', { author: currentUser, text });
   input.value = '';
-  renderSuggestions(d.items);
+  loadSuggestions();
 }
 
-// Form persistence
-const FORM_KEY = 'reunion_form_fields_v1';
+// ── FORM FIELDS PERSISTENCE ────────────────────────────────
 async function saveFormFields() {
-  const data = {};
+  const fields = [];
   document.querySelectorAll('#screen-main input[name], #screen-main select[name], #screen-main textarea[name]').forEach(el => {
-    if (el.type==='checkbox'||el.type==='radio') {
-      if (!data[el.name]) data[el.name]=[];
-      if (el.checked) data[el.name].push(el.value);
-    } else data[el.name] = el.value;
+    if (el.type==='checkbox') {
+      if (el.checked) fields.push({ key: el.name + ':' + el.value, value: 'true' });
+    } else if (el.type==='radio') {
+      if (el.checked) fields.push({ key: el.name, value: el.value });
+    } else if (el.value) {
+      fields.push({ key: el.name, value: el.value });
+    }
   });
-  await storeSet(FORM_KEY, data);
+  if (fields.length) await sb.upsert('form_fields', fields);
 }
+
 async function restoreFormFields() {
-  const saved = await storeGet(FORM_KEY);
-  if (!saved) return;
+  const rows = await sb.get('form_fields');
+  if (!rows || !rows.length) return;
+  const map = {};
+  rows.forEach(r => map[r.key] = r.value);
   document.querySelectorAll('#screen-main input[name], #screen-main select[name], #screen-main textarea[name]').forEach(el => {
-    const val = saved[el.name];
-    if (val===undefined) return;
-    if (el.type==='checkbox') el.checked = Array.isArray(val)&&val.includes(el.value);
-    else if (el.type==='radio') el.checked = Array.isArray(val)?val.includes(el.value):val===el.value;
-    else el.value = val;
+    if (el.type==='checkbox') {
+      if (map[el.name + ':' + el.value] === 'true') el.checked = true;
+    } else if (el.type==='radio') {
+      if (map[el.name] === el.value) el.checked = true;
+    } else {
+      if (map[el.name]) el.value = map[el.name];
+    }
   });
-  document.getElementById('screen-main').addEventListener('input', saveFormFields);
+  document.getElementById('screen-main').addEventListener('input', () => {
+    clearTimeout(window._saveTimer);
+    window._saveTimer = setTimeout(saveFormFields, 800);
+  });
   document.getElementById('screen-main').addEventListener('change', saveFormFields);
 }
 
