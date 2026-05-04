@@ -387,6 +387,144 @@ body.is-editor .editor-only-input { pointer-events: auto; opacity: 1; }
     .hype-wall { padding: 24px 18px 28px; }
   }
 
+  /* RSVP Bar */
+  .rsvp-bar {
+    background: var(--cream);
+    border-bottom: 1px solid rgba(26,18,8,0.1);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .rsvp-q {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    flex-shrink: 0;
+  }
+  .rsvp-opts {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .rsvp-btn {
+    background: transparent;
+    border: 1px solid rgba(26,18,8,0.2);
+    color: var(--ink);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    padding: 5px 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.05em;
+  }
+  .rsvp-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .rsvp-btn.active-yes  { background: var(--sage);  color: white; border-color: var(--sage); }
+  .rsvp-btn.active-no   { background: var(--rust);  color: white; border-color: var(--rust); }
+  .rsvp-btn.active-tent { background: var(--gold);  color: var(--ink); border-color: var(--gold); }
+  .rsvp-divider {
+    width: 1px;
+    height: 24px;
+    background: rgba(26,18,8,0.12);
+    flex-shrink: 0;
+  }
+  .rsvp-plus-opts {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .rsvp-plus-btn {
+    background: transparent;
+    border: 1px solid rgba(26,18,8,0.2);
+    color: var(--ink);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    padding: 5px 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .rsvp-plus-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .rsvp-plus-btn.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  @media (max-width: 600px) {
+    .rsvp-bar { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .rsvp-divider { display: none; }
+  }
+
+  /* Headcount box */
+  .headcount-bar {
+    background: var(--ink);
+    padding: 16px 24px;
+    display: none;
+  }
+  .headcount-inner {
+    max-width: 820px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 20px;
+  }
+  .headcount-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    margin-bottom: 2px;
+  }
+  .headcount-total {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--paper);
+    line-height: 1;
+  }
+  .headcount-total span {
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+    color: rgba(245,240,232,0.4);
+    font-weight: 400;
+    margin-left: 4px;
+  }
+  .headcount-breakdown {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .hc-pill {
+    font-size: 11px;
+    padding: 4px 10px;
+    border: 1px solid rgba(245,240,232,0.12);
+    color: rgba(245,240,232,0.7);
+    white-space: nowrap;
+  }
+  .hc-pill strong { color: var(--paper); }
+  .hc-pill.going  { border-color: var(--sage); }
+  .hc-pill.tent   { border-color: var(--gold); }
+  .hc-pill.no     { border-color: var(--rust); opacity: 0.7; }
+  .headcount-guests {
+    text-align: right;
+  }
+  .headcount-guests-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--paper);
+    line-height: 1;
+  }
+  .headcount-guests-label {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(245,240,232,0.4);
+    margin-top: 2px;
+  }
+  @media (max-width: 600px) {
+    .headcount-inner { grid-template-columns: 1fr 1fr; }
+    .headcount-breakdown { grid-column: 1 / -1; }
+  }
+
 </style>
 </head>
 <body>
@@ -427,11 +565,11 @@ body.is-editor .editor-only-input { pointer-events: auto; opacity: 1; }
     <button class="name-btn" onclick="selectName('Marneh')">Marneh</button>
     <button class="name-btn" onclick="selectName('Melanie')">Melanie</button>
     <button class="name-btn" onclick="selectName('Melinda')">Melinda</button>
+    <button class="name-btn" onclick="selectName('Mickey')">Mickey</button>
     <button class="name-btn" onclick="selectName('Mia')">Mia</button>
     <button class="name-btn" onclick="selectName('Rosegel')">Rosegel</button>
     <button class="name-btn" onclick="selectName('Rosemarie')">Rosemarie</button>
     <button class="name-btn" onclick="selectName('Sarah')">Sarah</button>
-    <button class="name-btn" onclick="selectName('Tikyo')">Tikyo</button>
   </div>
 </div>
 
@@ -445,6 +583,40 @@ body.is-editor .editor-only-input { pointer-events: auto; opacity: 1; }
     <span style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--rust);">⏳ Voting Deadline</span>
     <span style="font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:var(--ink);">Friday, May 8, 2026</span>
     <span style="font-size:11px;color:rgba(26,18,8,0.45);">Vote on date &amp; venue before then!</span>
+  </div>
+
+  <div class="rsvp-bar" id="rsvpBar" style="display:none;">
+    <span class="rsvp-q">Are you going?</span>
+    <div class="rsvp-opts">
+      <button type="button" class="rsvp-btn" id="rsvp-yes"  onclick="setRSVP('yes')">✓ Yes, I'll be there!</button>
+      <button type="button" class="rsvp-btn" id="rsvp-tent" onclick="setRSVP('tentative')">🤔 Tentatively</button>
+      <button type="button" class="rsvp-btn" id="rsvp-no"   onclick="setRSVP('no')">✗ Can't make it</button>
+    </div>
+    <div class="rsvp-divider"></div>
+    <span class="rsvp-q">Bringing guests?</span>
+    <div class="rsvp-plus-opts">
+      <button type="button" class="rsvp-plus-btn" id="rsvp-plus0" onclick="setPlus('0')">Just me</button>
+      <button type="button" class="rsvp-plus-btn" id="rsvp-plus1" onclick="setPlus('1')">+1</button>
+      <button type="button" class="rsvp-plus-btn" id="rsvp-plus2" onclick="setPlus('2')">+2</button>
+    </div>
+  </div>
+
+  <div class="headcount-bar" id="headcountBar">
+    <div class="headcount-inner">
+      <div>
+        <div class="headcount-label">Total Expected</div>
+        <div class="headcount-total" id="hcTotal">—<span>pax</span></div>
+      </div>
+      <div class="headcount-breakdown" id="hcBreakdown">
+        <div class="hc-pill going">Going: <strong id="hcGoing">0</strong> AB + <strong id="hcGoingGuests">0</strong> guests</div>
+        <div class="hc-pill tent">Tentative: <strong id="hcTent">0</strong> AB + <strong id="hcTentGuests">0</strong> guests</div>
+        <div class="hc-pill no">Can't make it: <strong id="hcNo">0</strong></div>
+      </div>
+      <div class="headcount-guests">
+        <div class="headcount-guests-num" id="hcProf">—</div>
+        <div class="headcount-guests-label">Profs confirmed</div>
+      </div>
+    </div>
   </div>
 
   <div class="page">
@@ -564,7 +736,7 @@ body.is-editor .editor-only-input { pointer-events: auto; opacity: 1; }
 
     <!-- PROFESSORS -->
     <div class="section">
-      <div class="section-header"><span class="section-num">—</span><span class="section-title">Professors to Invite</span></div>
+      <div class="section-header"><span class="section-num">—</span><span class="section-title">Professors to Invite <span id="profConfirmedBadge" style="font-family:'DM Mono',monospace;font-size:11px;font-weight:400;color:var(--sage);letter-spacing:0.05em;"></span></span></div>
       <div style="font-size:11px;color:rgba(26,18,8,0.5);font-style:italic;margin-bottom:12px;line-height:1.7;">
         The organizers are reaching out to all of them — tick a name once they've confirmed they're coming. And let us know if we forgot to invite any other beloved professor we had during college! 🥹
       </div>
@@ -597,7 +769,7 @@ body.is-editor .editor-only-input { pointer-events: auto; opacity: 1; }
         <div class="committee-item"><div class="committee-role">Souvenirs — T-shirt</div><div class="committee-person">Apyang</div></div>
         <div class="committee-item"><div class="committee-role">Souvenirs — Mug</div><div class="committee-person">Sarah</div><div class="committee-note">Boss Sarah</div></div>
         <div class="committee-item"><div class="committee-role">Tarp</div><div class="committee-person">Zprince</div><div class="committee-note">c/o D-G</div></div>
-        <div class="committee-item"><div class="committee-role">Sound System</div><div class="committee-person">U1</div><div class="committee-note">c/o Tikyo</div></div>
+        <div class="committee-item"><div class="committee-role">Sound System</div><div class="committee-person">U1</div><div class="committee-note">c/o Mickey</div></div>
         <div class="committee-item"><div class="committee-role">Photo Coverage</div><div class="committee-person">Cecil</div><div class="committee-note">Budget: ₱3,000 – ₱5,000</div></div>
         <div class="committee-item"><div class="committee-role">Floral Lei</div><div class="committee-person">Cecil</div></div>
         <div class="committee-item"><div class="committee-role">Paper Plate Holder</div><div class="committee-person">Cecil &amp; Sarah</div></div>
@@ -606,7 +778,7 @@ body.is-editor .editor-only-input { pointer-events: auto; opacity: 1; }
         <div class="committee-item"><div class="committee-role">Open Bar</div><div class="committee-person">Marneh</div><div class="committee-note">Ariel Alconera</div></div>
       </div>
       <div style="font-size:11px;color:rgba(26,18,8,0.5);font-style:italic;margin-top:4px;margin-bottom:16px;padding:9px 12px;background:rgba(184,134,11,0.06);border-left:2px solid var(--gold);line-height:1.7;">
-        Want to help make this happen? Whether you want to spearhead something new or assist with any of the items above, just reach out to any of the organizers — Marneh, D-G, Tikyo, Cecil, Apyang, Rosegel, or Sarah. Extra hands are always welcome! 🙌
+        Want to help make this happen? Whether you want to spearhead something new or assist with any of the items above, just reach out to any of the organizers — Marneh, D-G, Mickey, Cecil, Apyang, Rosegel, or Sarah. Extra hands are always welcome! 🙌
       </div>
 
       <div class="committee-item" style="margin-top:10px;">
@@ -682,7 +854,7 @@ body.is-editor .editor-only-input { pointer-events: auto; opacity: 1; }
 </div><!-- end screen-main -->
 
 <script>
-const ORGANIZERS = ['Marneh','D-G','Tikyo','Cecil','Apyang','Rosegel','Sarah'];
+const ORGANIZERS = ['Marneh','D-G','Mickey','Cecil','Apyang','Rosegel','Sarah'];
 const DATE_OPTS = ['jun13','jun20','jun27'];
 const VENUE_OPTS = ['v1','v2','v3','v4'];
 let currentUser = null;
@@ -762,7 +934,7 @@ function selectName(name) {
   const vs = document.getElementById('venueVoteStatus');
   if (ds) ds.textContent = 'Voting as ' + name;
   if (vs) vs.textContent = 'Voting as ' + name;
-  loadDatePoll(); loadVenuePoll(); loadPledges(); loadSuggestions(); loadHype(); restoreFormFields();
+  loadDatePoll(); loadVenuePoll(); loadPledges(); loadSuggestions(); loadHype(); loadRSVP(); restoreFormFields().then(() => { hookProfCheckboxes(); loadHeadcount(); });
   window.scrollTo(0, 0);
 }
 
@@ -982,6 +1154,111 @@ async function restoreFormFields() {
   document.getElementById('screen-main').addEventListener('change', saveFormFields);
 }
 
+
+
+
+// ── HEADCOUNT ───────────────────────────────────────────────
+async function loadHeadcount() {
+  const rows = await sb.get('rsvp');
+  renderHeadcount(rows || []);
+}
+
+function renderHeadcount(rows) {
+  // AB class counts
+  let goingAB = 0, tentAB = 0, noAB = 0;
+  let goingGuests = 0, tentGuests = 0;
+
+  rows.forEach(r => {
+    const plus = parseInt(r.plus || '0');
+    if (r.status === 'yes') {
+      goingAB++;
+      goingGuests += plus;
+    } else if (r.status === 'tentative') {
+      tentAB++;
+      tentGuests += plus;
+    } else if (r.status === 'no') {
+      noAB++;
+    }
+  });
+
+  const totalGoing = goingAB + goingGuests;
+  const totalTent  = tentAB  + tentGuests;
+  const total = totalGoing + totalTent;
+
+  // Prof count from checked boxes
+  const profChecked = document.querySelectorAll('input[name="teacher[]"]:checked').length;
+
+  // Update DOM
+  const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  set('hcTotal',       total > 0 ? total : '—');
+  set('hcGoing',       goingAB);
+  set('hcGoingGuests', goingGuests);
+  set('hcTent',        tentAB);
+  set('hcTentGuests',  tentGuests);
+  set('hcNo',          noAB);
+  set('hcProf',        profChecked > 0 ? profChecked : '—');
+
+  // Prof badge in section title
+  const badge = document.getElementById('profConfirmedBadge');
+  if (badge) badge.textContent = profChecked > 0 ? '(confirmed: ' + profChecked + ')' : '';
+
+  // Show headcount bar
+  const bar = document.getElementById('headcountBar');
+  if (bar) bar.style.display = 'block';
+}
+
+// Refresh headcount when prof checkboxes change
+function hookProfCheckboxes() {
+  document.querySelectorAll('input[name="teacher[]"]').forEach(cb => {
+    cb.addEventListener('change', () => loadHeadcount());
+  });
+}
+
+// ── RSVP ────────────────────────────────────────────────────
+async function loadRSVP() {
+  if (!currentUser) return;
+  const rows = await sb.get('rsvp', `name=eq.${encodeURIComponent(currentUser)}`);
+  if (rows && rows.length) {
+    applyRSVPState(rows[0].status, rows[0].plus);
+  }
+  // Also show bar
+  const bar = document.getElementById('rsvpBar');
+  if (bar) bar.style.display = 'flex';
+  loadHeadcount();
+}
+
+function applyRSVPState(status, plus) {
+  ['yes','tent','no'].forEach(k => {
+    const btn = document.getElementById('rsvp-' + (k === 'tent' ? 'tent' : k));
+    if (btn) btn.className = 'rsvp-btn' + (status === (k === 'tent' ? 'tentative' : k) ? ' active-' + (k === 'tent' ? 'tent' : k) : '');
+  });
+  // fix tentative button specifically
+  const tentBtn = document.getElementById('rsvp-tent');
+  if (tentBtn) tentBtn.className = 'rsvp-btn' + (status === 'tentative' ? ' active-tent' : '');
+
+  ['0','1','2'].forEach(p => {
+    const btn = document.getElementById('rsvp-plus' + p);
+    if (btn) btn.className = 'rsvp-plus-btn' + (plus === p ? ' active' : '');
+  });
+}
+
+async function setRSVP(status) {
+  if (!currentUser) return;
+  const existing = await sb.get('rsvp', `name=eq.${encodeURIComponent(currentUser)}`);
+  const plus = (existing && existing[0]) ? existing[0].plus : '0';
+  await sb.upsert('rsvp', { name: currentUser, status, plus });
+  applyRSVPState(status, plus);
+  loadHeadcount();
+}
+
+async function setPlus(plus) {
+  if (!currentUser) return;
+  const existing = await sb.get('rsvp', `name=eq.${encodeURIComponent(currentUser)}`);
+  const status = (existing && existing[0]) ? existing[0].status : null;
+  await sb.upsert('rsvp', { name: currentUser, status: status || 'tentative', plus });
+  applyRSVPState(status || 'tentative', plus);
+  loadHeadcount();
+}
 
 // ── HYPE WALL ───────────────────────────────────────────────
 async function loadHype() {
