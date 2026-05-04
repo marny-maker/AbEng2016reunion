@@ -990,6 +990,141 @@ body.is-editor .editor-only-input { pointer-events: auto; opacity: 1; }
     margin-top: 1px;
   }
 
+  /* ── Class Attendance Live ──────────────────────────────── */
+  .roll-section {
+    margin-top: 56px;
+    padding-top: 0;
+  }
+  .roll-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--ink);
+  }
+  .roll-live-dot {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+  .roll-live-dot::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    background: var(--sage);
+    border-radius: 50%;
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+  .roll-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 10px;
+  }
+  .roll-card {
+    background: var(--cream);
+    border: 1px solid rgba(26,18,8,0.1);
+    padding: 12px 12px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: border-color 0.15s;
+  }
+  .roll-card.is-me {
+    border-color: #d4a017 !important;
+    background: rgba(184,134,11,0.15) !important;
+  }
+  .roll-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .roll-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .roll-stat-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+  }
+  .roll-stat-label {
+    font-size: 10px;
+    color: rgba(26,18,8,0.4);
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+  }
+  .roll-check {
+    font-size: 11px;
+    font-weight: 500;
+  }
+  .roll-check.yes { color: var(--sage); }
+  .roll-check.no  { color: rgba(26,18,8,0.2); }
+  .rsvp-pill {
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 2px;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+  .rsvp-pill.going     { background: rgba(90,110,74,0.15); color: var(--sage); }
+  .rsvp-pill.tentative { background: rgba(184,134,11,0.15); color: var(--gold); }
+  .rsvp-pill.no        { background: rgba(139,58,42,0.12); color: var(--rust); }
+  .rsvp-pill.none      { background: rgba(26,18,8,0.06); color: rgba(26,18,8,0.3); }
+  .roll-bf-wrap {
+    margin-top: 2px;
+  }
+  .roll-bf-bar-bg {
+    height: 3px;
+    background: rgba(26,18,8,0.08);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 3px;
+  }
+  .roll-bf-bar {
+    height: 100%;
+    background: var(--gold);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+  .roll-bf-label {
+    font-size: 10px;
+    color: rgba(26,18,8,0.4);
+    display: flex;
+    justify-content: space-between;
+  }
+  .roll-bf-label span { color: var(--ink); font-weight: 500; }
+  .roll-last-updated {
+    font-size: 10px;
+    color: rgba(26,18,8,0.3);
+    text-align: right;
+    margin-top: 10px;
+    font-style: italic;
+    letter-spacing: 0.03em;
+  }
+  @media (max-width: 600px) {
+    .roll-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; }
+    .roll-name { font-size: 13px; }
+  }
+
 </style>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
@@ -1332,12 +1467,339 @@ body.is-editor .editor-only-input { pointer-events: auto; opacity: 1; }
       <div class="hype-feed" id="hypeFeed"></div>
     </div>
 
+
     <div style="text-align:center;margin-top:40px;padding-top:20px;border-top:1px solid var(--line);font-size:11px;color:rgba(26,18,8,0.35);">
       Wrong account? <span onclick="switchUser()" style="color:var(--gold);text-decoration:underline;cursor:pointer;">Switch name</span>
     </div>
 
+
+</div><!-- end .page -->
+
+<!-- FULL-BLEED CLASS ATTENDANCE -->
+<div style="background:#1a1208;padding:36px 40px 48px;width:100%;box-sizing:border-box;">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;padding-bottom:12px;border-bottom:1px solid rgba(245,240,232,0.1);">
+    <span style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:#f5f0e8;">Class Attendance</span>
+    <span class="roll-live-dot" style="margin-left:auto;">Live</span>
   </div>
-</div><!-- end screen-main -->
+  <div style="font-size:11px;color:rgba(245,240,232,0.3);font-style:italic;margin-bottom:20px;line-height:1.6;">Who's voted, who's RSVPd, and who still has unfinished business. Updates the moment anyone does anything.</div>
+  <div class="roll-grid" id="rollGrid" style="grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:12px;">
+    <div class="roll-card" id="roll-Aileen" data-name="Aileen" style="background:rgba(245,240,232,0.05);border-color:rgba(245,240,232,0.1);">
+      <div class="roll-name" style="color:#f5f0e8;font-size:15px;">Aileen</div>
+      <div class="roll-stats">
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">RSVP</span><span class="rsvp-pill none" id="roll-rsvp-Aileen">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Date</span><span class="roll-check no" id="roll-date-Aileen">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Venue</span><span class="roll-check no" id="roll-venue-Aileen">—</span></div>
+      </div>
+      <div class="roll-bf-wrap">
+        <div class="roll-bf-bar-bg" style="background:rgba(245,240,232,0.08);"><div class="roll-bf-bar" id="roll-bf-bar-Aileen" style="width:0%"></div></div>
+        <div class="roll-bf-label" style="color:rgba(245,240,232,0.3);">Batch Files <span id="roll-bf-num-Aileen" style="color:rgba(245,240,232,0.7);">0/29</span></div>
+      </div>
+    </div>
+    <div class="roll-card" id="roll-Apyang" data-name="Apyang" style="background:rgba(245,240,232,0.05);border-color:rgba(245,240,232,0.1);">
+      <div class="roll-name" style="color:#f5f0e8;font-size:15px;">Apyang</div>
+      <div class="roll-stats">
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">RSVP</span><span class="rsvp-pill none" id="roll-rsvp-Apyang">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Date</span><span class="roll-check no" id="roll-date-Apyang">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Venue</span><span class="roll-check no" id="roll-venue-Apyang">—</span></div>
+      </div>
+      <div class="roll-bf-wrap">
+        <div class="roll-bf-bar-bg" style="background:rgba(245,240,232,0.08);"><div class="roll-bf-bar" id="roll-bf-bar-Apyang" style="width:0%"></div></div>
+        <div class="roll-bf-label" style="color:rgba(245,240,232,0.3);">Batch Files <span id="roll-bf-num-Apyang" style="color:rgba(245,240,232,0.7);">0/29</span></div>
+      </div>
+    </div>
+    <div class="roll-card" id="roll-Arjane" data-name="Arjane" style="background:rgba(245,240,232,0.05);border-color:rgba(245,240,232,0.1);">
+      <div class="roll-name" style="color:#f5f0e8;font-size:15px;">Arjane</div>
+      <div class="roll-stats">
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">RSVP</span><span class="rsvp-pill none" id="roll-rsvp-Arjane">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Date</span><span class="roll-check no" id="roll-date-Arjane">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Venue</span><span class="roll-check no" id="roll-venue-Arjane">—</span></div>
+      </div>
+      <div class="roll-bf-wrap">
+        <div class="roll-bf-bar-bg" style="background:rgba(245,240,232,0.08);"><div class="roll-bf-bar" id="roll-bf-bar-Arjane" style="width:0%"></div></div>
+        <div class="roll-bf-label" style="color:rgba(245,240,232,0.3);">Batch Files <span id="roll-bf-num-Arjane" style="color:rgba(245,240,232,0.7);">0/29</span></div>
+      </div>
+    </div>
+    <div class="roll-card" id="roll-Cecil" data-name="Cecil" style="background:rgba(245,240,232,0.05);border-color:rgba(245,240,232,0.1);">
+      <div class="roll-name" style="color:#f5f0e8;font-size:15px;">Cecil</div>
+      <div class="roll-stats">
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">RSVP</span><span class="rsvp-pill none" id="roll-rsvp-Cecil">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Date</span><span class="roll-check no" id="roll-date-Cecil">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Venue</span><span class="roll-check no" id="roll-venue-Cecil">—</span></div>
+      </div>
+      <div class="roll-bf-wrap">
+        <div class="roll-bf-bar-bg" style="background:rgba(245,240,232,0.08);"><div class="roll-bf-bar" id="roll-bf-bar-Cecil" style="width:0%"></div></div>
+        <div class="roll-bf-label" style="color:rgba(245,240,232,0.3);">Batch Files <span id="roll-bf-num-Cecil" style="color:rgba(245,240,232,0.7);">0/29</span></div>
+      </div>
+    </div>
+    <div class="roll-card" id="roll-Cindy" data-name="Cindy" style="background:rgba(245,240,232,0.05);border-color:rgba(245,240,232,0.1);">
+      <div class="roll-name" style="color:#f5f0e8;font-size:15px;">Cindy</div>
+      <div class="roll-stats">
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">RSVP</span><span class="rsvp-pill none" id="roll-rsvp-Cindy">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Date</span><span class="roll-check no" id="roll-date-Cindy">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Venue</span><span class="roll-check no" id="roll-venue-Cindy">—</span></div>
+      </div>
+      <div class="roll-bf-wrap">
+        <div class="roll-bf-bar-bg" style="background:rgba(245,240,232,0.08);"><div class="roll-bf-bar" id="roll-bf-bar-Cindy" style="width:0%"></div></div>
+        <div class="roll-bf-label" style="color:rgba(245,240,232,0.3);">Batch Files <span id="roll-bf-num-Cindy" style="color:rgba(245,240,232,0.7);">0/29</span></div>
+      </div>
+    </div>
+    <div class="roll-card" id="roll-D-G" data-name="D-G" style="background:rgba(245,240,232,0.05);border-color:rgba(245,240,232,0.1);">
+      <div class="roll-name" style="color:#f5f0e8;font-size:15px;">D-G</div>
+      <div class="roll-stats">
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">RSVP</span><span class="rsvp-pill none" id="roll-rsvp-D-G">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Date</span><span class="roll-check no" id="roll-date-D-G">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Venue</span><span class="roll-check no" id="roll-venue-D-G">—</span></div>
+      </div>
+      <div class="roll-bf-wrap">
+        <div class="roll-bf-bar-bg" style="background:rgba(245,240,232,0.08);"><div class="roll-bf-bar" id="roll-bf-bar-D-G" style="width:0%"></div></div>
+        <div class="roll-bf-label" style="color:rgba(245,240,232,0.3);">Batch Files <span id="roll-bf-num-D-G" style="color:rgba(245,240,232,0.7);">0/29</span></div>
+      </div>
+    </div>
+    <div class="roll-card" id="roll-Didi" data-name="Didi" style="background:rgba(245,240,232,0.05);border-color:rgba(245,240,232,0.1);">
+      <div class="roll-name" style="color:#f5f0e8;font-size:15px;">Didi</div>
+      <div class="roll-stats">
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">RSVP</span><span class="rsvp-pill none" id="roll-rsvp-Didi">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Date</span><span class="roll-check no" id="roll-date-Didi">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Venue</span><span class="roll-check no" id="roll-venue-Didi">—</span></div>
+      </div>
+      <div class="roll-bf-wrap">
+        <div class="roll-bf-bar-bg" style="background:rgba(245,240,232,0.08);"><div class="roll-bf-bar" id="roll-bf-bar-Didi" style="width:0%"></div></div>
+        <div class="roll-bf-label" style="color:rgba(245,240,232,0.3);">Batch Files <span id="roll-bf-num-Didi" style="color:rgba(245,240,232,0.7);">0/29</span></div>
+      </div>
+    </div>
+    <div class="roll-card" id="roll-Ebing" data-name="Ebing" style="background:rgba(245,240,232,0.05);border-color:rgba(245,240,232,0.1);">
+      <div class="roll-name" style="color:#f5f0e8;font-size:15px;">Ebing</div>
+      <div class="roll-stats">
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">RSVP</span><span class="rsvp-pill none" id="roll-rsvp-Ebing">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Date</span><span class="roll-check no" id="roll-date-Ebing">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Venue</span><span class="roll-check no" id="roll-venue-Ebing">—</span></div>
+      </div>
+      <div class="roll-bf-wrap">
+        <div class="roll-bf-bar-bg" style="background:rgba(245,240,232,0.08);"><div class="roll-bf-bar" id="roll-bf-bar-Ebing" style="width:0%"></div></div>
+        <div class="roll-bf-label" style="color:rgba(245,240,232,0.3);">Batch Files <span id="roll-bf-num-Ebing" style="color:rgba(245,240,232,0.7);">0/29</span></div>
+      </div>
+    </div>
+    <div class="roll-card" id="roll-Ekon" data-name="Ekon" style="background:rgba(245,240,232,0.05);border-color:rgba(245,240,232,0.1);">
+      <div class="roll-name" style="color:#f5f0e8;font-size:15px;">Ekon</div>
+      <div class="roll-stats">
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">RSVP</span><span class="rsvp-pill none" id="roll-rsvp-Ekon">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Date</span><span class="roll-check no" id="roll-date-Ekon">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Venue</span><span class="roll-check no" id="roll-venue-Ekon">—</span></div>
+      </div>
+      <div class="roll-bf-wrap">
+        <div class="roll-bf-bar-bg" style="background:rgba(245,240,232,0.08);"><div class="roll-bf-bar" id="roll-bf-bar-Ekon" style="width:0%"></div></div>
+        <div class="roll-bf-label" style="color:rgba(245,240,232,0.3);">Batch Files <span id="roll-bf-num-Ekon" style="color:rgba(245,240,232,0.7);">0/29</span></div>
+      </div>
+    </div>
+    <div class="roll-card" id="roll-Fatima" data-name="Fatima" style="background:rgba(245,240,232,0.05);border-color:rgba(245,240,232,0.1);">
+      <div class="roll-name" style="color:#f5f0e8;font-size:15px;">Fatima</div>
+      <div class="roll-stats">
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">RSVP</span><span class="rsvp-pill none" id="roll-rsvp-Fatima">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Date</span><span class="roll-check no" id="roll-date-Fatima">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Venue</span><span class="roll-check no" id="roll-venue-Fatima">—</span></div>
+      </div>
+      <div class="roll-bf-wrap">
+        <div class="roll-bf-bar-bg" style="background:rgba(245,240,232,0.08);"><div class="roll-bf-bar" id="roll-bf-bar-Fatima" style="width:0%"></div></div>
+        <div class="roll-bf-label" style="color:rgba(245,240,232,0.3);">Batch Files <span id="roll-bf-num-Fatima" style="color:rgba(245,240,232,0.7);">0/29</span></div>
+      </div>
+    </div>
+    <div class="roll-card" id="roll-Grace" data-name="Grace" style="background:rgba(245,240,232,0.05);border-color:rgba(245,240,232,0.1);">
+      <div class="roll-name" style="color:#f5f0e8;font-size:15px;">Grace</div>
+      <div class="roll-stats">
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">RSVP</span><span class="rsvp-pill none" id="roll-rsvp-Grace">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Date</span><span class="roll-check no" id="roll-date-Grace">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Venue</span><span class="roll-check no" id="roll-venue-Grace">—</span></div>
+      </div>
+      <div class="roll-bf-wrap">
+        <div class="roll-bf-bar-bg" style="background:rgba(245,240,232,0.08);"><div class="roll-bf-bar" id="roll-bf-bar-Grace" style="width:0%"></div></div>
+        <div class="roll-bf-label" style="color:rgba(245,240,232,0.3);">Batch Files <span id="roll-bf-num-Grace" style="color:rgba(245,240,232,0.7);">0/29</span></div>
+      </div>
+    </div>
+    <div class="roll-card" id="roll-Honey" data-name="Honey" style="background:rgba(245,240,232,0.05);border-color:rgba(245,240,232,0.1);">
+      <div class="roll-name" style="color:#f5f0e8;font-size:15px;">Honey</div>
+      <div class="roll-stats">
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">RSVP</span><span class="rsvp-pill none" id="roll-rsvp-Honey">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Date</span><span class="roll-check no" id="roll-date-Honey">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Venue</span><span class="roll-check no" id="roll-venue-Honey">—</span></div>
+      </div>
+      <div class="roll-bf-wrap">
+        <div class="roll-bf-bar-bg" style="background:rgba(245,240,232,0.08);"><div class="roll-bf-bar" id="roll-bf-bar-Honey" style="width:0%"></div></div>
+        <div class="roll-bf-label" style="color:rgba(245,240,232,0.3);">Batch Files <span id="roll-bf-num-Honey" style="color:rgba(245,240,232,0.7);">0/29</span></div>
+      </div>
+    </div>
+    <div class="roll-card" id="roll-Jen-Bom" data-name="Jen Bom" style="background:rgba(245,240,232,0.05);border-color:rgba(245,240,232,0.1);">
+      <div class="roll-name" style="color:#f5f0e8;font-size:15px;">Jen Bom</div>
+      <div class="roll-stats">
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">RSVP</span><span class="rsvp-pill none" id="roll-rsvp-Jen-Bom">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Date</span><span class="roll-check no" id="roll-date-Jen-Bom">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Venue</span><span class="roll-check no" id="roll-venue-Jen-Bom">—</span></div>
+      </div>
+      <div class="roll-bf-wrap">
+        <div class="roll-bf-bar-bg" style="background:rgba(245,240,232,0.08);"><div class="roll-bf-bar" id="roll-bf-bar-Jen-Bom" style="width:0%"></div></div>
+        <div class="roll-bf-label" style="color:rgba(245,240,232,0.3);">Batch Files <span id="roll-bf-num-Jen-Bom" style="color:rgba(245,240,232,0.7);">0/29</span></div>
+      </div>
+    </div>
+    <div class="roll-card" id="roll-Jen-Om" data-name="Jen Om" style="background:rgba(245,240,232,0.05);border-color:rgba(245,240,232,0.1);">
+      <div class="roll-name" style="color:#f5f0e8;font-size:15px;">Jen Om</div>
+      <div class="roll-stats">
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">RSVP</span><span class="rsvp-pill none" id="roll-rsvp-Jen-Om">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Date</span><span class="roll-check no" id="roll-date-Jen-Om">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Venue</span><span class="roll-check no" id="roll-venue-Jen-Om">—</span></div>
+      </div>
+      <div class="roll-bf-wrap">
+        <div class="roll-bf-bar-bg" style="background:rgba(245,240,232,0.08);"><div class="roll-bf-bar" id="roll-bf-bar-Jen-Om" style="width:0%"></div></div>
+        <div class="roll-bf-label" style="color:rgba(245,240,232,0.3);">Batch Files <span id="roll-bf-num-Jen-Om" style="color:rgba(245,240,232,0.7);">0/29</span></div>
+      </div>
+    </div>
+    <div class="roll-card" id="roll-Jenny-Leen" data-name="Jenny Leen" style="background:rgba(245,240,232,0.05);border-color:rgba(245,240,232,0.1);">
+      <div class="roll-name" style="color:#f5f0e8;font-size:15px;">Jenny Leen</div>
+      <div class="roll-stats">
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">RSVP</span><span class="rsvp-pill none" id="roll-rsvp-Jenny-Leen">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Date</span><span class="roll-check no" id="roll-date-Jenny-Leen">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Venue</span><span class="roll-check no" id="roll-venue-Jenny-Leen">—</span></div>
+      </div>
+      <div class="roll-bf-wrap">
+        <div class="roll-bf-bar-bg" style="background:rgba(245,240,232,0.08);"><div class="roll-bf-bar" id="roll-bf-bar-Jenny-Leen" style="width:0%"></div></div>
+        <div class="roll-bf-label" style="color:rgba(245,240,232,0.3);">Batch Files <span id="roll-bf-num-Jenny-Leen" style="color:rgba(245,240,232,0.7);">0/29</span></div>
+      </div>
+    </div>
+    <div class="roll-card" id="roll-Jera" data-name="Jera" style="background:rgba(245,240,232,0.05);border-color:rgba(245,240,232,0.1);">
+      <div class="roll-name" style="color:#f5f0e8;font-size:15px;">Jera</div>
+      <div class="roll-stats">
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">RSVP</span><span class="rsvp-pill none" id="roll-rsvp-Jera">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Date</span><span class="roll-check no" id="roll-date-Jera">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Venue</span><span class="roll-check no" id="roll-venue-Jera">—</span></div>
+      </div>
+      <div class="roll-bf-wrap">
+        <div class="roll-bf-bar-bg" style="background:rgba(245,240,232,0.08);"><div class="roll-bf-bar" id="roll-bf-bar-Jera" style="width:0%"></div></div>
+        <div class="roll-bf-label" style="color:rgba(245,240,232,0.3);">Batch Files <span id="roll-bf-num-Jera" style="color:rgba(245,240,232,0.7);">0/29</span></div>
+      </div>
+    </div>
+    <div class="roll-card" id="roll-Joyce" data-name="Joyce" style="background:rgba(245,240,232,0.05);border-color:rgba(245,240,232,0.1);">
+      <div class="roll-name" style="color:#f5f0e8;font-size:15px;">Joyce</div>
+      <div class="roll-stats">
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">RSVP</span><span class="rsvp-pill none" id="roll-rsvp-Joyce">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Date</span><span class="roll-check no" id="roll-date-Joyce">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Venue</span><span class="roll-check no" id="roll-venue-Joyce">—</span></div>
+      </div>
+      <div class="roll-bf-wrap">
+        <div class="roll-bf-bar-bg" style="background:rgba(245,240,232,0.08);"><div class="roll-bf-bar" id="roll-bf-bar-Joyce" style="width:0%"></div></div>
+        <div class="roll-bf-label" style="color:rgba(245,240,232,0.3);">Batch Files <span id="roll-bf-num-Joyce" style="color:rgba(245,240,232,0.7);">0/29</span></div>
+      </div>
+    </div>
+    <div class="roll-card" id="roll-Lovely" data-name="Lovely" style="background:rgba(245,240,232,0.05);border-color:rgba(245,240,232,0.1);">
+      <div class="roll-name" style="color:#f5f0e8;font-size:15px;">Lovely</div>
+      <div class="roll-stats">
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">RSVP</span><span class="rsvp-pill none" id="roll-rsvp-Lovely">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Date</span><span class="roll-check no" id="roll-date-Lovely">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Venue</span><span class="roll-check no" id="roll-venue-Lovely">—</span></div>
+      </div>
+      <div class="roll-bf-wrap">
+        <div class="roll-bf-bar-bg" style="background:rgba(245,240,232,0.08);"><div class="roll-bf-bar" id="roll-bf-bar-Lovely" style="width:0%"></div></div>
+        <div class="roll-bf-label" style="color:rgba(245,240,232,0.3);">Batch Files <span id="roll-bf-num-Lovely" style="color:rgba(245,240,232,0.7);">0/29</span></div>
+      </div>
+    </div>
+    <div class="roll-card" id="roll-Marneh" data-name="Marneh" style="background:rgba(245,240,232,0.05);border-color:rgba(245,240,232,0.1);">
+      <div class="roll-name" style="color:#f5f0e8;font-size:15px;">Marneh</div>
+      <div class="roll-stats">
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">RSVP</span><span class="rsvp-pill none" id="roll-rsvp-Marneh">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Date</span><span class="roll-check no" id="roll-date-Marneh">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Venue</span><span class="roll-check no" id="roll-venue-Marneh">—</span></div>
+      </div>
+      <div class="roll-bf-wrap">
+        <div class="roll-bf-bar-bg" style="background:rgba(245,240,232,0.08);"><div class="roll-bf-bar" id="roll-bf-bar-Marneh" style="width:0%"></div></div>
+        <div class="roll-bf-label" style="color:rgba(245,240,232,0.3);">Batch Files <span id="roll-bf-num-Marneh" style="color:rgba(245,240,232,0.7);">0/29</span></div>
+      </div>
+    </div>
+    <div class="roll-card" id="roll-Melanie" data-name="Melanie" style="background:rgba(245,240,232,0.05);border-color:rgba(245,240,232,0.1);">
+      <div class="roll-name" style="color:#f5f0e8;font-size:15px;">Melanie</div>
+      <div class="roll-stats">
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">RSVP</span><span class="rsvp-pill none" id="roll-rsvp-Melanie">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Date</span><span class="roll-check no" id="roll-date-Melanie">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Venue</span><span class="roll-check no" id="roll-venue-Melanie">—</span></div>
+      </div>
+      <div class="roll-bf-wrap">
+        <div class="roll-bf-bar-bg" style="background:rgba(245,240,232,0.08);"><div class="roll-bf-bar" id="roll-bf-bar-Melanie" style="width:0%"></div></div>
+        <div class="roll-bf-label" style="color:rgba(245,240,232,0.3);">Batch Files <span id="roll-bf-num-Melanie" style="color:rgba(245,240,232,0.7);">0/29</span></div>
+      </div>
+    </div>
+    <div class="roll-card" id="roll-Melinda" data-name="Melinda" style="background:rgba(245,240,232,0.05);border-color:rgba(245,240,232,0.1);">
+      <div class="roll-name" style="color:#f5f0e8;font-size:15px;">Melinda</div>
+      <div class="roll-stats">
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">RSVP</span><span class="rsvp-pill none" id="roll-rsvp-Melinda">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Date</span><span class="roll-check no" id="roll-date-Melinda">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Venue</span><span class="roll-check no" id="roll-venue-Melinda">—</span></div>
+      </div>
+      <div class="roll-bf-wrap">
+        <div class="roll-bf-bar-bg" style="background:rgba(245,240,232,0.08);"><div class="roll-bf-bar" id="roll-bf-bar-Melinda" style="width:0%"></div></div>
+        <div class="roll-bf-label" style="color:rgba(245,240,232,0.3);">Batch Files <span id="roll-bf-num-Melinda" style="color:rgba(245,240,232,0.7);">0/29</span></div>
+      </div>
+    </div>
+    <div class="roll-card" id="roll-Mickey" data-name="Mickey" style="background:rgba(245,240,232,0.05);border-color:rgba(245,240,232,0.1);">
+      <div class="roll-name" style="color:#f5f0e8;font-size:15px;">Mickey</div>
+      <div class="roll-stats">
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">RSVP</span><span class="rsvp-pill none" id="roll-rsvp-Mickey">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Date</span><span class="roll-check no" id="roll-date-Mickey">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Venue</span><span class="roll-check no" id="roll-venue-Mickey">—</span></div>
+      </div>
+      <div class="roll-bf-wrap">
+        <div class="roll-bf-bar-bg" style="background:rgba(245,240,232,0.08);"><div class="roll-bf-bar" id="roll-bf-bar-Mickey" style="width:0%"></div></div>
+        <div class="roll-bf-label" style="color:rgba(245,240,232,0.3);">Batch Files <span id="roll-bf-num-Mickey" style="color:rgba(245,240,232,0.7);">0/29</span></div>
+      </div>
+    </div>
+    <div class="roll-card" id="roll-Mia" data-name="Mia" style="background:rgba(245,240,232,0.05);border-color:rgba(245,240,232,0.1);">
+      <div class="roll-name" style="color:#f5f0e8;font-size:15px;">Mia</div>
+      <div class="roll-stats">
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">RSVP</span><span class="rsvp-pill none" id="roll-rsvp-Mia">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Date</span><span class="roll-check no" id="roll-date-Mia">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Venue</span><span class="roll-check no" id="roll-venue-Mia">—</span></div>
+      </div>
+      <div class="roll-bf-wrap">
+        <div class="roll-bf-bar-bg" style="background:rgba(245,240,232,0.08);"><div class="roll-bf-bar" id="roll-bf-bar-Mia" style="width:0%"></div></div>
+        <div class="roll-bf-label" style="color:rgba(245,240,232,0.3);">Batch Files <span id="roll-bf-num-Mia" style="color:rgba(245,240,232,0.7);">0/29</span></div>
+      </div>
+    </div>
+    <div class="roll-card" id="roll-Rosegel" data-name="Rosegel" style="background:rgba(245,240,232,0.05);border-color:rgba(245,240,232,0.1);">
+      <div class="roll-name" style="color:#f5f0e8;font-size:15px;">Rosegel</div>
+      <div class="roll-stats">
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">RSVP</span><span class="rsvp-pill none" id="roll-rsvp-Rosegel">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Date</span><span class="roll-check no" id="roll-date-Rosegel">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Venue</span><span class="roll-check no" id="roll-venue-Rosegel">—</span></div>
+      </div>
+      <div class="roll-bf-wrap">
+        <div class="roll-bf-bar-bg" style="background:rgba(245,240,232,0.08);"><div class="roll-bf-bar" id="roll-bf-bar-Rosegel" style="width:0%"></div></div>
+        <div class="roll-bf-label" style="color:rgba(245,240,232,0.3);">Batch Files <span id="roll-bf-num-Rosegel" style="color:rgba(245,240,232,0.7);">0/29</span></div>
+      </div>
+    </div>
+    <div class="roll-card" id="roll-Rosemarie" data-name="Rosemarie" style="background:rgba(245,240,232,0.05);border-color:rgba(245,240,232,0.1);">
+      <div class="roll-name" style="color:#f5f0e8;font-size:15px;">Rosemarie</div>
+      <div class="roll-stats">
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">RSVP</span><span class="rsvp-pill none" id="roll-rsvp-Rosemarie">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Date</span><span class="roll-check no" id="roll-date-Rosemarie">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Venue</span><span class="roll-check no" id="roll-venue-Rosemarie">—</span></div>
+      </div>
+      <div class="roll-bf-wrap">
+        <div class="roll-bf-bar-bg" style="background:rgba(245,240,232,0.08);"><div class="roll-bf-bar" id="roll-bf-bar-Rosemarie" style="width:0%"></div></div>
+        <div class="roll-bf-label" style="color:rgba(245,240,232,0.3);">Batch Files <span id="roll-bf-num-Rosemarie" style="color:rgba(245,240,232,0.7);">0/29</span></div>
+      </div>
+    </div>
+    <div class="roll-card" id="roll-Sarah" data-name="Sarah" style="background:rgba(245,240,232,0.05);border-color:rgba(245,240,232,0.1);">
+      <div class="roll-name" style="color:#f5f0e8;font-size:15px;">Sarah</div>
+      <div class="roll-stats">
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">RSVP</span><span class="rsvp-pill none" id="roll-rsvp-Sarah">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Date</span><span class="roll-check no" id="roll-date-Sarah">—</span></div>
+        <div class="roll-stat-row"><span class="roll-stat-label" style="color:rgba(245,240,232,0.35);">Venue</span><span class="roll-check no" id="roll-venue-Sarah">—</span></div>
+      </div>
+      <div class="roll-bf-wrap">
+        <div class="roll-bf-bar-bg" style="background:rgba(245,240,232,0.08);"><div class="roll-bf-bar" id="roll-bf-bar-Sarah" style="width:0%"></div></div>
+        <div class="roll-bf-label" style="color:rgba(245,240,232,0.3);">Batch Files <span id="roll-bf-num-Sarah" style="color:rgba(245,240,232,0.7);">0/29</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="roll-last-updated" id="rollLastUpdated" style="color:rgba(245,240,232,0.2);margin-top:14px;"></div>
+</div>
+
+<div</div><!-- end screen-main -->
 
 <script>
 const ORGANIZERS = ['Marneh','D-G','Mickey','Cecil','Apyang','Rosegel','Sarah'];
@@ -1420,7 +1882,7 @@ function selectName(name) {
   const vs = document.getElementById('venueVoteStatus');
   if (ds) ds.textContent = 'Voting as ' + name;
   if (vs) vs.textContent = 'Voting as ' + name;
-  loadDatePoll(); loadVenuePoll(); loadPledges(); loadSuggestions(); loadHype(); loadRSVP(); loadMyBatchVotes(); restoreFormFields().then(() => { hookProfCheckboxes(); loadHeadcount(); });
+  loadDatePoll(); loadVenuePoll(); loadPledges(); loadSuggestions(); loadHype(); loadRSVP(); loadMyBatchVotes(); loadRollCall(); subscribeRollRealtime(); restoreFormFields().then(() => { hookProfCheckboxes(); loadHeadcount(); });
   window.scrollTo(0, 0);
 }
 
@@ -1734,7 +2196,7 @@ async function setRSVP(status) {
   const plus = (existing && existing[0]) ? existing[0].plus : '0';
   await sb.upsert('rsvp', { name: currentUser, status, plus });
   applyRSVPState(status, plus);
-  loadHeadcount();
+  loadHeadcount(); loadRollCall();
 }
 
 async function setPlus(plus) {
@@ -1743,7 +2205,7 @@ async function setPlus(plus) {
   const status = (existing && existing[0]) ? existing[0].status : null;
   await sb.upsert('rsvp', { name: currentUser, status: status || 'tentative', plus });
   applyRSVPState(status || 'tentative', plus);
-  loadHeadcount();
+  loadHeadcount(); loadRollCall();
 }
 
 // ── HYPE WALL ───────────────────────────────────────────────
@@ -1779,6 +2241,163 @@ async function submitHype() {
   await sb.insert('hype_wall', { author: currentUser, text });
   input.value = '';
   loadHype();
+}
+
+
+// ── CLASS ATTENDANCE LIVE ───────────────────────────────────
+const ROLL_NAMES = ['Aileen', 'Apyang', 'Arjane', 'Cecil', 'Cindy', 'D-G', 'Didi', 'Ebing', 'Ekon', 'Fatima', 'Grace', 'Honey', 'Jen Bom', 'Jen Om', 'Jenny Leen', 'Jera', 'Joyce', 'Lovely', 'Marneh', 'Melanie', 'Melinda', 'Mickey', 'Mia', 'Rosegel', 'Rosemarie', 'Sarah'];
+const ROLL_TOTAL = 29;
+let rollData = {
+  rsvp: {},
+  dateVotes: new Set(),
+  venueVotes: new Set(),
+  bfVotes: {}  // name -> count
+};
+
+function rollId(name) {
+  return name.replace(/ /g, '-').replace(/'/g, '');
+}
+
+async function loadRollCall() {
+  const [rsvpRows, dateRows, venueRows, bfRows] = await Promise.all([
+    sb.get('rsvp'),
+    sb.get('date_votes'),
+    sb.get('venue_votes'),
+    sb.get('batch_file_votes')
+  ]);
+
+  // Process RSVP
+  rollData.rsvp = {};
+  (rsvpRows || []).forEach(r => { rollData.rsvp[r.name] = r.status; });
+
+  // Process date votes
+  rollData.dateVotes = new Set((dateRows || []).map(r => r.name));
+
+  // Process venue votes
+  rollData.venueVotes = new Set((venueRows || []).map(r => r.name));
+
+  // Process batch files — count per voter
+  rollData.bfVotes = {};
+  (bfRows || []).forEach(r => {
+    rollData.bfVotes[r.voter] = (rollData.bfVotes[r.voter] || 0) + 1;
+  });
+
+  renderRollCall();
+}
+
+function renderRollCall() {
+  ROLL_NAMES.forEach(name => {
+    const id = rollId(name);
+    const card = document.getElementById('roll-' + id);
+    if (!card) return;
+
+    // Highlight my own card
+    card.classList.toggle('is-me', name === currentUser);
+
+    // RSVP pill
+    const rsvpEl = document.getElementById('roll-rsvp-' + id);
+    if (rsvpEl) {
+      const status = rollData.rsvp[name];
+      rsvpEl.className = 'rsvp-pill';
+      if (status === 'yes') { rsvpEl.classList.add('going'); rsvpEl.textContent = 'Going'; }
+      else if (status === 'tentative') { rsvpEl.classList.add('tentative'); rsvpEl.textContent = 'Maybe'; }
+      else if (status === 'no') { rsvpEl.classList.add('no'); rsvpEl.textContent = "Can't make it"; }
+      else { rsvpEl.classList.add('none'); rsvpEl.textContent = '—'; }
+    }
+
+    // Date voted
+    const dateEl = document.getElementById('roll-date-' + id);
+    if (dateEl) {
+      const voted = rollData.dateVotes.has(name);
+      dateEl.className = 'roll-check ' + (voted ? 'yes' : 'no');
+      dateEl.textContent = voted ? '✓' : '—';
+    }
+
+    // Venue voted
+    const venueEl = document.getElementById('roll-venue-' + id);
+    if (venueEl) {
+      const voted = rollData.venueVotes.has(name);
+      venueEl.className = 'roll-check ' + (voted ? 'yes' : 'no');
+      venueEl.textContent = voted ? '✓' : '—';
+    }
+
+    // Batch Files progress
+    const bfCount = rollData.bfVotes[name] || 0;
+    const bfBar = document.getElementById('roll-bf-bar-' + id);
+    const bfNum = document.getElementById('roll-bf-num-' + id);
+    if (bfBar) bfBar.style.width = Math.round(bfCount / ROLL_TOTAL * 100) + '%';
+    if (bfNum) bfNum.textContent = bfCount + '/' + ROLL_TOTAL;
+  });
+
+  // Update timestamp
+  const ts = document.getElementById('rollLastUpdated');
+  if (ts) {
+    const now = new Date();
+    ts.textContent = 'Last updated: ' + now.toLocaleTimeString('en-PH', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+  }
+}
+
+// ── REAL-TIME SUBSCRIPTIONS ─────────────────────────────────
+function subscribeRollRealtime() {
+  const wsUrl = 'https://auhkazxubjczgcusamxq.supabase.co'.replace('https://', 'wss://') + '/realtime/v1/websocket?apikey=sb_publishable_boKVP7k36iEFYikPRz3spA_d196OI1i&vsn=1.0.0';
+  
+  let ws;
+  let heartbeat;
+  let reconnectTimer;
+  let connected = false;
+
+  function connect() {
+    try {
+      ws = new WebSocket(wsUrl);
+    } catch(e) { scheduleReconnect(); return; }
+
+    ws.onopen = () => {
+      connected = true;
+      // Subscribe to all 4 tables
+      ['rsvp','date_votes','venue_votes','batch_file_votes'].forEach((table, i) => {
+        ws.send(JSON.stringify({
+          topic: 'realtime:public:' + table,
+          event: 'phx_join',
+          payload: { config: { broadcast: { self: true }, presence: { key: '' }, postgres_changes: [{ event: '*', schema: 'public', table }] } },
+          ref: String(i + 1)
+        }));
+      });
+      // Heartbeat every 25s
+      heartbeat = setInterval(() => {
+        if (ws.readyState === WebSocket.OPEN) {
+          ws.send(JSON.stringify({ topic: 'phoenix', event: 'heartbeat', payload: {}, ref: '0' }));
+        }
+      }, 25000);
+    };
+
+    ws.onmessage = (evt) => {
+      try {
+        const msg = JSON.parse(evt.data);
+        // Any postgres_changes event → reload roll call
+        if (msg.event === 'postgres_changes' || 
+            (msg.payload && msg.payload.data && msg.payload.data.type)) {
+          loadRollCall();
+        }
+      } catch(e) {}
+    };
+
+    ws.onclose = () => {
+      connected = false;
+      clearInterval(heartbeat);
+      scheduleReconnect();
+    };
+
+    ws.onerror = () => {
+      ws.close();
+    };
+  }
+
+  function scheduleReconnect() {
+    clearTimeout(reconnectTimer);
+    reconnectTimer = setTimeout(connect, 5000);
+  }
+
+  connect();
 }
 
 // ── GOOGLE DRIVE UPLOAD ────────────────────────────────────
