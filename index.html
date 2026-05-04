@@ -526,6 +526,7 @@ body.is-editor .editor-only-input { pointer-events: auto; opacity: 1; }
   }
 
 </style>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
 
@@ -785,12 +786,16 @@ body.is-editor .editor-only-input { pointer-events: auto; opacity: 1; }
         <div class="committee-role">Class Throwback Video</div>
         <div class="committee-person">Apyang &amp; Marneh</div>
         <div class="committee-note" style="margin-top:6px;">Upload your college photos &amp; videos — these will be collected for the throwback video.</div>
-        <div id="uploadArea" style="margin-top:10px;border:1px dashed rgba(26,18,8,0.25);padding:16px;text-align:center;background:var(--paper);">
-          <div style="font-size:11px;color:rgba(26,18,8,0.45);margin-bottom:8px;">📸 Drop files here or click to select</div>
+        <div id="uploadArea" style="margin-top:10px;border:1px dashed rgba(26,18,8,0.25);padding:20px;text-align:center;background:var(--paper);">
+          <div style="font-size:11px;color:rgba(26,18,8,0.45);margin-bottom:12px;line-height:1.6;">📸 Upload your college throwback photos &amp; videos.<br>They'll go straight into our shared Google Drive folder.</div>
           <input type="file" id="throwbackUpload" multiple accept="image/*,video/*" style="display:none;" onchange="handleUpload(this)">
-          <button type="button" onclick="document.getElementById('throwbackUpload').click()" style="background:var(--ink);color:var(--paper);border:none;padding:7px 20px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.15em;cursor:pointer;">Select Files</button>
-          <div id="uploadStatus" style="margin-top:8px;font-size:11px;color:var(--sage);"></div>
-          <div id="uploadList" style="margin-top:8px;font-size:11px;text-align:left;"></div>
+          <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+            <button type="button" id="driveSignInBtn" onclick="signInAndUpload()" style="background:var(--ink);color:var(--paper);border:none;padding:8px 20px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.15em;cursor:pointer;transition:background 0.15s;">📁 Sign in with Google to Upload</button>
+            <button type="button" id="driveSelectBtn" onclick="document.getElementById('throwbackUpload').click()" style="display:none;background:var(--sage);color:white;border:none;padding:8px 20px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.15em;cursor:pointer;">Select Files</button>
+          </div>
+          <div id="driveUserBadge" style="margin-top:8px;font-size:11px;color:var(--sage);display:none;"></div>
+          <div id="uploadStatus" style="margin-top:10px;font-size:11px;color:var(--sage);text-align:left;"></div>
+          <div id="uploadList" style="margin-top:6px;font-size:11px;text-align:left;"></div>
         </div>
       </div>
       <div class="ent-section">
@@ -1295,15 +1300,99 @@ async function submitHype() {
   loadHype();
 }
 
-// Upload stub
-function handleUpload(input) {
-  const status = document.getElementById('uploadStatus');
-  const list = document.getElementById('uploadList');
+// ── GOOGLE DRIVE UPLOAD ────────────────────────────────────
+const GD_CLIENT_ID = '74852158092-1pt5lup8o1f0p5bgccv19ne6pqmvajo7.apps.googleusercontent.com';
+const GD_FOLDER_ID = '1SPXhPIbyTkjgBAgHNfmCOYlJk3b2KEXx';
+const GD_SCOPE = 'https://www.googleapis.com/auth/drive.file';
+let gdAccessToken = null;
+let gdTokenClient = null;
+
+function initGoogleDrive() {
+  if (!window.google) return;
+  gdTokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: GD_CLIENT_ID,
+    scope: GD_SCOPE,
+    callback: (resp) => {
+      if (resp.error) {
+        setUploadStatus('Google sign-in failed: ' + resp.error, true);
+        return;
+      }
+      gdAccessToken = resp.access_token;
+      const badge = document.getElementById('driveUserBadge');
+      if (badge) { badge.textContent = '✓ Signed in — select your files!'; badge.style.display = 'block'; }
+      const signInBtn = document.getElementById('driveSignInBtn');
+      const selectBtn = document.getElementById('driveSelectBtn');
+      if (signInBtn) signInBtn.style.display = 'none';
+      if (selectBtn) selectBtn.style.display = 'inline-block';
+      document.getElementById('throwbackUpload').click();
+    }
+  });
+}
+
+function signInAndUpload() {
+  if (!gdTokenClient) { initGoogleDrive(); }
+  if (!gdTokenClient) { setUploadStatus('Google sign-in not ready yet — try again in a moment.', true); return; }
+  if (gdAccessToken) {
+    document.getElementById('throwbackUpload').click();
+  } else {
+    gdTokenClient.requestAccessToken({ prompt: 'consent' });
+  }
+}
+
+async function handleUpload(input) {
   const files = Array.from(input.files);
   if (!files.length) return;
-  status.textContent = files.length + ' file(s) selected — Google Drive upload coming in next update.';
-  list.innerHTML = files.map(f => '<div style="padding:2px 0;border-bottom:1px solid rgba(26,18,8,0.1);">📎 ' + f.name + ' <span style="color:rgba(26,18,8,0.35);">(' + (f.size/1024).toFixed(0) + ' KB)</span></div>').join('');
+  if (!gdAccessToken) { setUploadStatus('Please sign in with Google first.', true); return; }
+
+  const status = document.getElementById('uploadStatus');
+  const list = document.getElementById('uploadList');
+  list.innerHTML = '';
+  setUploadStatus('Uploading ' + files.length + ' file(s)...');
+
+  let done = 0;
+  for (const file of files) {
+    const row = document.createElement('div');
+    row.style.cssText = 'padding:4px 0;border-bottom:1px solid rgba(26,18,8,0.08);display:flex;justify-content:space-between;align-items:center;';
+    row.innerHTML = '<span>📎 ' + file.name + ' <span style="color:rgba(26,18,8,0.35);">(' + (file.size/1024).toFixed(0) + ' KB)</span></span><span id="row-' + encodeURIComponent(file.name) + '" style="color:var(--gold);font-size:10px;">uploading...</span>';
+    list.appendChild(row);
+
+    try {
+      await uploadFileToDrive(file);
+      const indicator = document.getElementById('row-' + encodeURIComponent(file.name));
+      if (indicator) { indicator.textContent = '✓ done'; indicator.style.color = 'var(--sage)'; }
+      done++;
+    } catch(e) {
+      const indicator = document.getElementById('row-' + encodeURIComponent(file.name));
+      if (indicator) { indicator.textContent = '✗ failed'; indicator.style.color = 'var(--rust)'; }
+    }
+  }
+
+  setUploadStatus('✓ ' + done + ' of ' + files.length + ' file(s) uploaded to Google Drive!');
+  input.value = '';
 }
+
+async function uploadFileToDrive(file) {
+  const meta = JSON.stringify({ name: (currentUser || 'unknown') + '_' + file.name, parents: [GD_FOLDER_ID] });
+  const form = new FormData();
+  form.append('metadata', new Blob([meta], { type: 'application/json' }));
+  form.append('file', file);
+
+  const res = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
+    method: 'POST',
+    headers: { Authorization: 'Bearer ' + gdAccessToken },
+    body: form
+  });
+  if (!res.ok) throw new Error('Upload failed: ' + res.status);
+  return res.json();
+}
+
+function setUploadStatus(msg, isError) {
+  const el = document.getElementById('uploadStatus');
+  if (el) { el.textContent = msg; el.style.color = isError ? 'var(--rust)' : 'var(--sage)'; }
+}
+
+// Init GDrive once GIS library loads
+window.addEventListener('load', () => { setTimeout(initGoogleDrive, 1000); });
 </script>
 </body>
 </html>
