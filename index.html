@@ -2033,13 +2033,13 @@ async function showHintChart(key) {
   // Vibe label based on distribution
   let vibe = '';
   if (sorted.length === 1) {
-    vibe = '— unanimous. 👀';
+    vibe = "— unanimous. 👀";
   } else if (sorted[0][1] >= max * 0.7) {
-    vibe = '— there's a clear frontrunner.';
+    vibe = "— there's a clear frontrunner.";
   } else if (sorted.length >= 4 && sorted[0][1] === sorted[sorted.length-1][1]) {
-    vibe = '— completely split. Nobody agrees.';
+    vibe = "— completely split. Nobody agrees.";
   } else {
-    vibe = '— it's closer than you think.';
+    vibe = "— it's closer than you think.";
   }
 
   chart.innerHTML = myVoteHtml +
