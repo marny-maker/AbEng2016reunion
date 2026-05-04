@@ -943,10 +943,66 @@ body.is-editor .editor-only-input { pointer-events: auto; opacity: 1; }
     .bf-overlay-inner { margin: 20px auto 40px; }
   }
 
+  /* ── Batch Files Ribbon ──────────────────────────────────── */
+  .bf-ribbon-wrap {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 120px;
+    height: 120px;
+    overflow: hidden;
+    z-index: 999;
+    pointer-events: none;
+  }
+  .bf-ribbon {
+    position: absolute;
+    top: 22px;
+    right: -36px;
+    width: 160px;
+    background: #b8860b;
+    color: #0f0d09;
+    text-align: center;
+    transform: rotate(45deg);
+    transform-origin: center;
+    padding: 7px 0 6px;
+    cursor: pointer;
+    pointer-events: all;
+    transition: background 0.15s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  }
+  .bf-ribbon:hover { background: #d4a017; }
+  .bf-ribbon-line1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 9px;
+    font-weight: 700;
+    font-style: italic;
+    letter-spacing: 0.05em;
+    line-height: 1.2;
+    display: block;
+  }
+  .bf-ribbon-line2 {
+    font-family: 'DM Mono', monospace;
+    font-size: 7.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.75;
+    display: block;
+    margin-top: 1px;
+  }
+
 </style>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
+
+
+<!-- Persistent Batch Files ribbon — shown on S1 and S2 only -->
+<div class="bf-ribbon-wrap" id="bfRibbonWrap">
+  <div class="bf-ribbon" onclick="enterBatchFiles()">
+    <span class="bf-ribbon-line1">The Batch Files</span>
+    <span class="bf-ribbon-line2">Vote Now</span>
+  </div>
+</div>
 
 <div class="site-header">
   <div class="eyebrow">AB English · Class Reunion 2026</div>
@@ -1820,7 +1876,7 @@ function setUploadStatus(msg, isError) {
 window.addEventListener('load', () => { setTimeout(initGoogleDrive, 1000); });
 
 // ── THE BATCH FILES ─────────────────────────────────────────
-const BF_AWARDS = {'most_silent': {'title': 'Most Silent', 'desc': 'Was physically present for four years. Verbally? Unconfirmed. Their attendance record says they were there. Their voice? A mystery the linguistics department could not solve.', 'num': '01'}, 'most_makeup_ready': {'title': 'Most Make-up Ready', 'desc': 'Arrived at 7am looking like a photoshoot. Left at 5pm looking like a photoshoot. Class pictures, oral exams, random Tuesday — always ready. The rest of us were just in the background.', 'num': '02'}, 'student_liaison': {'title': 'The Student Liaison', 'desc': "The diplomat who negotiated class cancellations on everyone's behalf. Walked into the professor's office with nothing but charm and a rehearsed excuse. Walked out with a free period. We owe them everything.", 'num': '03'}, 'recitation_mvp': {'title': 'The Recitation MVP', 'desc': 'First to raise a hand, even when they had no idea what the answer was. Confidence unmatched. The professor called on them anyway. It worked out more than it should have.', 'num': '04'}, 'thesis_survivor': {'title': 'The Last-Minute Thesis Survivor', 'desc': "Submitted at 11:58pm, passed with flying colors. We don't talk about what happened between 10pm and 11:57. What we know is: they made it. And they looked fine the next day.", 'num': '05'}, 'creative_excuse': {'title': 'Most Creative Excuse for an Absent', 'desc': 'A rotating hall of legends. A funeral every midterms. A mystery illness that only struck on reporting days. The creativity was, objectively, more impressive than some of the outputs.', 'num': '06'}, 'human_recorder': {'title': 'The Human Recorder', 'desc': "Always had the notes, the readings, the handouts, the past exams. The class would not have graduated without them. They probably still have the files. They're too kind to charge for them.", 'num': '07'}, 'gc_moderator': {'title': 'The GC Moderator', 'desc': "Created the GC. Kept it alive, organized, and on-topic. Sent reminders nobody asked for but everyone needed. The class literally could not function without this person's next message.", 'num': '08'}, 'read_the_novel': {'title': 'Most Likely to Actually Read the Novel', 'desc': 'And then explain it to everyone five minutes before the oral exam. Voluntarily. With genuine enthusiasm. While the rest of us were still on the back cover summary.', 'num': '09'}, 'sleeper_agent': {'title': 'The Sleeper Agent', 'desc': 'Appeared to be asleep for four years. Got grades nobody expected. Still undefeated. The most dangerous person in any classroom: the one you underestimate.', 'num': '10'}, 'prof_whisperer': {'title': 'The Professor Whisperer', 'desc': "Had a natural gift for making any professor like them enough to extend deadlines, bump grades, or forget attendance entirely. We still don't know exactly what they said. We're grateful they said it.", 'num': '11'}, 'walking_thesaurus': {'title': 'The Walking Thesaurus', 'desc': 'Could not send a simple message without it reading like a literary essay. "I concur with the aforementioned sentiment regarding the scheduling of our proposed assembly" in the GC at 9am. Every time.', 'num': '12'}, 'grammar_police': {'title': 'Most Likely to Correct Your Grammar in a Casual Conversation', 'desc': 'And did it gently enough that you couldn\'t even be mad. A light touch. A raised eyebrow. A quiet "I think you mean \'whom\'." You thanked them. You hated that you thanked them.', 'num': '13'}, 'liked_rizal': {'title': 'The One Who Actually Liked the Required Reading', 'desc': 'Read Rizal voluntarily. Asked follow-up questions. Had opinions about Noli Me Tangere that went beyond "it was long." Beloved and slightly feared.', 'num': '14'}, 'method_actor': {'title': 'The Method Actor', 'desc': 'Committed fully to every oral presentation, role-play, and dramatic reading. Theater kid energy, no theater degree. The class was their stage. Every recitation was opening night.', 'num': '15'}, 'class_mother': {'title': 'The Class Mother', 'desc': "Reminded everyone of deadlines, brought food, mediated conflicts, asked if you've eaten. Did not sign up for this role. Accepted it anyway. The class ran on their organizational energy.", 'num': '16'}, 'plot_twist': {'title': 'The Plot Twist', 'desc': 'Quiet for years, then did something completely unexpected after graduation. Nobody saw it coming. The most interesting character in the story, and they saved their arc for the sequel.', 'num': '17'}, 'most_changed': {'title': 'Most Changed (For the Better)', 'desc': "Glowed up so hard that the graduation photo looks like a different person. Ten years did something remarkable. We're all very happy about it and slightly intimidated.", 'num': '18'}, 'most_same': {'title': 'Most Exactly the Same', 'desc': "And that's a compliment. Consistent. Reliable. Exactly who they were in first year. Some people find themselves early and just stay there. Icon behavior.", 'num': '19'}, 'reunion_mvp': {'title': 'The Reunion MVP', 'desc': 'Somehow knows what everyone is up to, who got married, who moved abroad, who changed careers. A walking alumni directory. The reason this reunion is as complete as it is.', 'num': '20'}, 'journal_writer': {'title': 'Most Likely to Have Already Written This Night Into Their Journal', 'desc': "Probably has a chapter about tonight already drafted. The opening line is good. There's a metaphor in the second paragraph. They brought a pen just in case.", 'num': '21'}, 'class_sigaw': {'title': 'Class Sigaw', 'desc': "The one whose laugh you could hear from another building. From the corridor. Possibly from Cebu City. The classroom wasn't the same without it. Neither was any room they walked into.", 'num': '22'}, 'dramatic_pause': {'title': 'The Dramatic Pause', 'desc': 'Knew exactly when to stop mid-sentence for effect. During recitations. During arguments. During text messages. The three dots lasted longer than necessary. Every time. On purpose.', 'num': '23'}, 'one_take_wonder': {'title': 'The One-Take Wonder', 'desc': "Only needed to rehearse once for any oral presentation, sounded like they'd been preparing for weeks. The rest of us were on take twelve. They were already done and calm.", 'num': '24'}, 'hype_person': {'title': 'The Hype Person', 'desc': "Front row energy for everyone else's presentations, even when half asleep. The original hypebeast. Nobody bombed a report with this person in the audience. Impossible.", 'num': '25'}, 'narrator': {'title': 'The Narrator', 'desc': 'Could make a story out of anything. Going to the canteen, waiting for a jeep, a two-minute delay. Always a story. Always. The mundane became a chronicle in their hands.', 'num': '26'}, 'most_quotable': {'title': 'Most Quotable', 'desc': 'There are at least three things this person said in college that people still repeat. Without context. Out loud. In group chats. Ten years later and the line still lands.', 'num': '27'}, 'ultimo': {'title': 'The Ultimo', 'desc': 'Last to submit, last to arrive, last to leave. Chronically, peacefully, unapologetically last. Not in a rush. Never in a rush. The deadline was a suggestion.', 'num': '28'}, 'screenshot_archivist': {'title': 'The Screenshot Archivist', 'desc': 'Screenshotted everything. Has receipts going back to 2012. The GC, the complaints, the announcements, the drama. Do not cross them. They have the evidence. All of it.', 'num': '29'}};
+const BF_AWARDS = {'recitation_mvp': {'title': 'The Recitation MVP', 'desc': 'First to raise a hand, even when they had no idea what the answer was. Confidence unmatched. The professor called on them anyway. It worked out more than it should have.', 'num': '01'},  'most_makeup_ready': {'title': 'Most Make-up Ready', 'desc': 'Arrived at 7am looking like a photoshoot. Left at 5pm looking like a photoshoot. Class pictures, oral exams, random Tuesday — always ready. The rest of us were just in the background.', 'num': '02'}, 'student_liaison': {'title': 'The Student Liaison', 'desc': "The diplomat who negotiated class cancellations on everyone's behalf. Walked into the professor's office with nothing but charm and a rehearsed excuse. Walked out with a free period. We owe them everything.", 'num': '03'}, 'most_silent': {'title': 'Most Silent', 'desc': 'Was physically present for four years. Verbally? Unconfirmed. Their attendance record says they were there. Their voice? A mystery the linguistics department could not solve.', 'num': '04'}, 'thesis_survivor': {'title': 'The Last-Minute Thesis Survivor', 'desc': "Submitted at 11:58pm, passed with flying colors. We don't talk about what happened between 10pm and 11:57. What we know is: they made it. And they looked fine the next day.", 'num': '05'}, 'creative_excuse': {'title': 'Most Creative Excuse for an Absent', 'desc': 'A rotating hall of legends. A funeral every midterms. A mystery illness that only struck on reporting days. The creativity was, objectively, more impressive than some of the outputs.', 'num': '06'}, 'human_recorder': {'title': 'The Human Recorder', 'desc': "Always had the notes, the readings, the handouts, the past exams. The class would not have graduated without them. They probably still have the files. They're too kind to charge for them.", 'num': '07'}, 'gc_moderator': {'title': 'The GC Moderator', 'desc': "Created the GC. Kept it alive, organized, and on-topic. Sent reminders nobody asked for but everyone needed. The class literally could not function without this person's next message.", 'num': '08'}, 'read_the_novel': {'title': 'Most Likely to Actually Read the Novel', 'desc': 'And then explain it to everyone five minutes before the oral exam. Voluntarily. With genuine enthusiasm. While the rest of us were still on the back cover summary.', 'num': '09'}, 'sleeper_agent': {'title': 'The Sleeper Agent', 'desc': 'Appeared to be asleep for four years. Got grades nobody expected. Still undefeated. The most dangerous person in any classroom: the one you underestimate.', 'num': '10'}, 'prof_whisperer': {'title': 'The Professor Whisperer', 'desc': "Had a natural gift for making any professor like them enough to extend deadlines, bump grades, or forget attendance entirely. We still don't know exactly what they said. We're grateful they said it.", 'num': '11'}, 'walking_thesaurus': {'title': 'The Walking Thesaurus', 'desc': 'Could not send a simple message without it reading like a literary essay. "I concur with the aforementioned sentiment regarding the scheduling of our proposed assembly" in the GC at 9am. Every time.', 'num': '12'}, 'grammar_police': {'title': 'Most Likely to Correct Your Grammar in a Casual Conversation', 'desc': 'And did it gently enough that you couldn\'t even be mad. A light touch. A raised eyebrow. A quiet "I think you mean \'whom\'." You thanked them. You hated that you thanked them.', 'num': '13'}, 'liked_rizal': {'title': 'The One Who Actually Liked the Required Reading', 'desc': 'Read Rizal voluntarily. Asked follow-up questions. Had opinions about Noli Me Tangere that went beyond "it was long." Beloved and slightly feared.', 'num': '14'}, 'method_actor': {'title': 'The Method Actor', 'desc': 'Committed fully to every oral presentation, role-play, and dramatic reading. Theater kid energy, no theater degree. The class was their stage. Every recitation was opening night.', 'num': '15'}, 'class_mother': {'title': 'The Class Mother', 'desc': "Reminded everyone of deadlines, brought food, mediated conflicts, asked if you've eaten. Did not sign up for this role. Accepted it anyway. The class ran on their organizational energy.", 'num': '16'}, 'plot_twist': {'title': 'The Plot Twist', 'desc': 'Quiet for years, then did something completely unexpected after graduation. Nobody saw it coming. The most interesting character in the story, and they saved their arc for the sequel.', 'num': '17'}, 'most_changed': {'title': 'Most Changed (For the Better)', 'desc': "Glowed up so hard that the graduation photo looks like a different person. Ten years did something remarkable. We're all very happy about it and slightly intimidated.", 'num': '18'}, 'most_same': {'title': 'Most Exactly the Same', 'desc': "And that's a compliment. Consistent. Reliable. Exactly who they were in first year. Some people find themselves early and just stay there. Icon behavior.", 'num': '19'}, 'reunion_mvp': {'title': 'The Reunion MVP', 'desc': 'Somehow knows what everyone is up to, who got married, who moved abroad, who changed careers. A walking alumni directory. The reason this reunion is as complete as it is.', 'num': '20'}, 'journal_writer': {'title': 'Most Likely to Have Already Written This Night Into Their Journal', 'desc': "Probably has a chapter about tonight already drafted. The opening line is good. There's a metaphor in the second paragraph. They brought a pen just in case.", 'num': '21'}, 'class_sigaw': {'title': 'Class Sigaw', 'desc': "The one whose laugh you could hear from another building. From the corridor. Possibly from Cebu City. The classroom wasn't the same without it. Neither was any room they walked into.", 'num': '22'}, 'dramatic_pause': {'title': 'The Dramatic Pause', 'desc': 'Knew exactly when to stop mid-sentence for effect. During recitations. During arguments. During text messages. The three dots lasted longer than necessary. Every time. On purpose.', 'num': '23'}, 'one_take_wonder': {'title': 'The One-Take Wonder', 'desc': "Only needed to rehearse once for any oral presentation, sounded like they'd been preparing for weeks. The rest of us were on take twelve. They were already done and calm.", 'num': '24'}, 'hype_person': {'title': 'The Hype Person', 'desc': "Front row energy for everyone else's presentations, even when half asleep. The original hypebeast. Nobody bombed a report with this person in the audience. Impossible.", 'num': '25'}, 'narrator': {'title': 'The Narrator', 'desc': 'Could make a story out of anything. Going to the canteen, waiting for a jeep, a two-minute delay. Always a story. Always. The mundane became a chronicle in their hands.', 'num': '26'}, 'most_quotable': {'title': 'Most Quotable', 'desc': 'There are at least three things this person said in college that people still repeat. Without context. Out loud. In group chats. Ten years later and the line still lands.', 'num': '27'}, 'ultimo': {'title': 'The Ultimo', 'desc': 'Last to submit, last to arrive, last to leave. Chronically, peacefully, unapologetically last. Not in a rush. Never in a rush. The deadline was a suggestion.', 'num': '28'}, 'screenshot_archivist': {'title': 'The Screenshot Archivist', 'desc': 'Screenshotted everything. Has receipts going back to 2012. The GC, the complaints, the announcements, the drama. Do not cross them. They have the evidence. All of it.', 'num': '29'}};
 const BF_NAMES = ['Aileen', 'Apyang', 'Arjane', 'Cecil', 'Cindy', 'D-G', 'Didi', 'Ebing', 'Ekon', 'Fatima', 'Grace', 'Honey', 'Jen Bom', 'Jen Om', 'Jenny Leen', 'Jera', 'Joyce', 'Lovely', 'Marneh', 'Melanie', 'Melinda', 'Mickey', 'Mia', 'Rosegel', 'Rosemarie', 'Sarah'];
 let bfCurrentAward = null;
 let bfPendingNominee = null;
@@ -1852,6 +1908,8 @@ function enterBatchFiles() {
   document.getElementById('screen-select').style.display = 'none';
   document.getElementById('screen-main').style.display = 'none';
   document.getElementById('screen-batch').style.display = 'block';
+  const r = document.getElementById('bfRibbonWrap');
+  if (r) r.style.display = 'none';
   const lbl = document.getElementById('bfVoterLabel');
   if (lbl) lbl.textContent = currentUser || '—';
   loadMyBatchVotes();
@@ -1860,6 +1918,8 @@ function enterBatchFiles() {
 
 function exitBatchFiles() {
   document.getElementById('screen-batch').style.display = 'none';
+  const r = document.getElementById('bfRibbonWrap');
+  if (r) r.style.display = 'block';
   if (currentUser) {
     document.getElementById('screen-main').style.display = 'block';
   } else {
@@ -1939,23 +1999,53 @@ async function showHintChart(key) {
   BF_NAMES.forEach(n => counts[n] = 0);
   (rows || []).forEach(r => { if (counts[r.nominee] !== undefined) counts[r.nominee]++; });
   const max = Math.max(...Object.values(counts), 1);
+  const totalVotes = Object.values(counts).reduce((a,b)=>a+b,0);
+  // Sort by count desc, filter to those with votes
   const sorted = BF_NAMES.map(n => [n, counts[n]]).sort((a,b) => b[1]-a[1]).filter(x => x[1] > 0);
   const chart = document.getElementById('bfHintChart');
   if (!chart) return;
+
+  // Show own vote clearly above chart
+  const myPick = bfMyVotes[key];
+  const myVoteHtml = myPick
+    ? '<div style="text-align:center;margin-bottom:16px;padding:8px 16px;background:rgba(184,134,11,0.12);border:1px solid rgba(184,134,11,0.3);font-size:12px;color:#d4a017;letter-spacing:0.05em;">Your vote: <strong style="color:#f5f0e8;">' + myPick + '</strong></div>'
+    : '';
+
   if (!sorted.length) {
-    chart.innerHTML = '<div style="text-align:center;font-size:12px;color:rgba(245,240,232,0.25);padding:20px 0;">Be the first to vote for this award.</div>';
+    chart.innerHTML = myVoteHtml + '<div style="text-align:center;font-size:12px;color:rgba(245,240,232,0.25);padding:20px 0;">Be the first to vote for this award.</div>';
     return;
   }
-  chart.innerHTML = sorted.map(([name, count]) => {
+
+  // Anonymous labels: sort by votes, assign Classmate A/B/C...
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const anonRows = sorted.map(([name, count], i) => {
     const pct = Math.round(count / max * 100);
+    const label = 'Classmate ' + letters[i];
     return '<div class="bf-chart-row">' +
-      '<div class="bf-chart-label">' + name + '</div>' +
+      '<div class="bf-chart-label" style="font-size:10px;color:rgba(245,240,232,0.3);letter-spacing:0.05em;">' + label + '</div>' +
       '<div class="bf-chart-bar-wrap">' +
         '<div class="bf-chart-bar" style="width:' + pct + '%"></div>' +
         '<div class="bf-chart-blur-overlay"></div>' +
       '</div>' +
     '</div>';
   }).join('');
+
+  // Vibe label based on distribution
+  let vibe = '';
+  if (sorted.length === 1) {
+    vibe = '— unanimous. 👀';
+  } else if (sorted[0][1] >= max * 0.7) {
+    vibe = '— there's a clear frontrunner.';
+  } else if (sorted.length >= 4 && sorted[0][1] === sorted[sorted.length-1][1]) {
+    vibe = '— completely split. Nobody agrees.';
+  } else {
+    vibe = '— it's closer than you think.';
+  }
+
+  chart.innerHTML = myVoteHtml +
+    '<div style="font-size:10px;color:rgba(245,240,232,0.2);letter-spacing:0.08em;text-align:center;margin-bottom:10px;font-style:italic;">' +
+    totalVotes + (totalVotes===1?' vote':' votes') + ' cast ' + vibe + '</div>' +
+    anonRows;
 }
 
 </script>
@@ -1976,11 +2066,11 @@ async function showHintChart(key) {
   </div>
 
   <div class="bf-grid" id="bfGrid">
-          <div class="bf-card" id="bfcard-most_silent" onclick="openAward('most_silent')">
+          <div class="bf-card" id="bfcard-recitation_mvp" onclick="openAward('recitation_mvp')">
             <div class="bf-card-check">✓</div>
             <div class="bf-card-num">Award 01</div>
-            <div class="bf-card-title">Most Silent</div>
-            <div class="bf-card-desc">Was physically present for four years. Verbally? Unconfirmed. Their attendance record says they were there. Their voice? A mystery the linguistics department could not solve.</div>
+            <div class="bf-card-title">The Recitation MVP</div>
+            <div class="bf-card-desc">First to raise a hand, even when they had no idea what the answer was. Confidence unmatched. The professor called on them anyway. It worked out more than it should have.</div>
           </div>
           <div class="bf-card" id="bfcard-most_makeup_ready" onclick="openAward('most_makeup_ready')">
             <div class="bf-card-check">✓</div>
@@ -1994,11 +2084,11 @@ async function showHintChart(key) {
             <div class="bf-card-title">The Student Liaison</div>
             <div class="bf-card-desc">The diplomat who negotiated class cancellations on everyone's behalf. Walked into the professor's office with nothing but charm and a rehearsed excuse. Walked out with a free period. We owe them everything.</div>
           </div>
-          <div class="bf-card" id="bfcard-recitation_mvp" onclick="openAward('recitation_mvp')">
+          <div class="bf-card" id="bfcard-most_silent" onclick="openAward('most_silent')">
             <div class="bf-card-check">✓</div>
             <div class="bf-card-num">Award 04</div>
-            <div class="bf-card-title">The Recitation MVP</div>
-            <div class="bf-card-desc">First to raise a hand, even when they had no idea what the answer was. Confidence unmatched. The professor called on them anyway. It worked out more than it should have.</div>
+            <div class="bf-card-title">Most Silent</div>
+            <div class="bf-card-desc">Was physically present for four years. Verbally? Unconfirmed. Their attendance record says they were there. Their voice? A mystery the linguistics department could not solve.</div>
           </div>
           <div class="bf-card" id="bfcard-thesis_survivor" onclick="openAward('thesis_survivor')">
             <div class="bf-card-check">✓</div>
@@ -2197,9 +2287,9 @@ async function showHintChart(key) {
     </div>
 
     <div class="bf-hint-wrap" id="bfHintWrap">
-      <div class="bf-hint-title">⚡ The votes are in — results blurred until reunion night</div>
+      <div class="bf-hint-title">⚡ The votes are in — results blurred until reunion party</div>
       <div id="bfHintChart"></div>
-      <div class="bf-hint-note">May 2026 · CTU Argao · The real reveal is at the party 🎉</div>
+      <div class="bf-hint-note">June 2026 · Argao, Cebu · The real reveal is at the party 🎉</div>
       <div class="bf-change-vote"><button class="bf-change-vote-btn" onclick="showNameGrid()">Change my vote for this award</button></div>
     </div>
   </div>
