@@ -525,6 +525,423 @@ body.is-editor .editor-only-input { pointer-events: auto; opacity: 1; }
     .headcount-breakdown { grid-column: 1 / -1; }
   }
 
+  /* ── SCREEN 3: THE BATCH FILES ──────────────────────────── */
+  #screen-batch {
+    display: none;
+    min-height: 100vh;
+    background: #0f0d09;
+    color: #f5f0e8;
+    font-family: 'DM Mono', monospace;
+  }
+  .bf-header {
+    text-align: center;
+    padding: 36px 24px 20px;
+    border-bottom: 1px solid rgba(245,240,232,0.1);
+    position: relative;
+  }
+  .bf-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: #b8860b;
+    margin-bottom: 8px;
+  }
+  .bf-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: #f5f0e8;
+    margin-bottom: 4px;
+  }
+  .bf-title em { font-style: italic; color: #d4a017; }
+  .bf-subtitle {
+    font-size: 11px;
+    color: rgba(245,240,232,0.4);
+    letter-spacing: 0.08em;
+    margin-bottom: 0;
+  }
+  .bf-back {
+    position: absolute;
+    left: 20px;
+    top: 36px;
+    background: transparent;
+    border: 1px solid rgba(245,240,232,0.2);
+    color: rgba(245,240,232,0.6);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    padding: 6px 14px;
+    cursor: pointer;
+    letter-spacing: 0.1em;
+    transition: all 0.15s;
+  }
+  .bf-back:hover { border-color: #b8860b; color: #d4a017; }
+  .bf-voter-badge {
+    position: absolute;
+    right: 20px;
+    top: 36px;
+    font-size: 11px;
+    color: rgba(245,240,232,0.4);
+    letter-spacing: 0.05em;
+  }
+  .bf-voter-badge strong { color: #d4a017; }
+  .bf-progress {
+    padding: 10px 24px 0;
+    max-width: 820px;
+    margin: 0 auto;
+    font-size: 11px;
+    color: rgba(245,240,232,0.35);
+    letter-spacing: 0.05em;
+  }
+  .bf-progress-bar-wrap {
+    height: 2px;
+    background: rgba(245,240,232,0.08);
+    margin-top: 6px;
+    border-radius: 1px;
+    overflow: hidden;
+  }
+  .bf-progress-bar {
+    height: 100%;
+    background: #b8860b;
+    transition: width 0.4s ease;
+    border-radius: 1px;
+  }
+
+  /* Card grid */
+  .bf-grid {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 28px 20px 60px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px;
+  }
+  .bf-card {
+    background: rgba(245,240,232,0.04);
+    border: 1px solid rgba(245,240,232,0.1);
+    padding: 18px 16px 16px;
+    cursor: pointer;
+    transition: all 0.18s;
+    position: relative;
+    user-select: none;
+  }
+  .bf-card:hover {
+    background: rgba(245,240,232,0.08);
+    border-color: rgba(184,134,11,0.5);
+    transform: translateY(-2px);
+  }
+  .bf-card.voted {
+    border-color: #5a6e4a;
+    background: rgba(90,110,74,0.1);
+  }
+  .bf-card-check {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    width: 20px;
+    height: 20px;
+    background: #5a6e4a;
+    border-radius: 50%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: white;
+  }
+  .bf-card.voted .bf-card-check { display: flex; }
+  .bf-card-num {
+    font-size: 10px;
+    color: rgba(245,240,232,0.25);
+    letter-spacing: 0.15em;
+    margin-bottom: 8px;
+  }
+  .bf-card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #f5f0e8;
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+  .bf-card-desc {
+    font-size: 11px;
+    color: rgba(245,240,232,0.45);
+    line-height: 1.6;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Voting overlay */
+  .bf-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    overflow-y: auto;
+  }
+  .bf-overlay.active { display: block; }
+  .bf-blur-bg {
+    position: fixed;
+    inset: 0;
+    background: rgba(10,8,5,0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .bf-overlay-inner {
+    position: relative;
+    z-index: 201;
+    max-width: 680px;
+    margin: 40px auto 60px;
+    padding: 0 20px;
+  }
+  .bf-overlay-close {
+    position: fixed;
+    top: 20px;
+    right: 24px;
+    background: rgba(245,240,232,0.08);
+    border: 1px solid rgba(245,240,232,0.15);
+    color: rgba(245,240,232,0.7);
+    font-size: 18px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all 0.15s;
+    z-index: 202;
+    line-height: 1;
+  }
+  .bf-overlay-close:hover { background: rgba(245,240,232,0.15); color: #f5f0e8; }
+  .bf-award-display {
+    text-align: center;
+    padding: 36px 20px 28px;
+    border-bottom: 1px solid rgba(245,240,232,0.08);
+    margin-bottom: 24px;
+  }
+  .bf-award-num-big {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(184,134,11,0.7);
+    margin-bottom: 12px;
+  }
+  .bf-award-title-big {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: #f5f0e8;
+    line-height: 1.2;
+    margin-bottom: 14px;
+  }
+  .bf-award-desc-big {
+    font-size: 13px;
+    color: rgba(245,240,232,0.55);
+    line-height: 1.75;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  .bf-vote-prompt {
+    text-align: center;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(245,240,232,0.35);
+    margin-bottom: 16px;
+  }
+  .bf-name-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 7px;
+    margin-bottom: 24px;
+  }
+  .bf-name-btn {
+    background: rgba(245,240,232,0.05);
+    border: 1px solid rgba(245,240,232,0.12);
+    color: rgba(245,240,232,0.8);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    padding: 10px 4px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .bf-name-btn:hover { background: rgba(184,134,11,0.2); border-color: #b8860b; color: #f5f0e8; }
+  .bf-name-btn.my-pick { background: #b8860b; border-color: #b8860b; color: #0f0d09; font-weight: 500; }
+
+  /* Confirmation popup */
+  .bf-confirm-wrap {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 300;
+    align-items: center;
+    justify-content: center;
+  }
+  .bf-confirm-wrap.active { display: flex; }
+  .bf-confirm-bg {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+  }
+  .bf-confirm-box {
+    position: relative;
+    z-index: 301;
+    background: #1a1208;
+    border: 1px solid rgba(184,134,11,0.4);
+    padding: 28px 28px 24px;
+    max-width: 380px;
+    width: 90%;
+    text-align: center;
+  }
+  .bf-confirm-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #b8860b;
+    margin-bottom: 10px;
+  }
+  .bf-confirm-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    color: #f5f0e8;
+    line-height: 1.4;
+    margin-bottom: 20px;
+  }
+  .bf-confirm-text strong { color: #d4a017; }
+  .bf-confirm-btns {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }
+  .bf-btn-confirm {
+    background: #b8860b;
+    color: #0f0d09;
+    border: none;
+    padding: 9px 24px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.15s;
+    font-weight: 500;
+  }
+  .bf-btn-confirm:hover { background: #d4a017; }
+  .bf-btn-cancel {
+    background: transparent;
+    color: rgba(245,240,232,0.5);
+    border: 1px solid rgba(245,240,232,0.15);
+    padding: 9px 24px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .bf-btn-cancel:hover { border-color: rgba(245,240,232,0.4); color: #f5f0e8; }
+
+  /* Hint chart (post-vote) */
+  .bf-hint-wrap {
+    display: none;
+    margin-top: 8px;
+    padding: 20px 0 8px;
+  }
+  .bf-hint-wrap.active { display: block; }
+  .bf-hint-title {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(245,240,232,0.3);
+    text-align: center;
+    margin-bottom: 14px;
+  }
+  .bf-chart-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .bf-chart-label {
+    font-size: 11px;
+    color: rgba(245,240,232,0.35);
+    width: 80px;
+    flex-shrink: 0;
+    text-align: right;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .bf-chart-bar-wrap {
+    flex: 1;
+    height: 22px;
+    background: rgba(245,240,232,0.04);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+  }
+  .bf-chart-bar {
+    height: 100%;
+    background: linear-gradient(90deg, rgba(184,134,11,0.6), rgba(212,160,23,0.4));
+    border-radius: 2px;
+    filter: blur(4px);
+    transition: width 0.6s ease;
+  }
+  .bf-chart-blur-overlay {
+    position: absolute;
+    inset: 0;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+  .bf-hint-note {
+    text-align: center;
+    font-size: 11px;
+    color: rgba(245,240,232,0.25);
+    font-style: italic;
+    margin-top: 14px;
+    letter-spacing: 0.03em;
+  }
+  .bf-change-vote {
+    text-align: center;
+    margin-top: 12px;
+  }
+  .bf-change-vote-btn {
+    background: transparent;
+    border: none;
+    color: rgba(184,134,11,0.6);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    letter-spacing: 0.05em;
+    padding: 4px;
+  }
+  .bf-change-vote-btn:hover { color: #b8860b; }
+
+  /* Mobile */
+  @media (max-width: 600px) {
+    .bf-grid { grid-template-columns: 1fr 1fr; gap: 8px; padding: 20px 14px 60px; }
+    .bf-card { padding: 14px 12px 12px; }
+    .bf-card-title { font-size: 13px; }
+    .bf-title { font-size: 24px; }
+    .bf-back { position: static; display: block; margin: 0 auto 16px; width: fit-content; }
+    .bf-voter-badge { position: static; text-align: center; display: block; margin-bottom: 8px; }
+    .bf-award-title-big { font-size: 22px; }
+    .bf-name-grid { grid-template-columns: repeat(3, 1fr); }
+    .bf-overlay-inner { margin: 20px auto 40px; }
+  }
+
 </style>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
@@ -584,6 +1001,12 @@ body.is-editor .editor-only-input { pointer-events: auto; opacity: 1; }
     <span style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--rust);">⏳ Voting Deadline</span>
     <span style="font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:var(--ink);">Friday, May 8, 2026</span>
     <span style="font-size:11px;color:rgba(26,18,8,0.45);">Vote on date &amp; venue before then!</span>
+  </div>
+
+  <div style="background:rgba(184,134,11,0.08);border-bottom:1px solid rgba(184,134,11,0.15);padding:10px 24px;text-align:center;">
+    <span style="font-size:12px;color:rgba(245,240,232,0.0);display:none;">.</span>
+    <span style="font-size:12px;color:rgba(26,18,8,0.55);">Can't make it? You still have unfinished business. </span>
+    <span onclick="enterBatchFiles()" style="font-size:12px;color:var(--gold);text-decoration:underline;text-underline-offset:3px;cursor:pointer;font-style:italic;font-family:'Playfair Display',serif;">Vote in The Batch Files — our 10-year Class Awards.</span>
   </div>
 
   <div class="rsvp-bar" id="rsvpBar" style="display:none;">
@@ -940,7 +1363,7 @@ function selectName(name) {
   const vs = document.getElementById('venueVoteStatus');
   if (ds) ds.textContent = 'Voting as ' + name;
   if (vs) vs.textContent = 'Voting as ' + name;
-  loadDatePoll(); loadVenuePoll(); loadPledges(); loadSuggestions(); loadHype(); loadRSVP(); restoreFormFields().then(() => { hookProfCheckboxes(); loadHeadcount(); });
+  loadDatePoll(); loadVenuePoll(); loadPledges(); loadSuggestions(); loadHype(); loadRSVP(); loadMyBatchVotes(); restoreFormFields().then(() => { hookProfCheckboxes(); loadHeadcount(); });
   window.scrollTo(0, 0);
 }
 
@@ -1394,6 +1817,405 @@ function setUploadStatus(msg, isError) {
 
 // Init GDrive once GIS library loads
 window.addEventListener('load', () => { setTimeout(initGoogleDrive, 1000); });
+
+// ── THE BATCH FILES ─────────────────────────────────────────
+const BF_AWARDS = {'most_silent': {'title': 'Most Silent', 'desc': 'Was physically present for four years. Verbally? Unconfirmed. Their attendance record says they were there. Their voice? A mystery the linguistics department could not solve.', 'num': '01'}, 'most_makeup_ready': {'title': 'Most Make-up Ready', 'desc': 'Arrived at 7am looking like a photoshoot. Left at 5pm looking like a photoshoot. Class pictures, oral exams, random Tuesday — always ready. The rest of us were just in the background.', 'num': '02'}, 'student_liaison': {'title': 'The Student Liaison', 'desc': "The diplomat who negotiated class cancellations on everyone's behalf. Walked into the professor's office with nothing but charm and a rehearsed excuse. Walked out with a free period. We owe them everything.", 'num': '03'}, 'recitation_mvp': {'title': 'The Recitation MVP', 'desc': 'First to raise a hand, even when they had no idea what the answer was. Confidence unmatched. The professor called on them anyway. It worked out more than it should have.', 'num': '04'}, 'thesis_survivor': {'title': 'The Last-Minute Thesis Survivor', 'desc': "Submitted at 11:58pm, passed with flying colors. We don't talk about what happened between 10pm and 11:57. What we know is: they made it. And they looked fine the next day.", 'num': '05'}, 'creative_excuse': {'title': 'Most Creative Excuse for an Absent', 'desc': 'A rotating hall of legends. A funeral every midterms. A mystery illness that only struck on reporting days. The creativity was, objectively, more impressive than some of the outputs.', 'num': '06'}, 'human_recorder': {'title': 'The Human Recorder', 'desc': "Always had the notes, the readings, the handouts, the past exams. The class would not have graduated without them. They probably still have the files. They're too kind to charge for them.", 'num': '07'}, 'gc_moderator': {'title': 'The GC Moderator', 'desc': "Created the GC. Kept it alive, organized, and on-topic. Sent reminders nobody asked for but everyone needed. The class literally could not function without this person's next message.", 'num': '08'}, 'read_the_novel': {'title': 'Most Likely to Actually Read the Novel', 'desc': 'And then explain it to everyone five minutes before the oral exam. Voluntarily. With genuine enthusiasm. While the rest of us were still on the back cover summary.', 'num': '09'}, 'sleeper_agent': {'title': 'The Sleeper Agent', 'desc': 'Appeared to be asleep for four years. Got grades nobody expected. Still undefeated. The most dangerous person in any classroom: the one you underestimate.', 'num': '10'}, 'prof_whisperer': {'title': 'The Professor Whisperer', 'desc': "Had a natural gift for making any professor like them enough to extend deadlines, bump grades, or forget attendance entirely. We still don't know exactly what they said. We're grateful they said it.", 'num': '11'}, 'walking_thesaurus': {'title': 'The Walking Thesaurus', 'desc': 'Could not send a simple message without it reading like a literary essay. "I concur with the aforementioned sentiment regarding the scheduling of our proposed assembly" in the GC at 9am. Every time.', 'num': '12'}, 'grammar_police': {'title': 'Most Likely to Correct Your Grammar in a Casual Conversation', 'desc': 'And did it gently enough that you couldn\'t even be mad. A light touch. A raised eyebrow. A quiet "I think you mean \'whom\'." You thanked them. You hated that you thanked them.', 'num': '13'}, 'liked_rizal': {'title': 'The One Who Actually Liked the Required Reading', 'desc': 'Read Rizal voluntarily. Asked follow-up questions. Had opinions about Noli Me Tangere that went beyond "it was long." Beloved and slightly feared.', 'num': '14'}, 'method_actor': {'title': 'The Method Actor', 'desc': 'Committed fully to every oral presentation, role-play, and dramatic reading. Theater kid energy, no theater degree. The class was their stage. Every recitation was opening night.', 'num': '15'}, 'class_mother': {'title': 'The Class Mother', 'desc': "Reminded everyone of deadlines, brought food, mediated conflicts, asked if you've eaten. Did not sign up for this role. Accepted it anyway. The class ran on their organizational energy.", 'num': '16'}, 'plot_twist': {'title': 'The Plot Twist', 'desc': 'Quiet for years, then did something completely unexpected after graduation. Nobody saw it coming. The most interesting character in the story, and they saved their arc for the sequel.', 'num': '17'}, 'most_changed': {'title': 'Most Changed (For the Better)', 'desc': "Glowed up so hard that the graduation photo looks like a different person. Ten years did something remarkable. We're all very happy about it and slightly intimidated.", 'num': '18'}, 'most_same': {'title': 'Most Exactly the Same', 'desc': "And that's a compliment. Consistent. Reliable. Exactly who they were in first year. Some people find themselves early and just stay there. Icon behavior.", 'num': '19'}, 'reunion_mvp': {'title': 'The Reunion MVP', 'desc': 'Somehow knows what everyone is up to, who got married, who moved abroad, who changed careers. A walking alumni directory. The reason this reunion is as complete as it is.', 'num': '20'}, 'journal_writer': {'title': 'Most Likely to Have Already Written This Night Into Their Journal', 'desc': "Probably has a chapter about tonight already drafted. The opening line is good. There's a metaphor in the second paragraph. They brought a pen just in case.", 'num': '21'}, 'class_sigaw': {'title': 'Class Sigaw', 'desc': "The one whose laugh you could hear from another building. From the corridor. Possibly from Cebu City. The classroom wasn't the same without it. Neither was any room they walked into.", 'num': '22'}, 'dramatic_pause': {'title': 'The Dramatic Pause', 'desc': 'Knew exactly when to stop mid-sentence for effect. During recitations. During arguments. During text messages. The three dots lasted longer than necessary. Every time. On purpose.', 'num': '23'}, 'one_take_wonder': {'title': 'The One-Take Wonder', 'desc': "Only needed to rehearse once for any oral presentation, sounded like they'd been preparing for weeks. The rest of us were on take twelve. They were already done and calm.", 'num': '24'}, 'hype_person': {'title': 'The Hype Person', 'desc': "Front row energy for everyone else's presentations, even when half asleep. The original hypebeast. Nobody bombed a report with this person in the audience. Impossible.", 'num': '25'}, 'narrator': {'title': 'The Narrator', 'desc': 'Could make a story out of anything. Going to the canteen, waiting for a jeep, a two-minute delay. Always a story. Always. The mundane became a chronicle in their hands.', 'num': '26'}, 'most_quotable': {'title': 'Most Quotable', 'desc': 'There are at least three things this person said in college that people still repeat. Without context. Out loud. In group chats. Ten years later and the line still lands.', 'num': '27'}, 'ultimo': {'title': 'The Ultimo', 'desc': 'Last to submit, last to arrive, last to leave. Chronically, peacefully, unapologetically last. Not in a rush. Never in a rush. The deadline was a suggestion.', 'num': '28'}, 'screenshot_archivist': {'title': 'The Screenshot Archivist', 'desc': 'Screenshotted everything. Has receipts going back to 2012. The GC, the complaints, the announcements, the drama. Do not cross them. They have the evidence. All of it.', 'num': '29'}};
+const BF_NAMES = ['Aileen', 'Apyang', 'Arjane', 'Cecil', 'Cindy', 'D-G', 'Didi', 'Ebing', 'Ekon', 'Fatima', 'Grace', 'Honey', 'Jen Bom', 'Jen Om', 'Jenny Leen', 'Jera', 'Joyce', 'Lovely', 'Marneh', 'Melanie', 'Melinda', 'Mickey', 'Mia', 'Rosegel', 'Rosemarie', 'Sarah'];
+let bfCurrentAward = null;
+let bfPendingNominee = null;
+let bfMyVotes = {};
+
+async function loadMyBatchVotes() {
+  if (!currentUser) return;
+  const rows = await sb.get('batch_file_votes', `voter=eq.${encodeURIComponent(currentUser)}`);
+  bfMyVotes = {};
+  (rows || []).forEach(r => { bfMyVotes[r.award_key] = r.nominee; });
+  updateBatchCards();
+}
+
+function updateBatchCards() {
+  const total = Object.keys(BF_AWARDS).length;
+  const voted = Object.keys(bfMyVotes).length;
+  Object.keys(BF_AWARDS).forEach(key => {
+    const card = document.getElementById('bfcard-' + key);
+    if (card) card.classList.toggle('voted', !!bfMyVotes[key]);
+  });
+  const pct = Math.round(voted / total * 100);
+  const bar = document.getElementById('bfProgressBar');
+  const txt = document.getElementById('bfProgressText');
+  if (bar) bar.style.width = pct + '%';
+  if (txt) txt.textContent = voted + ' of ' + total + ' voted';
+}
+
+function enterBatchFiles() {
+  document.getElementById('screen-select').style.display = 'none';
+  document.getElementById('screen-main').style.display = 'none';
+  document.getElementById('screen-batch').style.display = 'block';
+  const lbl = document.getElementById('bfVoterLabel');
+  if (lbl) lbl.textContent = currentUser || '—';
+  loadMyBatchVotes();
+  window.scrollTo(0, 0);
+}
+
+function exitBatchFiles() {
+  document.getElementById('screen-batch').style.display = 'none';
+  if (currentUser) {
+    document.getElementById('screen-main').style.display = 'block';
+  } else {
+    document.getElementById('screen-select').style.display = 'block';
+  }
+  window.scrollTo(0, 0);
+}
+
+function openAward(key) {
+  const award = BF_AWARDS[key];
+  if (!award) return;
+  bfCurrentAward = key;
+  document.getElementById('bfOverlayNum').textContent = 'Award ' + award.num;
+  document.getElementById('bfOverlayTitle').textContent = award.title;
+  document.getElementById('bfOverlayDesc').textContent = award.desc;
+  // highlight existing vote
+  document.querySelectorAll('.bf-name-btn').forEach(btn => {
+    btn.classList.toggle('my-pick', btn.textContent.trim() === bfMyVotes[key]);
+  });
+  // show vote section or hint
+  if (bfMyVotes[key]) {
+    showHintChart(key);
+  } else {
+    showNameGrid();
+  }
+  document.getElementById('bfOverlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeOverlay() {
+  document.getElementById('bfOverlay').classList.remove('active');
+  document.body.style.overflow = '';
+  bfCurrentAward = null;
+}
+
+function showNameGrid() {
+  document.getElementById('bfVoteSection').style.display = 'block';
+  document.getElementById('bfHintWrap').classList.remove('active');
+}
+
+function selectNominee(name) {
+  bfPendingNominee = name;
+  const award = BF_AWARDS[bfCurrentAward];
+  document.getElementById('bfConfirmName').textContent = name;
+  document.getElementById('bfConfirmAward').textContent = award ? award.title : '—';
+  document.getElementById('bfConfirmWrap').classList.add('active');
+}
+
+function cancelVote() {
+  bfPendingNominee = null;
+  document.getElementById('bfConfirmWrap').classList.remove('active');
+}
+
+async function confirmVote() {
+  if (!currentUser || !bfCurrentAward || !bfPendingNominee) return;
+  document.getElementById('bfConfirmWrap').classList.remove('active');
+  await sb.upsert('batch_file_votes', {
+    voter: currentUser,
+    award_key: bfCurrentAward,
+    nominee: bfPendingNominee
+  });
+  bfMyVotes[bfCurrentAward] = bfPendingNominee;
+  // highlight selected
+  document.querySelectorAll('.bf-name-btn').forEach(btn => {
+    btn.classList.toggle('my-pick', btn.textContent.trim() === bfPendingNominee);
+  });
+  updateBatchCards();
+  bfPendingNominee = null;
+  showHintChart(bfCurrentAward);
+}
+
+async function showHintChart(key) {
+  document.getElementById('bfVoteSection').style.display = 'none';
+  document.getElementById('bfHintWrap').classList.add('active');
+  const rows = await sb.get('batch_file_votes', `award_key=eq.${key}`);
+  const counts = {};
+  BF_NAMES.forEach(n => counts[n] = 0);
+  (rows || []).forEach(r => { if (counts[r.nominee] !== undefined) counts[r.nominee]++; });
+  const max = Math.max(...Object.values(counts), 1);
+  const sorted = BF_NAMES.map(n => [n, counts[n]]).sort((a,b) => b[1]-a[1]).filter(x => x[1] > 0);
+  const chart = document.getElementById('bfHintChart');
+  if (!chart) return;
+  if (!sorted.length) {
+    chart.innerHTML = '<div style="text-align:center;font-size:12px;color:rgba(245,240,232,0.25);padding:20px 0;">Be the first to vote for this award.</div>';
+    return;
+  }
+  chart.innerHTML = sorted.map(([name, count]) => {
+    const pct = Math.round(count / max * 100);
+    return '<div class="bf-chart-row">' +
+      '<div class="bf-chart-label">' + name + '</div>' +
+      '<div class="bf-chart-bar-wrap">' +
+        '<div class="bf-chart-bar" style="width:' + pct + '%"></div>' +
+        '<div class="bf-chart-blur-overlay"></div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
 </script>
+
+<!-- ══ SCREEN 3: THE BATCH FILES ═════════════════════════════ -->
+<div id="screen-batch">
+  <div class="bf-header">
+    <button class="bf-back" onclick="exitBatchFiles()">← Back</button>
+    <div class="bf-eyebrow">AB English · Class of '16</div>
+    <div class="bf-title">The <em>Batch Files</em></div>
+    <div class="bf-subtitle">10-Year Class Awards · One vote per award · Results revealed at the reunion</div>
+    <div class="bf-voter-badge">Voting as <strong id="bfVoterLabel">—</strong></div>
+  </div>
+
+  <div class="bf-progress">
+    <span id="bfProgressText">0 of 29 voted</span>
+    <div class="bf-progress-bar-wrap"><div class="bf-progress-bar" id="bfProgressBar" style="width:0%"></div></div>
+  </div>
+
+  <div class="bf-grid" id="bfGrid">
+          <div class="bf-card" id="bfcard-most_silent" onclick="openAward('most_silent')">
+            <div class="bf-card-check">✓</div>
+            <div class="bf-card-num">Award 01</div>
+            <div class="bf-card-title">Most Silent</div>
+            <div class="bf-card-desc">Was physically present for four years. Verbally? Unconfirmed. Their attendance record says they were there. Their voice? A mystery the linguistics department could not solve.</div>
+          </div>
+          <div class="bf-card" id="bfcard-most_makeup_ready" onclick="openAward('most_makeup_ready')">
+            <div class="bf-card-check">✓</div>
+            <div class="bf-card-num">Award 02</div>
+            <div class="bf-card-title">Most Make-up Ready</div>
+            <div class="bf-card-desc">Arrived at 7am looking like a photoshoot. Left at 5pm looking like a photoshoot. Class pictures, oral exams, random Tuesday — always ready. The rest of us were just in the background.</div>
+          </div>
+          <div class="bf-card" id="bfcard-student_liaison" onclick="openAward('student_liaison')">
+            <div class="bf-card-check">✓</div>
+            <div class="bf-card-num">Award 03</div>
+            <div class="bf-card-title">The Student Liaison</div>
+            <div class="bf-card-desc">The diplomat who negotiated class cancellations on everyone's behalf. Walked into the professor's office with nothing but charm and a rehearsed excuse. Walked out with a free period. We owe them everything.</div>
+          </div>
+          <div class="bf-card" id="bfcard-recitation_mvp" onclick="openAward('recitation_mvp')">
+            <div class="bf-card-check">✓</div>
+            <div class="bf-card-num">Award 04</div>
+            <div class="bf-card-title">The Recitation MVP</div>
+            <div class="bf-card-desc">First to raise a hand, even when they had no idea what the answer was. Confidence unmatched. The professor called on them anyway. It worked out more than it should have.</div>
+          </div>
+          <div class="bf-card" id="bfcard-thesis_survivor" onclick="openAward('thesis_survivor')">
+            <div class="bf-card-check">✓</div>
+            <div class="bf-card-num">Award 05</div>
+            <div class="bf-card-title">The Last-Minute Thesis Survivor</div>
+            <div class="bf-card-desc">Submitted at 11:58pm, passed with flying colors. We don't talk about what happened between 10pm and 11:57. What we know is: they made it. And they looked fine the next day.</div>
+          </div>
+          <div class="bf-card" id="bfcard-creative_excuse" onclick="openAward('creative_excuse')">
+            <div class="bf-card-check">✓</div>
+            <div class="bf-card-num">Award 06</div>
+            <div class="bf-card-title">Most Creative Excuse for an Absent</div>
+            <div class="bf-card-desc">A rotating hall of legends. A funeral every midterms. A mystery illness that only struck on reporting days. The creativity was, objectively, more impressive than some of the outputs.</div>
+          </div>
+          <div class="bf-card" id="bfcard-human_recorder" onclick="openAward('human_recorder')">
+            <div class="bf-card-check">✓</div>
+            <div class="bf-card-num">Award 07</div>
+            <div class="bf-card-title">The Human Recorder</div>
+            <div class="bf-card-desc">Always had the notes, the readings, the handouts, the past exams. The class would not have graduated without them. They probably still have the files. They're too kind to charge for them.</div>
+          </div>
+          <div class="bf-card" id="bfcard-gc_moderator" onclick="openAward('gc_moderator')">
+            <div class="bf-card-check">✓</div>
+            <div class="bf-card-num">Award 08</div>
+            <div class="bf-card-title">The GC Moderator</div>
+            <div class="bf-card-desc">Created the GC. Kept it alive, organized, and on-topic. Sent reminders nobody asked for but everyone needed. The class literally could not function without this person's next message.</div>
+          </div>
+          <div class="bf-card" id="bfcard-read_the_novel" onclick="openAward('read_the_novel')">
+            <div class="bf-card-check">✓</div>
+            <div class="bf-card-num">Award 09</div>
+            <div class="bf-card-title">Most Likely to Actually Read the Novel</div>
+            <div class="bf-card-desc">And then explain it to everyone five minutes before the oral exam. Voluntarily. With genuine enthusiasm. While the rest of us were still on the back cover summary.</div>
+          </div>
+          <div class="bf-card" id="bfcard-sleeper_agent" onclick="openAward('sleeper_agent')">
+            <div class="bf-card-check">✓</div>
+            <div class="bf-card-num">Award 10</div>
+            <div class="bf-card-title">The Sleeper Agent</div>
+            <div class="bf-card-desc">Appeared to be asleep for four years. Got grades nobody expected. Still undefeated. The most dangerous person in any classroom: the one you underestimate.</div>
+          </div>
+          <div class="bf-card" id="bfcard-prof_whisperer" onclick="openAward('prof_whisperer')">
+            <div class="bf-card-check">✓</div>
+            <div class="bf-card-num">Award 11</div>
+            <div class="bf-card-title">The Professor Whisperer</div>
+            <div class="bf-card-desc">Had a natural gift for making any professor like them enough to extend deadlines, bump grades, or forget attendance entirely. We still don't know exactly what they said. We're grateful they said it.</div>
+          </div>
+          <div class="bf-card" id="bfcard-walking_thesaurus" onclick="openAward('walking_thesaurus')">
+            <div class="bf-card-check">✓</div>
+            <div class="bf-card-num">Award 12</div>
+            <div class="bf-card-title">The Walking Thesaurus</div>
+            <div class="bf-card-desc">Could not send a simple message without it reading like a literary essay. "I concur with the aforementioned sentiment regarding the scheduling of our proposed assembly" in the GC at 9am. Every time.</div>
+          </div>
+          <div class="bf-card" id="bfcard-grammar_police" onclick="openAward('grammar_police')">
+            <div class="bf-card-check">✓</div>
+            <div class="bf-card-num">Award 13</div>
+            <div class="bf-card-title">Most Likely to Correct Your Grammar in a Casual Conversation</div>
+            <div class="bf-card-desc">And did it gently enough that you couldn't even be mad. A light touch. A raised eyebrow. A quiet "I think you mean 'whom'." You thanked them. You hated that you thanked them.</div>
+          </div>
+          <div class="bf-card" id="bfcard-liked_rizal" onclick="openAward('liked_rizal')">
+            <div class="bf-card-check">✓</div>
+            <div class="bf-card-num">Award 14</div>
+            <div class="bf-card-title">The One Who Actually Liked the Required Reading</div>
+            <div class="bf-card-desc">Read Rizal voluntarily. Asked follow-up questions. Had opinions about Noli Me Tangere that went beyond "it was long." Beloved and slightly feared.</div>
+          </div>
+          <div class="bf-card" id="bfcard-method_actor" onclick="openAward('method_actor')">
+            <div class="bf-card-check">✓</div>
+            <div class="bf-card-num">Award 15</div>
+            <div class="bf-card-title">The Method Actor</div>
+            <div class="bf-card-desc">Committed fully to every oral presentation, role-play, and dramatic reading. Theater kid energy, no theater degree. The class was their stage. Every recitation was opening night.</div>
+          </div>
+          <div class="bf-card" id="bfcard-class_mother" onclick="openAward('class_mother')">
+            <div class="bf-card-check">✓</div>
+            <div class="bf-card-num">Award 16</div>
+            <div class="bf-card-title">The Class Mother</div>
+            <div class="bf-card-desc">Reminded everyone of deadlines, brought food, mediated conflicts, asked if you've eaten. Did not sign up for this role. Accepted it anyway. The class ran on their organizational energy.</div>
+          </div>
+          <div class="bf-card" id="bfcard-plot_twist" onclick="openAward('plot_twist')">
+            <div class="bf-card-check">✓</div>
+            <div class="bf-card-num">Award 17</div>
+            <div class="bf-card-title">The Plot Twist</div>
+            <div class="bf-card-desc">Quiet for years, then did something completely unexpected after graduation. Nobody saw it coming. The most interesting character in the story, and they saved their arc for the sequel.</div>
+          </div>
+          <div class="bf-card" id="bfcard-most_changed" onclick="openAward('most_changed')">
+            <div class="bf-card-check">✓</div>
+            <div class="bf-card-num">Award 18</div>
+            <div class="bf-card-title">Most Changed (For the Better)</div>
+            <div class="bf-card-desc">Glowed up so hard that the graduation photo looks like a different person. Ten years did something remarkable. We're all very happy about it and slightly intimidated.</div>
+          </div>
+          <div class="bf-card" id="bfcard-most_same" onclick="openAward('most_same')">
+            <div class="bf-card-check">✓</div>
+            <div class="bf-card-num">Award 19</div>
+            <div class="bf-card-title">Most Exactly the Same</div>
+            <div class="bf-card-desc">And that's a compliment. Consistent. Reliable. Exactly who they were in first year. Some people find themselves early and just stay there. Icon behavior.</div>
+          </div>
+          <div class="bf-card" id="bfcard-reunion_mvp" onclick="openAward('reunion_mvp')">
+            <div class="bf-card-check">✓</div>
+            <div class="bf-card-num">Award 20</div>
+            <div class="bf-card-title">The Reunion MVP</div>
+            <div class="bf-card-desc">Somehow knows what everyone is up to, who got married, who moved abroad, who changed careers. A walking alumni directory. The reason this reunion is as complete as it is.</div>
+          </div>
+          <div class="bf-card" id="bfcard-journal_writer" onclick="openAward('journal_writer')">
+            <div class="bf-card-check">✓</div>
+            <div class="bf-card-num">Award 21</div>
+            <div class="bf-card-title">Most Likely to Have Already Written This Night Into Their Journal</div>
+            <div class="bf-card-desc">Probably has a chapter about tonight already drafted. The opening line is good. There's a metaphor in the second paragraph. They brought a pen just in case.</div>
+          </div>
+          <div class="bf-card" id="bfcard-class_sigaw" onclick="openAward('class_sigaw')">
+            <div class="bf-card-check">✓</div>
+            <div class="bf-card-num">Award 22</div>
+            <div class="bf-card-title">Class Sigaw</div>
+            <div class="bf-card-desc">The one whose laugh you could hear from another building. From the corridor. Possibly from Cebu City. The classroom wasn't the same without it. Neither was any room they walked into.</div>
+          </div>
+          <div class="bf-card" id="bfcard-dramatic_pause" onclick="openAward('dramatic_pause')">
+            <div class="bf-card-check">✓</div>
+            <div class="bf-card-num">Award 23</div>
+            <div class="bf-card-title">The Dramatic Pause</div>
+            <div class="bf-card-desc">Knew exactly when to stop mid-sentence for effect. During recitations. During arguments. During text messages. The three dots lasted longer than necessary. Every time. On purpose.</div>
+          </div>
+          <div class="bf-card" id="bfcard-one_take_wonder" onclick="openAward('one_take_wonder')">
+            <div class="bf-card-check">✓</div>
+            <div class="bf-card-num">Award 24</div>
+            <div class="bf-card-title">The One-Take Wonder</div>
+            <div class="bf-card-desc">Only needed to rehearse once for any oral presentation, sounded like they'd been preparing for weeks. The rest of us were on take twelve. They were already done and calm.</div>
+          </div>
+          <div class="bf-card" id="bfcard-hype_person" onclick="openAward('hype_person')">
+            <div class="bf-card-check">✓</div>
+            <div class="bf-card-num">Award 25</div>
+            <div class="bf-card-title">The Hype Person</div>
+            <div class="bf-card-desc">Front row energy for everyone else's presentations, even when half asleep. The original hypebeast. Nobody bombed a report with this person in the audience. Impossible.</div>
+          </div>
+          <div class="bf-card" id="bfcard-narrator" onclick="openAward('narrator')">
+            <div class="bf-card-check">✓</div>
+            <div class="bf-card-num">Award 26</div>
+            <div class="bf-card-title">The Narrator</div>
+            <div class="bf-card-desc">Could make a story out of anything. Going to the canteen, waiting for a jeep, a two-minute delay. Always a story. Always. The mundane became a chronicle in their hands.</div>
+          </div>
+          <div class="bf-card" id="bfcard-most_quotable" onclick="openAward('most_quotable')">
+            <div class="bf-card-check">✓</div>
+            <div class="bf-card-num">Award 27</div>
+            <div class="bf-card-title">Most Quotable</div>
+            <div class="bf-card-desc">There are at least three things this person said in college that people still repeat. Without context. Out loud. In group chats. Ten years later and the line still lands.</div>
+          </div>
+          <div class="bf-card" id="bfcard-ultimo" onclick="openAward('ultimo')">
+            <div class="bf-card-check">✓</div>
+            <div class="bf-card-num">Award 28</div>
+            <div class="bf-card-title">The Ultimo</div>
+            <div class="bf-card-desc">Last to submit, last to arrive, last to leave. Chronically, peacefully, unapologetically last. Not in a rush. Never in a rush. The deadline was a suggestion.</div>
+          </div>
+          <div class="bf-card" id="bfcard-screenshot_archivist" onclick="openAward('screenshot_archivist')">
+            <div class="bf-card-check">✓</div>
+            <div class="bf-card-num">Award 29</div>
+            <div class="bf-card-title">The Screenshot Archivist</div>
+            <div class="bf-card-desc">Screenshotted everything. Has receipts going back to 2012. The GC, the complaints, the announcements, the drama. Do not cross them. They have the evidence. All of it.</div>
+          </div>
+  </div>
+</div>
+
+<!-- Voting overlay -->
+<div class="bf-overlay" id="bfOverlay">
+  <div class="bf-blur-bg" onclick="closeOverlay()"></div>
+  <button class="bf-overlay-close" onclick="closeOverlay()">✕</button>
+  <div class="bf-overlay-inner">
+    <div class="bf-award-display">
+      <div class="bf-award-num-big" id="bfOverlayNum">Award 01</div>
+      <div class="bf-award-title-big" id="bfOverlayTitle">Award Title</div>
+      <div class="bf-award-desc-big" id="bfOverlayDesc">Description</div>
+    </div>
+
+    <div id="bfVoteSection">
+      <div class="bf-vote-prompt">Who gets this award?</div>
+      <div class="bf-name-grid">
+          <button class="bf-name-btn" onclick="selectNominee('Aileen')">Aileen</button>
+          <button class="bf-name-btn" onclick="selectNominee('Apyang')">Apyang</button>
+          <button class="bf-name-btn" onclick="selectNominee('Arjane')">Arjane</button>
+          <button class="bf-name-btn" onclick="selectNominee('Cecil')">Cecil</button>
+          <button class="bf-name-btn" onclick="selectNominee('Cindy')">Cindy</button>
+          <button class="bf-name-btn" onclick="selectNominee('D-G')">D-G</button>
+          <button class="bf-name-btn" onclick="selectNominee('Didi')">Didi</button>
+          <button class="bf-name-btn" onclick="selectNominee('Ebing')">Ebing</button>
+          <button class="bf-name-btn" onclick="selectNominee('Ekon')">Ekon</button>
+          <button class="bf-name-btn" onclick="selectNominee('Fatima')">Fatima</button>
+          <button class="bf-name-btn" onclick="selectNominee('Grace')">Grace</button>
+          <button class="bf-name-btn" onclick="selectNominee('Honey')">Honey</button>
+          <button class="bf-name-btn" onclick="selectNominee('Jen Bom')">Jen Bom</button>
+          <button class="bf-name-btn" onclick="selectNominee('Jen Om')">Jen Om</button>
+          <button class="bf-name-btn" onclick="selectNominee('Jenny Leen')">Jenny Leen</button>
+          <button class="bf-name-btn" onclick="selectNominee('Jera')">Jera</button>
+          <button class="bf-name-btn" onclick="selectNominee('Joyce')">Joyce</button>
+          <button class="bf-name-btn" onclick="selectNominee('Lovely')">Lovely</button>
+          <button class="bf-name-btn" onclick="selectNominee('Marneh')">Marneh</button>
+          <button class="bf-name-btn" onclick="selectNominee('Melanie')">Melanie</button>
+          <button class="bf-name-btn" onclick="selectNominee('Melinda')">Melinda</button>
+          <button class="bf-name-btn" onclick="selectNominee('Mickey')">Mickey</button>
+          <button class="bf-name-btn" onclick="selectNominee('Mia')">Mia</button>
+          <button class="bf-name-btn" onclick="selectNominee('Rosegel')">Rosegel</button>
+          <button class="bf-name-btn" onclick="selectNominee('Rosemarie')">Rosemarie</button>
+          <button class="bf-name-btn" onclick="selectNominee('Sarah')">Sarah</button>
+      </div>
+    </div>
+
+    <div class="bf-hint-wrap" id="bfHintWrap">
+      <div class="bf-hint-title">⚡ The votes are in — results blurred until reunion night</div>
+      <div id="bfHintChart"></div>
+      <div class="bf-hint-note">May 2026 · CTU Argao · The real reveal is at the party 🎉</div>
+      <div class="bf-change-vote"><button class="bf-change-vote-btn" onclick="showNameGrid()">Change my vote for this award</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- Confirmation popup -->
+<div class="bf-confirm-wrap" id="bfConfirmWrap">
+  <div class="bf-confirm-bg" onclick="cancelVote()"></div>
+  <div class="bf-confirm-box">
+    <div class="bf-confirm-label">Confirm your vote</div>
+    <div class="bf-confirm-text">Vote <strong id="bfConfirmName">—</strong><br>for <strong id="bfConfirmAward">—</strong>?</div>
+    <div class="bf-confirm-btns">
+      <button class="bf-btn-cancel" onclick="cancelVote()">Cancel</button>
+      <button class="bf-btn-confirm" onclick="confirmVote()">Lock it in ✓</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
