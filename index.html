@@ -2,6 +2,18 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+  <meta property="og:title" content="AB English — Class of '16 Reunion">
+  <meta property="og:description" content="Then &amp; Now: Celebrating 10 Years of Turning Pages · Vote on date, venue, and The Batch Files class awards!">
+  <meta property="og:image" content="https://ab-eng2016reunion.vercel.app/og_thumbnail.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ab-eng2016reunion.vercel.app">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="AB English — Class of '16 Reunion">
+  <meta name="twitter:description" content="Then &amp; Now: Celebrating 10 Years of Turning Pages">
+  <meta name="twitter:image" content="https://ab-eng2016reunion.vercel.app/og_thumbnail.png">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AB English '16 — Reunion</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
@@ -1189,11 +1201,7 @@ body.is-editor .editor-only-input { pointer-events: auto; opacity: 1; }
     <span>Signed in as <strong id="userLabel">—</strong></span>
     <span class="switch-btn" onclick="switchUser()">Not you? Switch</span>
   </div>
-  <div style="background:rgba(139,58,42,0.07);border-bottom:1px solid rgba(139,58,42,0.18);padding:10px 24px;display:flex;align-items:center;justify-content:center;gap:16px;text-align:center;">
-    <span style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--rust);">⏳ Voting Deadline</span>
-    <span style="font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:var(--ink);">Friday, May 8, 2026</span>
-    <span style="font-size:11px;color:rgba(26,18,8,0.45);">Vote on date &amp; venue before then!</span>
-  </div>
+
 
   <div style="background:rgba(184,134,11,0.08);border-bottom:1px solid rgba(184,134,11,0.15);padding:10px 24px;text-align:center;">
     <span style="font-size:12px;color:rgba(245,240,232,0.0);display:none;">.</span>
@@ -1235,25 +1243,58 @@ body.is-editor .editor-only-input { pointer-events: auto; opacity: 1; }
     </div>
   </div>
 
+
+  <div style="background:rgba(184,134,11,0.08);border-bottom:1px solid rgba(184,134,11,0.15);padding:10px 24px;text-align:center;">
+    <span style="font-size:12px;color:rgba(26,18,8,0.55);">Can't make it? You still have unfinished business. </span>
+    <span onclick="enterBatchFiles()" style="font-size:12px;color:var(--gold);text-decoration:underline;text-underline-offset:3px;cursor:pointer;font-style:italic;font-family:'Playfair Display',serif;">Vote in The Batch Files — our 10-year Class Awards.</span>
+  </div>
+
+  <div class="rsvp-bar" id="rsvpBar" style="display:none;">
+    <span class="rsvp-q">Are you going?</span>
+    <div class="rsvp-opts">
+      <button type="button" class="rsvp-btn" id="rsvp-yes" onclick="setRSVP('yes')">✓ Yes, I'll be there!</button>
+      <button type="button" class="rsvp-btn" id="rsvp-tent" onclick="setRSVP('tentative')">🤔 Tentatively</button>
+      <button type="button" class="rsvp-btn" id="rsvp-no" onclick="setRSVP('no')">✗ Can't make it</button>
+    </div>
+    <div class="rsvp-divider"></div>
+    <span class="rsvp-q">Bringing guests?</span>
+    <div class="rsvp-plus-opts">
+      <button type="button" class="rsvp-plus-btn" id="rsvp-plus0" onclick="setPlus('0')">Just me</button>
+      <button type="button" class="rsvp-plus-btn" id="rsvp-plus1" onclick="setPlus('1')">+1</button>
+      <button type="button" class="rsvp-plus-btn" id="rsvp-plus2" onclick="setPlus('2')">+2</button>
+    </div>
+  </div>
+
+  <div class="headcount-bar" id="headcountBar">
+    <div class="headcount-inner">
+      <div>
+        <div class="headcount-label">Total Expected</div>
+        <div class="headcount-total" id="hcTotal">—<span>pax</span></div>
+      </div>
+      <div class="headcount-breakdown" id="hcBreakdown">
+        <div class="hc-pill going">Going: <strong id="hcGoing">0</strong> AB + <strong id="hcGoingGuests">0</strong> guests</div>
+        <div class="hc-pill tent">Tentative: <strong id="hcTent">0</strong> AB + <strong id="hcTentGuests">0</strong> guests</div>
+        <div class="hc-pill no">Can't make it: <strong id="hcNo">0</strong></div>
+      </div>
+      <div class="headcount-guests">
+        <div class="headcount-guests-num" id="hcProf">—</div>
+        <div class="headcount-guests-label">Profs confirmed</div>
+      </div>
+    </div>
+  </div>
   <div class="page">
 
     <!-- 01 EVENT BASICS -->
     <div class="section">
       <div class="section-header"><span class="section-num">01</span><span class="section-title">Event Basics</span></div>
 
-      <div class="poll-block">
-        <div class="poll-header-row">
-          <label class="poll-main-label">Vote for a Date</label>
-          <span class="register-status" id="dateVoteStatus"></span>
+      <div style="background:var(--sage);padding:18px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:4px;">
+        <div>
+          <div style="font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:rgba(245,240,232,0.7);margin-bottom:4px;">✓ Date Confirmed</div>
+          <div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:#f5f0e8;line-height:1.1;">Saturday, June 27, 2026</div>
+          <div style="font-size:11px;color:rgba(245,240,232,0.65);margin-top:3px;letter-spacing:0.05em;">Mark your calendars — it's official!</div>
         </div>
-        <div style="font-size:11px;color:rgba(26,18,8,0.5);font-style:italic;margin-bottom:12px;padding:9px 12px;background:rgba(184,134,11,0.06);border-left:2px solid var(--gold);line-height:1.7;">
-          Pick whichever date(s) work for you — you can vote on more than one! The one with the most votes wins. Deadline to vote is <strong style="color:var(--ink);font-style:normal;">Friday, May 8</strong>, so don't sleep on it. 😄
-        </div>
-        <div class="poll-options">
-          <div class="poll-option" id="opt-jun13"><div class="poll-option-top"><div class="poll-date-info"><span class="poll-day">Saturday</span><span class="poll-date-big">June 13</span><span class="poll-year">2026</span></div><div class="poll-right"><span class="poll-count" id="count-jun13">0 votes</span><button type="button" class="btn-vote" id="vbtn-jun13" onclick="castDateVote('jun13')" disabled>Vote</button></div></div><div class="poll-bar-wrap"><div class="poll-bar" id="bar-jun13"></div></div><div class="poll-voters" id="voters-jun13"></div></div>
-          <div class="poll-option" id="opt-jun20"><div class="poll-option-top"><div class="poll-date-info"><span class="poll-day">Saturday</span><span class="poll-date-big">June 20</span><span class="poll-year">2026</span></div><div class="poll-right"><span class="poll-count" id="count-jun20">0 votes</span><button type="button" class="btn-vote" id="vbtn-jun20" onclick="castDateVote('jun20')" disabled>Vote</button></div></div><div class="poll-bar-wrap"><div class="poll-bar" id="bar-jun20"></div></div><div class="poll-voters" id="voters-jun20"></div></div>
-          <div class="poll-option" id="opt-jun27"><div class="poll-option-top"><div class="poll-date-info"><span class="poll-day">Saturday</span><span class="poll-date-big">June 27</span><span class="poll-year">2026</span></div><div class="poll-right"><span class="poll-count" id="count-jun27">0 votes</span><button type="button" class="btn-vote" id="vbtn-jun27" onclick="castDateVote('jun27')" disabled>Vote</button></div></div><div class="poll-bar-wrap"><div class="poll-bar" id="bar-jun27"></div></div><div class="poll-voters" id="voters-jun27"></div></div>
-        </div>
+        <div style="font-size:40px;opacity:0.35;">📅</div>
       </div>
 
       <div class="field-row">
@@ -1278,20 +1319,16 @@ body.is-editor .editor-only-input { pointer-events: auto; opacity: 1; }
     <div class="section">
       <div class="section-header"><span class="section-num">02</span><span class="section-title">Venue</span></div>
       <div class="ornament">— ✦ —</div>
-      <div class="poll-block">
-        <div class="poll-header-row"><label class="poll-main-label">Vote for a Venue</label><span class="register-status" id="venueVoteStatus"></span></div>
-        <div style="font-size:11px;color:rgba(26,18,8,0.5);font-style:italic;margin-bottom:12px;padding:9px 12px;background:rgba(184,134,11,0.06);border-left:2px solid var(--gold);line-height:1.7;">
-          Same deal — vote for all the venues you're okay with, not just your top pick. The organizers will cross-check availability and cost before locking it in. Each venue has a link — tap View Page to check them out before voting!
+      <div style="background:var(--rust);padding:18px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
+        <div>
+          <div style="font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:rgba(245,240,232,0.7);margin-bottom:4px;">✓ Venue Confirmed</div>
+          <div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:#f5f0e8;line-height:1.1;">Commune, Argao</div>
+          <div style="font-size:11px;color:rgba(245,240,232,0.65);margin-top:3px;letter-spacing:0.05em;">We're going to the best spot in Argao. &nbsp;·&nbsp; <a href="https://www.facebook.com/p/Commune-Argao-100075971657408/" target="_blank" style="color:rgba(245,240,232,0.8);text-decoration:underline;text-underline-offset:2px;">View Page ↗</a></div>
         </div>
-        <div class="poll-options">
-          <div class="poll-option" id="vopt-v1"><div class="poll-option-top"><div style="flex:1;"><div style="display:flex;align-items:baseline;gap:8px;margin-bottom:3px;"><span class="poll-day">Option A</span><span style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;">Commune</span></div><div style="font-size:11px;color:rgba(26,18,8,0.5);">Argao, Cebu &nbsp;·&nbsp; <a href="https://www.facebook.com/p/Commune-Argao-100075971657408/" target="_blank" style="color:var(--gold);font-size:10px;">View Page ↗</a></div><div style="margin-top:8px;display:flex;flex-direction:column;gap:6px;"><div style="display:flex;align-items:center;gap:10px;"><span style="font-size:10px;color:var(--gold);letter-spacing:0.1em;text-transform:uppercase;flex-shrink:0;">Cost</span><input type="text" class="editor-only-input" name="v1_cost" placeholder="e.g. ₱5,000" onblur="saveField('v1_cost', this.value)" style="max-width:140px;"></div><div><span style="font-size:10px;color:var(--gold);letter-spacing:0.1em;text-transform:uppercase;display:block;margin-bottom:3px;">Inclusions</span><textarea class="editor-only-input" name="v1_inc" placeholder="• Tables &amp; chairs&#10;• Sound system&#10;• Add more..." onblur="saveField('v1_inc', this.value)" rows="3" style="width:100%;font-family:'DM Mono',monospace;font-size:11px;color:var(--ink);background:transparent;border:1px dashed rgba(26,18,8,0.2);padding:5px 7px;resize:vertical;outline:none;line-height:1.6;pointer-events:auto;"></textarea></div></div></div><div class="poll-right" style="flex-shrink:0;margin-left:12px;"><span class="poll-count" id="vcount-v1">0 votes</span><button type="button" class="btn-vote" id="vvbtn-v1" onclick="castVenueVote('v1')" disabled>Vote</button></div></div><div class="poll-bar-wrap"><div class="poll-bar" id="vbar-v1"></div></div><div class="poll-voters" id="vvoters-v1"></div></div>
-          <div class="poll-option" id="vopt-v2"><div class="poll-option-top"><div style="flex:1;"><div style="display:flex;align-items:baseline;gap:8px;margin-bottom:3px;"><span class="poll-day">Option B</span><span style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;">Sea Breeze</span> &nbsp;·&nbsp; <a href="https://www.instagram.com/explore/locations/447842183/sea-breeze-resort-looc-argao-cebu/" target="_blank" style="color:var(--gold);font-size:10px;text-decoration:none;">View Page ↗</a></div><div style="margin-top:8px;display:flex;flex-direction:column;gap:6px;"><div style="display:flex;align-items:center;gap:10px;"><span style="font-size:10px;color:var(--gold);letter-spacing:0.1em;text-transform:uppercase;flex-shrink:0;">Cost</span><input type="text" class="editor-only-input" name="v2_cost" placeholder="e.g. ₱5,000" onblur="saveField('v2_cost', this.value)" style="max-width:140px;"></div><div><span style="font-size:10px;color:var(--gold);letter-spacing:0.1em;text-transform:uppercase;display:block;margin-bottom:3px;">Inclusions</span><textarea class="editor-only-input" name="v2_inc" placeholder="• Tables &amp; chairs&#10;• Sound system&#10;• Add more..." onblur="saveField('v2_inc', this.value)" rows="3" style="width:100%;font-family:'DM Mono',monospace;font-size:11px;color:var(--ink);background:transparent;border:1px dashed rgba(26,18,8,0.2);padding:5px 7px;resize:vertical;outline:none;line-height:1.6;pointer-events:auto;"></textarea></div></div></div><div class="poll-right" style="flex-shrink:0;margin-left:12px;"><span class="poll-count" id="vcount-v2">0 votes</span><button type="button" class="btn-vote" id="vvbtn-v2" onclick="castVenueVote('v2')" disabled>Vote</button></div></div><div class="poll-bar-wrap"><div class="poll-bar" id="vbar-v2"></div></div><div class="poll-voters" id="vvoters-v2"></div></div>
-          <div class="poll-option" id="vopt-v3"><div class="poll-option-top"><div style="flex:1;"><div style="display:flex;align-items:baseline;gap:8px;margin-bottom:3px;"><span class="poll-day">Option C</span><span style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;">Curbada</span> &nbsp;·&nbsp; <a href="https://www.facebook.com/curbadabythesea/" target="_blank" style="color:var(--gold);font-size:10px;text-decoration:none;">View Page ↗</a></div><div style="margin-top:8px;display:flex;flex-direction:column;gap:6px;"><div style="display:flex;align-items:center;gap:10px;"><span style="font-size:10px;color:var(--gold);letter-spacing:0.1em;text-transform:uppercase;flex-shrink:0;">Cost</span><input type="text" class="editor-only-input" name="v3_cost" placeholder="e.g. ₱5,000" onblur="saveField('v3_cost', this.value)" style="max-width:140px;"></div><div><span style="font-size:10px;color:var(--gold);letter-spacing:0.1em;text-transform:uppercase;display:block;margin-bottom:3px;">Inclusions</span><textarea class="editor-only-input" name="v3_inc" placeholder="• Tables &amp; chairs&#10;• Sound system&#10;• Add more..." onblur="saveField('v3_inc', this.value)" rows="3" style="width:100%;font-family:'DM Mono',monospace;font-size:11px;color:var(--ink);background:transparent;border:1px dashed rgba(26,18,8,0.2);padding:5px 7px;resize:vertical;outline:none;line-height:1.6;pointer-events:auto;"></textarea></div></div></div><div class="poll-right" style="flex-shrink:0;margin-left:12px;"><span class="poll-count" id="vcount-v3">0 votes</span><button type="button" class="btn-vote" id="vvbtn-v3" onclick="castVenueVote('v3')" disabled>Vote</button></div></div><div class="poll-bar-wrap"><div class="poll-bar" id="vbar-v3"></div></div><div class="poll-voters" id="vvoters-v3"></div></div>
-        </div>
+        <div style="font-size:40px;opacity:0.35;">📍</div>
       </div>
-    </div>
 
-    <!-- 03 ACTIVITIES -->
+    <!-- 03 ACTIVITIES & PROGRAM -->
     <div class="section">
       <div class="section-header"><span class="section-num">03</span><span class="section-title">Activities &amp; Program</span></div>
       <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">Confirmed Activities</div>
@@ -1304,7 +1341,7 @@ body.is-editor .editor-only-input { pointer-events: auto; opacity: 1; }
         <div class="activity-item"><div class="activity-bullet"></div><div class="activity-text">Raffle Draw 🎟</div></div>
       </div>
       <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;">Program Flow</div>
-      <div style="font-size:11px;color:rgba(26,18,8,0.5);font-style:italic;margin-bottom:10px;line-height:1.7;">This is still a rough flow — timings and order may shift closer to the event. More details to follow once the date and venue are locked in! 📋</div>
+      <div style="font-size:11px;color:rgba(26,18,8,0.5);font-style:italic;margin-bottom:10px;line-height:1.7;">This is still a rough flow — timings and order may shift closer to the event. More details to follow! 📋</div>
       <div>
         <div class="prog-time">8:00 – 10:00 AM</div><div class="prog-items"><div class="prog-item">Prep time / Arrival / Registration</div></div><div class="prog-separator"></div>
         <div class="prog-time">10:00 – 10:30 AM</div><div class="prog-items"><div class="prog-item">Photo Op</div></div><div class="prog-separator"></div>
@@ -1322,7 +1359,7 @@ body.is-editor .editor-only-input { pointer-events: auto; opacity: 1; }
       </div>
     </div>
 
-    <!-- 04 FOOD -->
+    <!-- 04 FOOD & DRINKS -->
     <div class="section">
       <div class="section-header"><span class="section-num">04</span><span class="section-title">Food &amp; Drinks</span></div>
       <div class="food-banner">
@@ -1337,12 +1374,9 @@ body.is-editor .editor-only-input { pointer-events: auto; opacity: 1; }
           </div>
         </div>
       </div>
-
       <div>
         <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;">Community Pledge — Bring Along</div>
-        <div style="font-size:11px;color:rgba(26,18,8,0.5);font-style:italic;margin-bottom:12px;padding:9px 12px;background:rgba(184,134,11,0.06);border-left:2px solid var(--gold);line-height:1.7;">
-          Alvin's got the mains covered — but it's always better with more! Claim a dessert, drinks, or snacks slot before someone else does. 🍰🥤 Even a bag of chips counts. No pressure, but also... pressure.
-        </div>
+        <div style="font-size:11px;color:rgba(26,18,8,0.5);font-style:italic;margin-bottom:12px;padding:9px 12px;background:rgba(184,134,11,0.06);border-left:2px solid var(--gold);line-height:1.7;">Alvin's got the mains covered — but it's always better with more! Claim a dessert, drinks, or snacks slot before someone else does. 🍰🥤 Even a bag of chips counts. No pressure, but also... pressure.</div>
         <div class="pledge-col-header">🎉 Desserts · Drinks · Snacks</div>
         <div id="pledge-bring"></div>
         <button type="button" class="btn-add-pledge" onclick="addPledgeRow()">+ Add your pledge</button>
@@ -1352,9 +1386,7 @@ body.is-editor .editor-only-input { pointer-events: auto; opacity: 1; }
     <!-- PROFESSORS -->
     <div class="section">
       <div class="section-header"><span class="section-num">—</span><span class="section-title">Professors to Invite <span id="profConfirmedBadge" style="font-family:'DM Mono',monospace;font-size:11px;font-weight:400;color:var(--sage);letter-spacing:0.05em;"></span></span></div>
-      <div style="font-size:11px;color:rgba(26,18,8,0.5);font-style:italic;margin-bottom:12px;line-height:1.7;">
-        The organizers are reaching out to all of them — tick a name once they've confirmed they're coming. And let us know if we forgot to invite any other beloved professor we had during college! 🥹
-      </div>
+      <div style="font-size:11px;color:rgba(26,18,8,0.5);font-style:italic;margin-bottom:12px;line-height:1.7;">The organizers are reaching out to all of them — tick a name once they've confirmed they're coming. And let us know if we forgot to invite any other beloved professor we had during college! 🥹</div>
       <div class="check-grid three-col">
         <label class="check-item"><input type="checkbox" name="teacher[]" value="mother"><span>Mother</span></label>
         <label class="check-item"><input type="checkbox" name="teacher[]" value="sir_fitz"><span>Sir Fitz</span></label>
@@ -1392,10 +1424,7 @@ body.is-editor .editor-only-input { pointer-events: auto; opacity: 1; }
         <div class="committee-item"><div class="committee-role">Program Flow</div><div class="committee-person">Cecil</div></div>
         <div class="committee-item"><div class="committee-role">Open Bar</div><div class="committee-person">Marneh</div><div class="committee-note">Ariel Alconera</div></div>
       </div>
-      <div style="font-size:11px;color:rgba(26,18,8,0.5);font-style:italic;margin-top:4px;margin-bottom:16px;padding:9px 12px;background:rgba(184,134,11,0.06);border-left:2px solid var(--gold);line-height:1.7;">
-        Want to help make this happen? Whether you want to spearhead something new or assist with any of the items above, just reach out to any of the organizers — Marneh, D-G, Mickey, Cecil, Apyang, Rosegel, or Sarah. Extra hands are always welcome! 🙌
-      </div>
-
+      <div style="font-size:11px;color:rgba(26,18,8,0.5);font-style:italic;margin-top:4px;margin-bottom:16px;padding:9px 12px;background:rgba(184,134,11,0.06);border-left:2px solid var(--gold);line-height:1.7;">Want to help make this happen? Whether you want to spearhead something new or assist with any of the items above, just reach out to any of the organizers — Marneh, D-G, Mickey, Cecil, Apyang, Rosegel, or Sarah. Extra hands are always welcome! 🙌</div>
       <div class="committee-item" style="margin-top:10px;">
         <div class="committee-role">Class Throwback Video</div>
         <div class="committee-person">Apyang &amp; Marneh</div>
@@ -1404,9 +1433,9 @@ body.is-editor .editor-only-input { pointer-events: auto; opacity: 1; }
           <div style="font-size:11px;color:rgba(26,18,8,0.45);margin-bottom:12px;line-height:1.6;">📸 Upload your college throwback photos &amp; videos.<br>They'll go straight into our shared Google Drive folder.</div>
           <input type="file" id="throwbackUpload" multiple accept="image/*,video/*" style="display:none;" onchange="handleUpload(this)">
           <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
-            <button type="button" id="driveSignInBtn" onclick="signInAndUpload()" style="background:var(--ink);color:var(--paper);border:none;padding:8px 20px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.15em;cursor:pointer;transition:background 0.15s;">📁 Sign in with Google to Upload</button>
+            <button type="button" id="driveSignInBtn" onclick="signInAndUpload()" style="background:var(--ink);color:var(--paper);border:none;padding:8px 20px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.15em;cursor:pointer;">📁 Sign in with Google to Upload</button>
             <button type="button" id="driveSelectBtn" onclick="document.getElementById('throwbackUpload').click()" style="display:none;background:var(--sage);color:white;border:none;padding:8px 20px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.15em;cursor:pointer;">Select Files</button>
-            <a href="https://drive.google.com/drive/folders/1SPXhPIbyTkjgBAgHNfmCOYlJk3b2KEXx?usp=sharing" target="_blank" style="background:transparent;color:var(--gold);border:1px solid var(--gold);padding:8px 20px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.15em;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:all 0.15s;" onmouseover="this.style.background='var(--gold)';this.style.color='var(--paper)'" onmouseout="this.style.background='transparent';this.style.color='var(--gold)'">👁 Preview Folder ↗</a>
+            <a href="https://drive.google.com/drive/folders/1SPXhPIbyTkjgBAgHNfmCOYlJk3b2KEXx?usp=sharing" target="_blank" style="background:transparent;color:var(--gold);border:1px solid var(--gold);padding:8px 20px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.15em;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px;" onmouseover="this.style.background='var(--gold)';this.style.color='var(--paper)'" onmouseout="this.style.background='transparent';this.style.color='var(--gold)'">👁 Preview Folder ↗</a>
           </div>
           <div id="driveUserBadge" style="margin-top:8px;font-size:11px;color:var(--sage);display:none;"></div>
           <div id="uploadStatus" style="margin-top:10px;font-size:11px;color:var(--sage);text-align:left;"></div>
@@ -1419,9 +1448,7 @@ body.is-editor .editor-only-input { pointer-events: auto; opacity: 1; }
         <div style="font-size:12px;color:rgba(26,18,8,0.6);margin-bottom:16px;padding-left:12px;border-left:2px solid var(--gold);">Open karaoke session — bring your go-to songs! Era music encouraged.</div>
         <div style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">Raffle Draw</div>
         <div style="font-size:12px;color:rgba(26,18,8,0.55);margin-bottom:6px;font-style:italic;">Format: <strong style="color:var(--ink);">Bring 1 item</strong> to join the raffle. Suggested practical prizes:</div>
-        <div style="font-size:11px;color:rgba(26,18,8,0.45);font-style:italic;margin-bottom:10px;padding:9px 12px;background:rgba(184,134,11,0.06);border-left:2px solid var(--gold);line-height:1.7;">
-          Practical items are great, but honestly? We're not closing the door on a secondhand TV, a monobloc chair set, or a ceiling fan still in the box. If it fits in a car and someone will genuinely use it, it counts. The bigger the item, the bigger the applause. 📦😂
-        </div>
+        <div style="font-size:11px;color:rgba(26,18,8,0.45);font-style:italic;margin-bottom:10px;padding:9px 12px;background:rgba(184,134,11,0.06);border-left:2px solid var(--gold);line-height:1.7;">Practical items are great, but honestly? We're not closing the door on a secondhand TV, a monobloc chair set, or a ceiling fan still in the box. If it fits in a car and someone will genuinely use it, it counts. The bigger the item, the bigger the applause. 📦😂</div>
         <div>
           <div class="raffle-item"><span class="raffle-num">01</span><span>5 kilos of rice</span></div>
           <div class="raffle-item"><span class="raffle-num">02</span><span>Cooking oil (1 liter)</span></div>
@@ -1435,12 +1462,25 @@ body.is-editor .editor-only-input { pointer-events: auto; opacity: 1; }
       </div>
     </div>
 
+
+    <!-- HYPE WALL -->
+    <div class="hype-wall">
+      <div class="hype-wall-header">
+        <div class="hype-wall-eyebrow">⚡ Limited Edition · Class of '16 Only</div>
+        <div class="hype-wall-title">The <em>Hype Wall</em></div>
+        <div class="hype-wall-sub">Ten years later and we're STILL that batch. Drop a hype, a memory, a countdown, a threat — whatever you're feeling. No wrong answers. The reunion isn't gonna hype itself. 🔥</div>
+      </div>
+      <div class="hype-input-row">
+        <input type="text" class="hype-input" id="hypeInput" placeholder="Drop your hype here... 🎤" maxlength="200" onkeydown="if(event.key==='Enter')submitHype()">
+        <button type="button" class="hype-submit" onclick="submitHype()">Send It 🚀</button>
+      </div>
+      <div class="hype-feed" id="hypeFeed"></div>
+    </div>
+
     <!-- SUGGESTION BOX -->
     <div class="section">
       <div class="section-header"><span class="section-num">—</span><span class="section-title">Suggestion Box 💬</span></div>
-      <div style="font-size:11px;color:rgba(26,18,8,0.5);font-style:italic;margin-bottom:14px;padding:9px 12px;background:rgba(184,134,11,0.06);border-left:2px solid var(--gold);line-height:1.7;">
-        Anything not covered above — a song you want played, a game idea, someone we should look for, a memory you want included in the video — just drop it here. Nothing's too random. This is literally the first time we're all in the same (virtual) room in 10 years. 🥂
-      </div>
+      <div style="font-size:11px;color:rgba(26,18,8,0.5);font-style:italic;margin-bottom:14px;padding:9px 12px;background:rgba(184,134,11,0.06);border-left:2px solid var(--gold);line-height:1.7;">Anything not covered above — a song you want played, a game idea, someone we should look for, a memory you want included in the video — just drop it here. Nothing's too random. This is literally the first time we're all in the same (virtual) room in 10 years. 🥂</div>
       <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;">
         <textarea id="suggInput" placeholder="Type your suggestion..." style="width:100%;background:transparent;border:1px solid rgba(26,18,8,0.15);padding:12px;font-family:'DM Mono',monospace;font-size:12px;color:var(--ink);outline:none;resize:vertical;min-height:80px;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(26,18,8,0.15)'"></textarea>
         <div style="display:flex;justify-content:flex-end;">
@@ -1450,37 +1490,19 @@ body.is-editor .editor-only-input { pointer-events: auto; opacity: 1; }
       <div id="suggList"></div>
     </div>
 
-    <!-- HYPE WALL -->
-    <div class="hype-wall">
-      <div class="hype-wall-header">
-        <div class="hype-wall-eyebrow">⚡ Limited Edition · Class of '16 Only</div>
-        <div class="hype-wall-title">The <em>Hype Wall</em></div>
-        <div class="hype-wall-sub">
-          Ten years later and we're STILL that batch. Drop a hype, a memory, a countdown, a threat — whatever you're feeling. No wrong answers. The reunion isn't gonna hype itself. 🔥
-        </div>
-      </div>
-      <div class="hype-input-row">
-        <input type="text" class="hype-input" id="hypeInput" placeholder="Drop your hype here... 🎤" maxlength="200" onkeydown="if(event.key==='Enter')submitHype()">
-        <button type="button" class="hype-submit" onclick="submitHype()">Send It 🚀</button>
-      </div>
-      <div class="hype-feed" id="hypeFeed"></div>
-    </div>
-
-
     <div style="text-align:center;margin-top:40px;padding-top:20px;border-top:1px solid var(--line);font-size:11px;color:rgba(26,18,8,0.35);">
-      Wrong account? <span onclick="switchUser()" style="color:var(--gold);text-decoration:underline;cursor:pointer;">Switch name</span>
+      Wrong account? <span onclick="switchUser()" style="color:var(--gold);text-decoration:underline;text-underline-offset:2px;cursor:pointer;">Switch name</span>
     </div>
 
+  </div>
+</div><!-- end screen-main -->
 
-</div><!-- end .page -->
-
-<!-- FULL-BLEED CLASS ATTENDANCE -->
 <div style="background:#1a1208;padding:36px 40px 48px;width:100%;box-sizing:border-box;">
   <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;padding-bottom:12px;border-bottom:1px solid rgba(245,240,232,0.1);">
     <span style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:#f5f0e8;">Class Attendance</span>
     <span class="roll-live-dot" style="margin-left:auto;">Live</span>
   </div>
-  <div style="font-size:11px;color:rgba(245,240,232,0.3);font-style:italic;margin-bottom:20px;line-height:1.6;">Who's voted, who's RSVPd, and who still has unfinished business. Updates the moment anyone does anything.</div>
+  <div style="font-size:11px;color:rgba(245,240,232,0.3);font-style:italic;margin-bottom:20px;line-height:1.6;">Who's RSVPd and who still has unfinished business. Updates the moment anyone does anything.</div>
   <div class="roll-grid" id="rollGrid" style="grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:12px;">
     <div class="roll-card" id="roll-Aileen" data-name="Aileen" style="background:rgba(245,240,232,0.05);border-color:rgba(245,240,232,0.1);">
       <div class="roll-name" style="color:#f5f0e8;font-size:15px;">Aileen</div>
@@ -1798,889 +1820,8 @@ body.is-editor .editor-only-input { pointer-events: auto; opacity: 1; }
   <div class="roll-last-updated" id="rollLastUpdated" style="color:rgba(245,240,232,0.2);margin-top:14px;"></div>
 </div>
 
-</div><!-- end screen-main -->
-
-<script>
-const ORGANIZERS = ['Marneh','D-G','Mickey','Cecil','Apyang','Rosegel','Sarah'];
-const DATE_OPTS = ['jun13','jun20','jun27'];
-const VENUE_OPTS = ['v1','v2','v3'];
-let currentUser = null;
-
-// ── SUPABASE CONFIG ────────────────────────────────────────
-const SB_URL = 'https://auhkazxubjczgcusamxq.supabase.co';
-const SB_KEY = 'sb_publishable_boKVP7k36iEFYikPRz3spA_d196OI1i';
-
-const sb = {
-  headers: {
-    'apikey': SB_KEY,
-    'Authorization': 'Bearer ' + SB_KEY,
-    'Content-Type': 'application/json',
-    'Prefer': 'return=representation'
-  },
-
-  async get(table, params='') {
-    try {
-      const r = await fetch(`${SB_URL}/rest/v1/${table}?${params}`, { headers: this.headers });
-      return r.ok ? await r.json() : [];
-    } catch(e) { console.error('sb.get', e); return []; }
-  },
-
-  async upsert(table, body) {
-    try {
-      const r = await fetch(`${SB_URL}/rest/v1/${table}`, {
-        method: 'POST',
-        headers: { ...this.headers, 'Prefer': 'resolution=merge-duplicates,return=representation' },
-        body: JSON.stringify(body)
-      });
-      return r.ok ? await r.json() : null;
-    } catch(e) { console.error('sb.upsert', e); return null; }
-  },
-
-  async delete(table, params) {
-    try {
-      const r = await fetch(`${SB_URL}/rest/v1/${table}?${params}`, {
-        method: 'DELETE', headers: this.headers
-      });
-      return r.ok;
-    } catch(e) { console.error('sb.delete', e); return false; }
-  },
-
-  async insert(table, body) {
-    try {
-      const r = await fetch(`${SB_URL}/rest/v1/${table}`, {
-        method: 'POST',
-        headers: this.headers,
-        body: JSON.stringify(body)
-      });
-      return r.ok ? await r.json() : null;
-    } catch(e) { console.error('sb.insert', e); return null; }
-  },
-
-  async update(table, params, body) {
-    try {
-      const r = await fetch(`${SB_URL}/rest/v1/${table}?${params}`, {
-        method: 'PATCH',
-        headers: this.headers,
-        body: JSON.stringify(body)
-      });
-      return r.ok;
-    } catch(e) { console.error('sb.update', e); return false; }
-  }
-};
-
-// Name selection
-function selectName(name) {
-  currentUser = name;
-  document.getElementById('userLabel').textContent = name;
-  document.getElementById('screen-select').style.display = 'none';
-  document.getElementById('screen-main').style.display = 'block';
-  const isEditor = ORGANIZERS.includes(name);
-  if (isEditor) document.body.classList.add('is-editor');
-  else document.body.classList.remove('is-editor');
-  document.querySelectorAll('.editor-only-input').forEach(el => {
-    if (isEditor) el.removeAttribute('readonly');
-    else el.setAttribute('readonly', true);
-  });
-  document.querySelectorAll('.btn-vote').forEach(b => b.disabled = false);
-  const ds = document.getElementById('dateVoteStatus');
-  const vs = document.getElementById('venueVoteStatus');
-  if (ds) ds.textContent = 'Voting as ' + name;
-  if (vs) vs.textContent = 'Voting as ' + name;
-  loadDatePoll(); loadVenuePoll(); loadPledges(); loadSuggestions(); loadHype(); loadRSVP(); loadMyBatchVotes(); loadRollCall(); subscribeRollRealtime(); restoreFormFields().then(() => { hookProfCheckboxes(); loadHeadcount(); });
-  window.scrollTo(0, 0);
-}
-
-function switchUser() {
-  currentUser = null;
-  document.body.classList.remove('is-editor');
-  document.getElementById('screen-main').style.display = 'none';
-  document.getElementById('screen-select').style.display = 'block';
-  window.scrollTo(0, 0);
-}
-
-// ── DATE POLL ──────────────────────────────────────────────
-async function loadDatePoll() {
-  const rows = await sb.get('date_votes');
-  renderDatePollFromRows(rows || []);
-}
-
-function renderVoterThumbs(names) {
-  const colors = ['#b8860b','#5a6e4a','#8b3a2a','#4a6e8a','#7a5c8a','#6e7a4a','#8a6e3a'];
-  return '<div class="voter-thumbs">' + names.map((n,i) => {
-    const ini = n.split(/[\s-]/).map(w=>w[0]||'').join('').toUpperCase().slice(0,2) || n[0].toUpperCase();
-    const col = colors[i % colors.length];
-    const me = n === currentUser;
-    return '<span class="voter-thumb' + (me?' voter-thumb-me':'') + '" style="background:' + col + '" title="' + n + '" data-name="' + n + '">' + ini + '</span>';
-  }).join('') + '</div>';
-}
-
-function renderDatePollFromRows(rows) {
-  const voteMap = {};
-  DATE_OPTS.forEach(k => voteMap[k] = []);
-  rows.forEach(r => {
-    if (voteMap[r.date_key]) voteMap[r.date_key].push(r.name);
-  });
-  const totals = DATE_OPTS.map(k => voteMap[k].length);
-  const max = Math.max(...totals, 1);
-  DATE_OPTS.forEach(k => {
-    const names = voteMap[k];
-    const n = names.length;
-    const iVoted = currentUser && names.includes(currentUser);
-    document.getElementById('count-'+k).textContent = n + (n===1?' vote':' votes');
-    document.getElementById('bar-'+k).style.width = (n/max*100)+'%';
-    document.getElementById('voters-'+k).innerHTML = n ? renderVoterThumbs(names) : '';
-    const btn = document.getElementById('vbtn-'+k);
-    const opt = document.getElementById('opt-'+k);
-    btn.disabled = !currentUser;
-    btn.classList.toggle('voted', iVoted);
-    btn.textContent = iVoted ? '✓ Going' : 'Vote';
-    opt.classList.remove('my-vote','leading');
-    if (iVoted) opt.classList.add('my-vote');
-  });
-  const mi = totals.indexOf(Math.max(...totals));
-  if (totals[mi]>0 && totals.filter(t=>t===totals[mi]).length===1)
-    document.getElementById('opt-'+DATE_OPTS[mi]).classList.add('leading');
-}
-
-async function castDateVote(key) {
-  if (!currentUser) return;
-  const rows = await sb.get('date_votes', `name=eq.${encodeURIComponent(currentUser)}&date_key=eq.${key}`);
-  const already = rows && rows.length > 0;
-  if (already) {
-    await sb.delete('date_votes', `name=eq.${encodeURIComponent(currentUser)}&date_key=eq.${key}`);
-  } else {
-    await sb.upsert('date_votes', { name: currentUser, date_key: key });
-  }
-  loadDatePoll();
-}
-
-// ── VENUE POLL ─────────────────────────────────────────────
-async function loadVenuePoll() {
-  const rows = await sb.get('venue_votes');
-  renderVenuePollFromRows(rows || []);
-}
-
-function renderVenuePollFromRows(rows) {
-  const voteMap = {};
-  VENUE_OPTS.forEach(k => voteMap[k] = []);
-  rows.forEach(r => {
-    if (voteMap[r.venue_key]) voteMap[r.venue_key].push(r.name);
-  });
-  const totals = VENUE_OPTS.map(k => voteMap[k].length);
-  const max = Math.max(...totals, 1);
-  VENUE_OPTS.forEach(k => {
-    const names = voteMap[k];
-    const n = names.length;
-    const iVoted = currentUser && names.includes(currentUser);
-    document.getElementById('vcount-'+k).textContent = n + (n===1?' vote':' votes');
-    document.getElementById('vbar-'+k).style.width = (n/max*100)+'%';
-    document.getElementById('vvoters-'+k).innerHTML = n ? renderVoterThumbs(names) : '';
-    const btn = document.getElementById('vvbtn-'+k);
-    const opt = document.getElementById('vopt-'+k);
-    btn.disabled = !currentUser;
-    btn.classList.toggle('voted', iVoted);
-    btn.textContent = iVoted ? '✓ Going' : 'Vote';
-    opt.classList.remove('my-vote','leading');
-    if (iVoted) opt.classList.add('my-vote');
-  });
-  const mi = totals.indexOf(Math.max(...totals));
-  if (totals[mi]>0 && totals.filter(t=>t===totals[mi]).length===1)
-    document.getElementById('vopt-'+VENUE_OPTS[mi]).classList.add('leading');
-}
-
-async function castVenueVote(key) {
-  if (!currentUser) return;
-  const rows = await sb.get('venue_votes', `name=eq.${encodeURIComponent(currentUser)}&venue_key=eq.${key}`);
-  const already = rows && rows.length > 0;
-  if (already) {
-    await sb.delete('venue_votes', `name=eq.${encodeURIComponent(currentUser)}&venue_key=eq.${key}`);
-  } else {
-    await sb.upsert('venue_votes', { name: currentUser, venue_key: key });
-  }
-  loadVenuePoll();
-}
-
-// ── PLEDGES ────────────────────────────────────────────────
-async function loadPledges() {
-  const rows = await sb.get('pledges', 'order=id.asc');
-  renderPledgesFromRows(rows || []);
-}
-
-function renderPledgesFromRows(rows) {
-  const c = document.getElementById('pledge-bring');
-  if (!c) return;
-  c.innerHTML = '';
-  rows.forEach(row => c.appendChild(makePledgeRow(row.id, row.name||'', row.item||'')));
-}
-
-function makePledgeRow(id, name, item) {
-  const row = document.createElement('div');
-  row.className = 'pledge-row';
-  row.dataset.id = id;
-  row.innerHTML = '<input type="text" placeholder="Your name" value="' + name + '" onblur="updatePledge(' + id + ',\'name\',this.value)"><input type="text" placeholder="What are you bringing?" value="' + item + '" onblur="updatePledge(' + id + ',\'item\',this.value)"><button type=\"button\" class=\"pledge-del\" onclick=\"deletePledge(' + id + ',this)\">×</button>';
-  return row;
-}
-
-async function addPledgeRow() {
-  const rows = await sb.insert('pledges', { name: currentUser||'', item: '' });
-  if (rows && rows[0]) {
-    const c = document.getElementById('pledge-bring');
-    const newRow = makePledgeRow(rows[0].id, currentUser||'', '');
-    c.appendChild(newRow);
-    const inputs = newRow.querySelectorAll('input');
-    (inputs[1]||inputs[0]).focus();
-  }
-}
-
-async function updatePledge(id, field, value) {
-  await sb.update('pledges', `id=eq.${id}`, { [field]: value });
-}
-
-async function deletePledge(id, btn) {
-  await sb.delete('pledges', `id=eq.${id}`);
-  btn.closest('.pledge-row').remove();
-}
-
-// ── SUGGESTIONS ────────────────────────────────────────────
-async function loadSuggestions() {
-  const rows = await sb.get('suggestions', 'order=created_at.desc');
-  renderSuggestionsFromRows(rows || []);
-}
-
-function renderSuggestionsFromRows(rows) {
-  const list = document.getElementById('suggList');
-  if (!list) return;
-  if (!rows.length) {
-    list.innerHTML = '<div style="font-size:11px;color:rgba(26,18,8,0.3);font-style:italic;">No suggestions yet.</div>';
-    return;
-  }
-  list.innerHTML = rows.map(s => {
-    const d = new Date(s.created_at);
-    const time = d.toLocaleDateString('en-PH', {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'});
-    return '<div class="sugg-entry"><div style="display:flex;justify-content:space-between;align-items:baseline;"><span class="sugg-author">' + s.author + '</span><span class="sugg-time">' + time + '</span></div><div class="sugg-text">' + s.text + '</div></div>';
-  }).join('');
-}
-
-async function submitSuggestion() {
-  const input = document.getElementById('suggInput');
-  const text = input ? input.value.trim() : '';
-  if (!text || !currentUser) return;
-  await sb.insert('suggestions', { author: currentUser, text });
-  input.value = '';
-  loadSuggestions();
-}
-
-// ── FORM FIELDS PERSISTENCE ────────────────────────────────
-// Save a single named field immediately on blur
-async function saveField(name, value) {
-  await sb.upsert('form_fields', { key: name, value: value || '' });
-}
-
-async function saveFormFields() {
-  const fields = [];
-  document.querySelectorAll('#screen-main input[name], #screen-main select[name], #screen-main textarea[name]').forEach(el => {
-    if (el.type === 'checkbox') {
-      fields.push({ key: el.name + ':' + el.value, value: el.checked ? 'true' : 'false' });
-    } else if (el.type === 'radio') {
-      if (el.checked) fields.push({ key: el.name, value: el.value });
-    } else if (el.value) {
-      fields.push({ key: el.name, value: el.value });
-    }
-  });
-  if (fields.length) await sb.upsert('form_fields', fields);
-}
-
-async function restoreFormFields() {
-  const rows = await sb.get('form_fields');
-  if (!rows || !rows.length) return;
-  const map = {};
-  rows.forEach(r => map[r.key] = r.value);
-  document.querySelectorAll('#screen-main input[name], #screen-main select[name], #screen-main textarea[name]').forEach(el => {
-    if (el.type === 'checkbox') {
-      el.checked = map[el.name + ':' + el.value] === 'true';
-    } else if (el.type === 'radio') {
-      if (map[el.name] === el.value) el.checked = true;
-    } else {
-      if (map[el.name] !== undefined) el.value = map[el.name];
-    }
-  });
-  document.getElementById('screen-main').addEventListener('change', saveFormFields);
-  document.getElementById('screen-main').addEventListener('input', () => {
-    clearTimeout(window._saveTimer);
-    window._saveTimer = setTimeout(saveFormFields, 800);
-  });
-}
-
-
-
-
-// ── HEADCOUNT ───────────────────────────────────────────────
-async function loadHeadcount() {
-  const rows = await sb.get('rsvp');
-  renderHeadcount(rows || []);
-}
-
-function renderHeadcount(rows) {
-  // AB class counts
-  let goingAB = 0, tentAB = 0, noAB = 0;
-  let goingGuests = 0, tentGuests = 0;
-
-  rows.forEach(r => {
-    const plus = parseInt(r.plus || '0');
-    if (r.status === 'yes') {
-      goingAB++;
-      goingGuests += plus;
-    } else if (r.status === 'tentative') {
-      tentAB++;
-      tentGuests += plus;
-    } else if (r.status === 'no') {
-      noAB++;
-    }
-  });
-
-  const totalGoing = goingAB + goingGuests;
-  const totalTent  = tentAB  + tentGuests;
-  const total = totalGoing + totalTent;
-
-  // Prof count from checked boxes
-  const profChecked = document.querySelectorAll('input[name="teacher[]"]:checked').length;
-
-  // Update DOM
-  const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
-  set('hcTotal',       total > 0 ? total : '—');
-  set('hcGoing',       goingAB);
-  set('hcGoingGuests', goingGuests);
-  set('hcTent',        tentAB);
-  set('hcTentGuests',  tentGuests);
-  set('hcNo',          noAB);
-  set('hcProf',        profChecked > 0 ? profChecked : '—');
-
-  // Prof badge in section title
-  const badge = document.getElementById('profConfirmedBadge');
-  if (badge) badge.textContent = profChecked > 0 ? '(confirmed: ' + profChecked + ')' : '';
-
-  // Show headcount bar
-  const bar = document.getElementById('headcountBar');
-  if (bar) bar.style.display = 'block';
-}
-
-// Refresh headcount when prof checkboxes change
-function hookProfCheckboxes() {
-  document.querySelectorAll('input[name="teacher[]"]').forEach(cb => {
-    cb.addEventListener('change', () => loadHeadcount());
-  });
-}
-
-// ── RSVP ────────────────────────────────────────────────────
-async function loadRSVP() {
-  if (!currentUser) return;
-  const rows = await sb.get('rsvp', `name=eq.${encodeURIComponent(currentUser)}`);
-  if (rows && rows.length) {
-    applyRSVPState(rows[0].status, rows[0].plus);
-  }
-  // Also show bar
-  const bar = document.getElementById('rsvpBar');
-  if (bar) bar.style.display = 'flex';
-  loadHeadcount();
-}
-
-function applyRSVPState(status, plus) {
-  ['yes','tent','no'].forEach(k => {
-    const btn = document.getElementById('rsvp-' + (k === 'tent' ? 'tent' : k));
-    if (btn) btn.className = 'rsvp-btn' + (status === (k === 'tent' ? 'tentative' : k) ? ' active-' + (k === 'tent' ? 'tent' : k) : '');
-  });
-  // fix tentative button specifically
-  const tentBtn = document.getElementById('rsvp-tent');
-  if (tentBtn) tentBtn.className = 'rsvp-btn' + (status === 'tentative' ? ' active-tent' : '');
-
-  ['0','1','2'].forEach(p => {
-    const btn = document.getElementById('rsvp-plus' + p);
-    if (btn) btn.className = 'rsvp-plus-btn' + (plus === p ? ' active' : '');
-  });
-}
-
-async function setRSVP(status) {
-  if (!currentUser) return;
-  const existing = await sb.get('rsvp', `name=eq.${encodeURIComponent(currentUser)}`);
-  const plus = (existing && existing[0]) ? existing[0].plus : '0';
-  await sb.upsert('rsvp', { name: currentUser, status, plus });
-  applyRSVPState(status, plus);
-  loadHeadcount(); loadRollCall();
-}
-
-async function setPlus(plus) {
-  if (!currentUser) return;
-  const existing = await sb.get('rsvp', `name=eq.${encodeURIComponent(currentUser)}`);
-  const status = (existing && existing[0]) ? existing[0].status : null;
-  await sb.upsert('rsvp', { name: currentUser, status: status || 'tentative', plus });
-  applyRSVPState(status || 'tentative', plus);
-  loadHeadcount(); loadRollCall();
-}
-
-// ── HYPE WALL ───────────────────────────────────────────────
-async function loadHype() {
-  const rows = await sb.get('hype_wall', 'order=created_at.desc&limit=50');
-  renderHype(rows || []);
-}
-
-function renderHype(rows) {
-  const feed = document.getElementById('hypeFeed');
-  if (!feed) return;
-  if (!rows.length) {
-    feed.innerHTML = '<div class="hype-empty">Nobody\'s hyped yet \u2014 be the first one to go off! 🎤</div>';
-    return;
-  }
-  feed.innerHTML = rows.map(r => {
-    const d = new Date(r.created_at);
-    const time = d.toLocaleDateString('en-PH', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-    return `<div class="hype-entry">
-      <div class="hype-entry-top">
-        <span class="hype-author">${r.author}</span>
-        <span class="hype-time">${time}</span>
-      </div>
-      <div class="hype-text">${r.text}</div>
-    </div>`;
-  }).join('');
-}
-
-async function submitHype() {
-  const input = document.getElementById('hypeInput');
-  const text = input ? input.value.trim() : '';
-  if (!text || !currentUser) return;
-  await sb.insert('hype_wall', { author: currentUser, text });
-  input.value = '';
-  loadHype();
-}
-
-
-// ── CLASS ATTENDANCE LIVE ───────────────────────────────────
-const ROLL_NAMES = ['Aileen', 'Apyang', 'Arjane', 'Cecil', 'Cindy', 'D-G', 'Didi', 'Ebing', 'Ekon', 'Fatima', 'Grace', 'Honey', 'Jen Bom', 'Jen Om', 'Jenny Leen', 'Jera', 'Joyce', 'Lovely', 'Marneh', 'Melanie', 'Melinda', 'Mickey', 'Mia', 'Rosegel', 'Rosemarie', 'Sarah'];
-const ROLL_TOTAL = 35;
-let rollData = {
-  rsvp: {},
-  dateVotes: new Set(),
-  venueVotes: new Set(),
-  bfVotes: {}  // name -> count
-};
-
-function rollId(name) {
-  return name.replace(/ /g, '-').replace(/'/g, '');
-}
-
-async function loadRollCall() {
-  const [rsvpRows, dateRows, venueRows, bfRows] = await Promise.all([
-    sb.get('rsvp'),
-    sb.get('date_votes'),
-    sb.get('venue_votes'),
-    sb.get('batch_file_votes')
-  ]);
-
-  // Process RSVP
-  rollData.rsvp = {};
-  (rsvpRows || []).forEach(r => { rollData.rsvp[r.name] = r.status; });
-
-  // Process date votes
-  rollData.dateVotes = new Set((dateRows || []).map(r => r.name));
-
-  // Process venue votes
-  rollData.venueVotes = new Set((venueRows || []).map(r => r.name));
-
-  // Process batch files — count per voter
-  rollData.bfVotes = {};
-  (bfRows || []).forEach(r => {
-    rollData.bfVotes[r.voter] = (rollData.bfVotes[r.voter] || 0) + 1;
-  });
-
-  renderRollCall();
-}
-
-function renderRollCall() {
-  ROLL_NAMES.forEach(name => {
-    const id = rollId(name);
-    const card = document.getElementById('roll-' + id);
-    if (!card) return;
-
-    // Highlight my own card
-    card.classList.toggle('is-me', name === currentUser);
-
-    // RSVP pill
-    const rsvpEl = document.getElementById('roll-rsvp-' + id);
-    if (rsvpEl) {
-      const status = rollData.rsvp[name];
-      rsvpEl.className = 'rsvp-pill';
-      if (status === 'yes') { rsvpEl.classList.add('going'); rsvpEl.textContent = 'Going'; }
-      else if (status === 'tentative') { rsvpEl.classList.add('tentative'); rsvpEl.textContent = 'Maybe'; }
-      else if (status === 'no') { rsvpEl.classList.add('no'); rsvpEl.textContent = "Can't make it"; }
-      else { rsvpEl.classList.add('none'); rsvpEl.textContent = '—'; }
-    }
-
-    // Date voted
-    const dateEl = document.getElementById('roll-date-' + id);
-    if (dateEl) {
-      const voted = rollData.dateVotes.has(name);
-      dateEl.className = 'roll-check ' + (voted ? 'yes' : 'no');
-      dateEl.textContent = voted ? '✓' : '—';
-    }
-
-    // Venue voted
-    const venueEl = document.getElementById('roll-venue-' + id);
-    if (venueEl) {
-      const voted = rollData.venueVotes.has(name);
-      venueEl.className = 'roll-check ' + (voted ? 'yes' : 'no');
-      venueEl.textContent = voted ? '✓' : '—';
-    }
-
-    // Batch Files progress
-    const bfCount = rollData.bfVotes[name] || 0;
-    const bfBar = document.getElementById('roll-bf-bar-' + id);
-    const bfNum = document.getElementById('roll-bf-num-' + id);
-    if (bfBar) bfBar.style.width = Math.round(bfCount / ROLL_TOTAL * 100) + '%';
-    if (bfNum) bfNum.textContent = bfCount + '/' + ROLL_TOTAL;
-  });
-
-  // Update timestamp
-  const ts = document.getElementById('rollLastUpdated');
-  if (ts) {
-    const now = new Date();
-    ts.textContent = 'Last updated: ' + now.toLocaleTimeString('en-PH', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
-  }
-}
-
-// ── REAL-TIME SUBSCRIPTIONS ─────────────────────────────────
-function subscribeRollRealtime() {
-  const wsUrl = 'https://auhkazxubjczgcusamxq.supabase.co'.replace('https://', 'wss://') + '/realtime/v1/websocket?apikey=sb_publishable_boKVP7k36iEFYikPRz3spA_d196OI1i&vsn=1.0.0';
-  
-  let ws;
-  let heartbeat;
-  let reconnectTimer;
-  let connected = false;
-
-  function connect() {
-    try {
-      ws = new WebSocket(wsUrl);
-    } catch(e) { scheduleReconnect(); return; }
-
-    ws.onopen = () => {
-      connected = true;
-      // Subscribe to all 4 tables
-      ['rsvp','date_votes','venue_votes','batch_file_votes'].forEach((table, i) => {
-        ws.send(JSON.stringify({
-          topic: 'realtime:public:' + table,
-          event: 'phx_join',
-          payload: { config: { broadcast: { self: true }, presence: { key: '' }, postgres_changes: [{ event: '*', schema: 'public', table }] } },
-          ref: String(i + 1)
-        }));
-      });
-      // Heartbeat every 25s
-      heartbeat = setInterval(() => {
-        if (ws.readyState === WebSocket.OPEN) {
-          ws.send(JSON.stringify({ topic: 'phoenix', event: 'heartbeat', payload: {}, ref: '0' }));
-        }
-      }, 25000);
-    };
-
-    ws.onmessage = (evt) => {
-      try {
-        const msg = JSON.parse(evt.data);
-        // Any postgres_changes event → reload roll call
-        if (msg.event === 'postgres_changes' || 
-            (msg.payload && msg.payload.data && msg.payload.data.type)) {
-          loadRollCall();
-        }
-      } catch(e) {}
-    };
-
-    ws.onclose = () => {
-      connected = false;
-      clearInterval(heartbeat);
-      scheduleReconnect();
-    };
-
-    ws.onerror = () => {
-      ws.close();
-    };
-  }
-
-  function scheduleReconnect() {
-    clearTimeout(reconnectTimer);
-    reconnectTimer = setTimeout(connect, 5000);
-  }
-
-  connect();
-}
-
-// ── GOOGLE DRIVE UPLOAD ────────────────────────────────────
-const GD_CLIENT_ID = '74852158092-1pt5lup8o1f0p5bgccv19ne6pqmvajo7.apps.googleusercontent.com';
-const GD_FOLDER_ID = '1SPXhPIbyTkjgBAgHNfmCOYlJk3b2KEXx';
-const GD_SCOPE = 'https://www.googleapis.com/auth/drive.file';
-let gdAccessToken = null;
-let gdTokenClient = null;
-
-function initGoogleDrive() {
-  if (!window.google) return;
-  gdTokenClient = google.accounts.oauth2.initTokenClient({
-    client_id: GD_CLIENT_ID,
-    scope: GD_SCOPE,
-    callback: (resp) => {
-      if (resp.error) {
-        setUploadStatus('Google sign-in failed: ' + resp.error, true);
-        return;
-      }
-      gdAccessToken = resp.access_token;
-      const badge = document.getElementById('driveUserBadge');
-      if (badge) { badge.textContent = '✓ Signed in — select your files!'; badge.style.display = 'block'; }
-      const signInBtn = document.getElementById('driveSignInBtn');
-      const selectBtn = document.getElementById('driveSelectBtn');
-      if (signInBtn) signInBtn.style.display = 'none';
-      if (selectBtn) selectBtn.style.display = 'inline-block';
-      document.getElementById('throwbackUpload').click();
-    }
-  });
-}
-
-function signInAndUpload() {
-  if (!gdTokenClient) { initGoogleDrive(); }
-  if (!gdTokenClient) { setUploadStatus('Google sign-in not ready yet — try again in a moment.', true); return; }
-  if (gdAccessToken) {
-    document.getElementById('throwbackUpload').click();
-  } else {
-    gdTokenClient.requestAccessToken({ prompt: 'consent' });
-  }
-}
-
-async function handleUpload(input) {
-  const files = Array.from(input.files);
-  if (!files.length) return;
-  if (!gdAccessToken) { setUploadStatus('Please sign in with Google first.', true); return; }
-
-  const status = document.getElementById('uploadStatus');
-  const list = document.getElementById('uploadList');
-  list.innerHTML = '';
-  setUploadStatus('Uploading ' + files.length + ' file(s)...');
-
-  let done = 0;
-  for (const file of files) {
-    const row = document.createElement('div');
-    row.style.cssText = 'padding:4px 0;border-bottom:1px solid rgba(26,18,8,0.08);display:flex;justify-content:space-between;align-items:center;';
-    row.innerHTML = '<span>📎 ' + file.name + ' <span style="color:rgba(26,18,8,0.35);">(' + (file.size/1024).toFixed(0) + ' KB)</span></span><span id="row-' + encodeURIComponent(file.name) + '" style="color:var(--gold);font-size:10px;">uploading...</span>';
-    list.appendChild(row);
-
-    try {
-      await uploadFileToDrive(file);
-      const indicator = document.getElementById('row-' + encodeURIComponent(file.name));
-      if (indicator) { indicator.textContent = '✓ done'; indicator.style.color = 'var(--sage)'; }
-      done++;
-    } catch(e) {
-      const indicator = document.getElementById('row-' + encodeURIComponent(file.name));
-      if (indicator) { indicator.textContent = '✗ failed'; indicator.style.color = 'var(--rust)'; }
-    }
-  }
-
-  setUploadStatus('✓ ' + done + ' of ' + files.length + ' file(s) uploaded to Google Drive!');
-  input.value = '';
-}
-
-async function uploadFileToDrive(file) {
-  const meta = JSON.stringify({ name: (currentUser || 'unknown') + '_' + file.name, parents: [GD_FOLDER_ID] });
-  const form = new FormData();
-  form.append('metadata', new Blob([meta], { type: 'application/json' }));
-  form.append('file', file);
-
-  const res = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
-    method: 'POST',
-    headers: { Authorization: 'Bearer ' + gdAccessToken },
-    body: form
-  });
-  if (!res.ok) throw new Error('Upload failed: ' + res.status);
-  return res.json();
-}
-
-function setUploadStatus(msg, isError) {
-  const el = document.getElementById('uploadStatus');
-  if (el) { el.textContent = msg; el.style.color = isError ? 'var(--rust)' : 'var(--sage)'; }
-}
-
-// Init GDrive once GIS library loads
-window.addEventListener('load', () => { setTimeout(initGoogleDrive, 1000); });
-
-// ── THE BATCH FILES ─────────────────────────────────────────
-const BF_AWARDS = {'recitation_mvp': {'title': 'The Recitation MVP', 'desc': 'First to raise a hand, even when they had no idea what the answer was. Confidence unmatched. The professor called on them anyway. It worked out more than it should have.', 'num': '01'},  'most_makeup_ready': {'title': 'Most Make-up Ready', 'desc': 'Arrived at 7am looking like a photoshoot. Left at 5pm looking like a photoshoot. Class pictures, oral exams, random Tuesday — always ready. The rest of us were just in the background.', 'num': '02'}, 'student_liaison': {'title': 'The Student Liaison', 'desc': "The diplomat who negotiated class cancellations on everyone's behalf. Walked into the professor's office with nothing but charm and a rehearsed excuse. Walked out with a free period. We owe them everything.", 'num': '03'}, 'most_silent': {'title': 'Most Silent', 'desc': 'Was physically present for four years. Verbally? Unconfirmed. Their attendance record says they were there. Their voice? A mystery the linguistics department could not solve.', 'num': '04'}, 'thesis_survivor': {'title': 'The Last-Minute Thesis Survivor', 'desc': "Submitted at 11:58pm, passed with flying colors. We don't talk about what happened between 10pm and 11:57. What we know is: they made it. And they looked fine the next day.", 'num': '05'}, 'creative_excuse': {'title': 'Most Creative Excuse for an Absent', 'desc': 'A rotating hall of legends. A funeral every midterms. A mystery illness that only struck on reporting days. The creativity was, objectively, more impressive than some of the outputs.', 'num': '06'}, 'human_recorder': {'title': 'The Human Recorder', 'desc': "Always had the notes, the readings, the handouts, the past exams. The class would not have graduated without them. They probably still have the files. They're too kind to charge for them.", 'num': '07'}, 'gc_moderator': {'title': 'The GC Moderator', 'desc': "Created the GC. Kept it alive, organized, and on-topic. Sent reminders nobody asked for but everyone needed. The class literally could not function without this person's next message.", 'num': '08'}, 'read_the_novel': {'title': 'Most Likely to Actually Read the Novel', 'desc': 'And then explain it to everyone five minutes before the oral exam. Voluntarily. With genuine enthusiasm. While the rest of us were still on the back cover summary.', 'num': '09'}, 'sleeper_agent': {'title': 'The Sleeper Agent', 'desc': 'Appeared to be asleep for four years. Got grades nobody expected. Still undefeated. The most dangerous person in any classroom: the one you underestimate.', 'num': '10'}, 'prof_whisperer': {'title': 'The Professor Whisperer', 'desc': "Had a natural gift for making any professor like them enough to extend deadlines, bump grades, or forget attendance entirely. We still don't know exactly what they said. We're grateful they said it.", 'num': '11'}, 'walking_thesaurus': {'title': 'The Walking Thesaurus', 'desc': 'Could not send a simple message without it reading like a literary essay. "I concur with the aforementioned sentiment regarding the scheduling of our proposed assembly" in the GC at 9am. Every time.', 'num': '12'}, 'grammar_police': {'title': 'Most Likely to Correct Your Grammar in a Casual Conversation', 'desc': 'And did it gently enough that you couldn\'t even be mad. A light touch. A raised eyebrow. A quiet "I think you mean \'whom\'." You thanked them. You hated that you thanked them.', 'num': '13'}, 'liked_rizal': {'title': 'The One Who Actually Liked the Required Reading', 'desc': 'Read Beowulf voluntarily. Asked follow-up questions. Had opinions about the monster Grendel that went beyond "it was confusing." Beloved and slightly feared.', 'num': '14'}, 'method_actor': {'title': 'The Method Actor', 'desc': 'Committed fully to every oral presentation, role-play, and dramatic reading. Theater kid energy, no theater degree. The class was their stage. Every recitation was opening night.', 'num': '15'}, 'class_mother': {'title': 'The Class Mother', 'desc': "Reminded everyone of deadlines, brought food, mediated conflicts, asked if you've eaten. Did not sign up for this role. Accepted it anyway. The class ran on their organizational energy.", 'num': '16'}, 'plot_twist': {'title': 'The Plot Twist', 'desc': 'Quiet for years, then did something completely unexpected after graduation. Nobody saw it coming. The most interesting character in the story, and they saved their arc for the sequel.', 'num': '17'}, 'most_changed': {'title': 'Most Changed (For the Better)', 'desc': "Glowed up so hard that the graduation photo looks like a different person. Ten years did something remarkable. We're all very happy about it and slightly intimidated.", 'num': '18'}, 'most_same': {'title': 'Most Exactly the Same', 'desc': "And that's a compliment. Consistent. Reliable. Exactly who they were in first year. Some people find themselves early and just stay there. Icon behavior.", 'num': '19'}, 'reunion_mvp': {'title': 'The Reunion MVP', 'desc': 'Somehow knows what everyone is up to, who got married, who moved abroad, who changed careers. A walking alumni directory. The reason this reunion is as complete as it is.', 'num': '20'}, 'journal_writer': {'title': 'Most Likely to Have Already Written This Night Into Their Journal', 'desc': "Probably has a chapter about tonight already drafted. The opening line is good. There's a metaphor in the second paragraph. They brought a pen just in case.", 'num': '21'}, 'class_sigaw': {'title': 'Class Sigaw', 'desc': "The one whose laugh you could hear from another building. From the corridor. Possibly from Cebu City. The classroom wasn't the same without it. Neither was any room they walked into.", 'num': '22'}, 'dramatic_pause': {'title': 'The Dramatic Pause', 'desc': 'Knew exactly when to stop mid-sentence for effect. During recitations. During arguments. During text messages. The three dots lasted longer than necessary. Every time. On purpose.', 'num': '23'}, 'one_take_wonder': {'title': 'The One-Take Wonder', 'desc': "Only needed to rehearse once for any oral presentation, sounded like they'd been preparing for weeks. The rest of us were on take twelve. They were already done and calm.", 'num': '24'}, 'hype_person': {'title': 'The Hype Person', 'desc': "Front row energy for everyone else's presentations, even when half asleep. The original hypebeast. Nobody bombed a report with this person in the audience. Impossible.", 'num': '25'}, 'narrator': {'title': 'The Narrator', 'desc': 'Could make a story out of anything. Going to the canteen, waiting for a jeep, a two-minute delay. Always a story. Always. The mundane became a chronicle in their hands.', 'num': '26'}, 'most_quotable': {'title': 'Most Quotable', 'desc': 'There are at least three things this person said in college that people still repeat. Without context. Out loud. In group chats. Ten years later and the line still lands.', 'num': '27'}, 'ultimo': {'title': 'The Last Laugh', 'desc': 'Always the last one standing at any event, long after everyone else has gone home. Last to submit, last to leave, and somehow last to stop having fun. Not because they were slow — because they knew how to make the most of every last minute. The real winner every time.', 'num': '28'}, 'screenshot_archivist': {'title': 'The Screenshot Archivist', 'desc': 'Screenshotted everything. Has receipts going back to 2012. The GC, the complaints, the announcements, the drama. Do not cross them. They have the evidence. All of it.', 'num': '29'}, "face_of_class": {"title": "The Face of the Class", "desc": "Not just beautiful — architecturally unfair. Always the one put forward when the department needed a representative, a candidate, a poster face. Probably won something. The rest of us cheered. We also knew we never stood a chance.", "num": "30"}, "the_dancer": {"title": "The Dancer", "desc": "Could hear a beat from three buildings away and their body would just respond. Cheerdance practice? First to know the choreography. Last to stop. Every event had a performance. Every performance had this person front and center. Born for the stage, enrolled in English by technicality.", "num": "31"}, "campus_wanderer": {"title": "The Campus Wanderer", "desc": "Cheerdance? Present. Sports fest? Present. Outreach? Present. University week committee? Present. You wondered when they actually attended class — and somehow their grades were fine. Living proof that you can be in six places at once if you are committed enough.", "num": "32"}, "hot_partner": {"title": "The One With the Hot Partner", "desc": "We do not know how they did it. Every ex, every partner, every oh-we-are-just-talking — inexplicably, unfairly attractive. This person has a type and the type is: out of everyone's league. We are not mad. We are taking notes.", "num": "33"}, "class_cook": {"title": "The Class Cook", "desc": "Whenever there was an outreach, a Christmas party, a department event, or any situation involving food — this person was already in the kitchen. Did not complain. Did not ask for credit. Just cooked. And it was always good. The class ate well because of them.", "num": "34"}, "conyo_kid": {"title": "The Conyo Kid", "desc": "The fanciest accent in the room. Could not finish a single sentence without switching lanes — Bisaya start, English finish, occasionally Tagalog in the middle for dramatic effect. An art form. A lifestyle. A full personality.", "num": "35"}};
-const BF_NAMES = ['Aileen', 'Apyang', 'Arjane', 'Cecil', 'Cindy', 'D-G', 'Didi', 'Ebing', 'Ekon', 'Fatima', 'Grace', 'Honey', 'Jen Bom', 'Jen Om', 'Jenny Leen', 'Jera', 'Joyce', 'Lovely', 'Marneh', 'Melanie', 'Melinda', 'Mickey', 'Mia', 'Rosegel', 'Rosemarie', 'Sarah'];
-let bfCurrentAward = null;
-let bfPendingNominee = null;
-let bfMyVotes = {};
-
-async function loadMyBatchVotes() {
-  if (!currentUser) return;
-  const rows = await sb.get('batch_file_votes', `voter=eq.${encodeURIComponent(currentUser)}`);
-  bfMyVotes = {};
-  (rows || []).forEach(r => { bfMyVotes[r.award_key] = r.nominee; });
-  updateBatchCards();
-}
-
-function updateBatchCards() {
-  const total = Object.keys(BF_AWARDS).length;
-  const voted = Object.keys(bfMyVotes).length;
-  Object.keys(BF_AWARDS).forEach(key => {
-    const card = document.getElementById('bfcard-' + key);
-    if (card) card.classList.toggle('voted', !!bfMyVotes[key]);
-  });
-  const pct = Math.round(voted / total * 100);
-  const bar = document.getElementById('bfProgressBar');
-  const txt = document.getElementById('bfProgressText');
-  if (bar) bar.style.width = pct + '%';
-  if (txt) txt.textContent = voted + ' of ' + total + ' voted';
-}
-
-function enterBatchFiles() {
-  document.getElementById('screen-select').style.display = 'none';
-  document.getElementById('screen-main').style.display = 'none';
-  document.getElementById('screen-batch').style.display = 'block';
-  const r = document.getElementById('bfRibbonWrap');
-  if (r) r.style.display = 'none';
-  const lbl = document.getElementById('bfVoterLabel');
-  if (lbl) lbl.textContent = currentUser || '—';
-  loadMyBatchVotes();
-  window.scrollTo(0, 0);
-}
-
-function exitBatchFiles() {
-  document.getElementById('screen-batch').style.display = 'none';
-  const r = document.getElementById('bfRibbonWrap');
-  if (r) r.style.display = 'block';
-  if (currentUser) {
-    document.getElementById('screen-main').style.display = 'block';
-  } else {
-    document.getElementById('screen-select').style.display = 'block';
-  }
-  window.scrollTo(0, 0);
-}
-
-function openAward(key) {
-  const award = BF_AWARDS[key];
-  if (!award) return;
-  bfCurrentAward = key;
-  document.getElementById('bfOverlayNum').textContent = 'Award ' + award.num;
-  document.getElementById('bfOverlayTitle').textContent = award.title;
-  document.getElementById('bfOverlayDesc').textContent = award.desc;
-  // highlight existing vote
-  document.querySelectorAll('.bf-name-btn').forEach(btn => {
-    btn.classList.toggle('my-pick', btn.textContent.trim() === bfMyVotes[key]);
-  });
-  // show vote section or hint
-  if (bfMyVotes[key]) {
-    showHintChart(key);
-  } else {
-    showNameGrid();
-  }
-  document.getElementById('bfOverlay').classList.add('active');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeOverlay() {
-  document.getElementById('bfOverlay').classList.remove('active');
-  document.body.style.overflow = '';
-  bfCurrentAward = null;
-}
-
-function showNameGrid() {
-  document.getElementById('bfVoteSection').style.display = 'block';
-  document.getElementById('bfHintWrap').classList.remove('active');
-}
-
-function selectNominee(name) {
-  bfPendingNominee = name;
-  const award = BF_AWARDS[bfCurrentAward];
-  document.getElementById('bfConfirmName').textContent = name;
-  document.getElementById('bfConfirmAward').textContent = award ? award.title : '—';
-  document.getElementById('bfConfirmWrap').classList.add('active');
-}
-
-function cancelVote() {
-  bfPendingNominee = null;
-  document.getElementById('bfConfirmWrap').classList.remove('active');
-}
-
-async function confirmVote() {
-  if (!currentUser || !bfCurrentAward || !bfPendingNominee) return;
-  document.getElementById('bfConfirmWrap').classList.remove('active');
-  await sb.upsert('batch_file_votes', {
-    voter: currentUser,
-    award_key: bfCurrentAward,
-    nominee: bfPendingNominee
-  });
-  bfMyVotes[bfCurrentAward] = bfPendingNominee;
-  // highlight selected
-  document.querySelectorAll('.bf-name-btn').forEach(btn => {
-    btn.classList.toggle('my-pick', btn.textContent.trim() === bfPendingNominee);
-  });
-  updateBatchCards();
-  bfPendingNominee = null;
-  showHintChart(bfCurrentAward);
-}
-
-async function showHintChart(key) {
-  document.getElementById('bfVoteSection').style.display = 'none';
-  document.getElementById('bfHintWrap').classList.add('active');
-  const rows = await sb.get('batch_file_votes', `award_key=eq.${key}`);
-  const counts = {};
-  BF_NAMES.forEach(n => counts[n] = 0);
-  (rows || []).forEach(r => { if (counts[r.nominee] !== undefined) counts[r.nominee]++; });
-  const max = Math.max(...Object.values(counts), 1);
-  const totalVotes = Object.values(counts).reduce((a,b)=>a+b,0);
-  // Sort by count desc, filter to those with votes
-  const sorted = BF_NAMES.map(n => [n, counts[n]]).sort((a,b) => b[1]-a[1]).filter(x => x[1] > 0);
-  const chart = document.getElementById('bfHintChart');
-  if (!chart) return;
-
-  // Show own vote clearly above chart
-  const myPick = bfMyVotes[key];
-  const myVoteHtml = myPick
-    ? '<div style="text-align:center;margin-bottom:16px;padding:8px 16px;background:rgba(184,134,11,0.12);border:1px solid rgba(184,134,11,0.3);font-size:12px;color:#d4a017;letter-spacing:0.05em;">Your vote: <strong style="color:#f5f0e8;">' + myPick + '</strong></div>'
-    : '';
-
-  if (!sorted.length) {
-    chart.innerHTML = myVoteHtml + '<div style="text-align:center;font-size:12px;color:rgba(245,240,232,0.25);padding:20px 0;">Be the first to vote for this award.</div>';
-    return;
-  }
-
-  // Anonymous labels: sort by votes, assign Classmate A/B/C...
-  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  const anonRows = sorted.map(([name, count], i) => {
-    const pct = Math.round(count / max * 100);
-    const label = 'Classmate ' + letters[i];
-    return '<div class="bf-chart-row">' +
-      '<div class="bf-chart-label" style="font-size:10px;color:rgba(245,240,232,0.3);letter-spacing:0.05em;">' + label + '</div>' +
-      '<div class="bf-chart-bar-wrap">' +
-        '<div class="bf-chart-bar" style="width:' + pct + '%"></div>' +
-        '<div class="bf-chart-blur-overlay"></div>' +
-      '</div>' +
-    '</div>';
-  }).join('');
-
-  // Vibe label based on distribution
-  let vibe = '';
-  if (sorted.length === 1) {
-    vibe = "— unanimous. 👀";
-  } else if (sorted[0][1] >= max * 0.7) {
-    vibe = "— there's a clear frontrunner.";
-  } else if (sorted.length >= 4 && sorted[0][1] === sorted[sorted.length-1][1]) {
-    vibe = "— completely split. Nobody agrees.";
-  } else {
-    vibe = "— it's closer than you think.";
-  }
-
-  chart.innerHTML = myVoteHtml +
-    '<div style="font-size:10px;color:rgba(245,240,232,0.2);letter-spacing:0.08em;text-align:center;margin-bottom:10px;font-style:italic;">' +
-    totalVotes + (totalVotes===1?' vote':' votes') + ' cast ' + vibe + '</div>' +
-    anonRows;
-}
-
-
-</script>
-
-<!-- ══ SCREEN 3: THE BATCH FILES ═════════════════════════════ -->
-<div id="screen-batch">
+<!-- SCREEN 3: THE BATCH FILES -->
+<div id="screen-batch" style="display:none;">
   <div class="bf-header">
     <button class="bf-back" onclick="exitBatchFiles()">← Back</button>
     <div class="bf-eyebrow">AB English · Class of '16</div>
@@ -2688,229 +1829,49 @@ async function showHintChart(key) {
     <div class="bf-subtitle">10-Year Class Awards · One vote per award · Results revealed at the reunion</div>
     <div class="bf-voter-badge">Voting as <strong id="bfVoterLabel">—</strong></div>
   </div>
-
   <div class="bf-progress">
     <span id="bfProgressText">0 of 35 voted</span>
     <div class="bf-progress-bar-wrap"><div class="bf-progress-bar" id="bfProgressBar" style="width:0%"></div></div>
   </div>
-
   <div class="bf-grid" id="bfGrid">
-          <div class="bf-card" id="bfcard-recitation_mvp" onclick="openAward('recitation_mvp')">
-            <div class="bf-card-check">✓</div>
-            <div class="bf-card-num">Award 01</div>
-            <div class="bf-card-title">The Recitation MVP</div>
-            <div class="bf-card-desc">First to raise a hand, even when they had no idea what the answer was. Confidence unmatched. The professor called on them anyway. It worked out more than it should have.</div>
-          </div>
-          <div class="bf-card" id="bfcard-most_makeup_ready" onclick="openAward('most_makeup_ready')">
-            <div class="bf-card-check">✓</div>
-            <div class="bf-card-num">Award 02</div>
-            <div class="bf-card-title">Most Make-up Ready</div>
-            <div class="bf-card-desc">Arrived at 7am looking like a photoshoot. Left at 5pm looking like a photoshoot. Class pictures, oral exams, random Tuesday — always ready. The rest of us were just in the background.</div>
-          </div>
-          <div class="bf-card" id="bfcard-student_liaison" onclick="openAward('student_liaison')">
-            <div class="bf-card-check">✓</div>
-            <div class="bf-card-num">Award 03</div>
-            <div class="bf-card-title">The Student Liaison</div>
-            <div class="bf-card-desc">The diplomat who negotiated class cancellations on everyone's behalf. Walked into the professor's office with nothing but charm and a rehearsed excuse. Walked out with a free period. We owe them everything.</div>
-          </div>
-          <div class="bf-card" id="bfcard-most_silent" onclick="openAward('most_silent')">
-            <div class="bf-card-check">✓</div>
-            <div class="bf-card-num">Award 04</div>
-            <div class="bf-card-title">Most Silent</div>
-            <div class="bf-card-desc">Was physically present for four years. Verbally? Unconfirmed. Their attendance record says they were there. Their voice? A mystery the linguistics department could not solve.</div>
-          </div>
-          <div class="bf-card" id="bfcard-thesis_survivor" onclick="openAward('thesis_survivor')">
-            <div class="bf-card-check">✓</div>
-            <div class="bf-card-num">Award 05</div>
-            <div class="bf-card-title">The Last-Minute Thesis Survivor</div>
-            <div class="bf-card-desc">Submitted at 11:58pm, passed with flying colors. We don't talk about what happened between 10pm and 11:57. What we know is: they made it. And they looked fine the next day.</div>
-          </div>
-          <div class="bf-card" id="bfcard-creative_excuse" onclick="openAward('creative_excuse')">
-            <div class="bf-card-check">✓</div>
-            <div class="bf-card-num">Award 06</div>
-            <div class="bf-card-title">Most Creative Excuse for an Absent</div>
-            <div class="bf-card-desc">A rotating hall of legends. A funeral every midterms. A mystery illness that only struck on reporting days. The creativity was, objectively, more impressive than some of the outputs.</div>
-          </div>
-          <div class="bf-card" id="bfcard-human_recorder" onclick="openAward('human_recorder')">
-            <div class="bf-card-check">✓</div>
-            <div class="bf-card-num">Award 07</div>
-            <div class="bf-card-title">The Human Recorder</div>
-            <div class="bf-card-desc">Always had the notes, the readings, the handouts, the past exams. The class would not have graduated without them. They probably still have the files. They're too kind to charge for them.</div>
-          </div>
-          <div class="bf-card" id="bfcard-gc_moderator" onclick="openAward('gc_moderator')">
-            <div class="bf-card-check">✓</div>
-            <div class="bf-card-num">Award 08</div>
-            <div class="bf-card-title">The GC Moderator</div>
-            <div class="bf-card-desc">Created the GC. Kept it alive, organized, and on-topic. Sent reminders nobody asked for but everyone needed. The class literally could not function without this person's next message.</div>
-          </div>
-          <div class="bf-card" id="bfcard-read_the_novel" onclick="openAward('read_the_novel')">
-            <div class="bf-card-check">✓</div>
-            <div class="bf-card-num">Award 09</div>
-            <div class="bf-card-title">Most Likely to Actually Read the Novel</div>
-            <div class="bf-card-desc">And then explain it to everyone five minutes before the oral exam. Voluntarily. With genuine enthusiasm. While the rest of us were still on the back cover summary.</div>
-          </div>
-          <div class="bf-card" id="bfcard-sleeper_agent" onclick="openAward('sleeper_agent')">
-            <div class="bf-card-check">✓</div>
-            <div class="bf-card-num">Award 10</div>
-            <div class="bf-card-title">The Sleeper Agent</div>
-            <div class="bf-card-desc">Appeared to be asleep for four years. Got grades nobody expected. Still undefeated. The most dangerous person in any classroom: the one you underestimate.</div>
-          </div>
-          <div class="bf-card" id="bfcard-prof_whisperer" onclick="openAward('prof_whisperer')">
-            <div class="bf-card-check">✓</div>
-            <div class="bf-card-num">Award 11</div>
-            <div class="bf-card-title">The Professor Whisperer</div>
-            <div class="bf-card-desc">Had a natural gift for making any professor like them enough to extend deadlines, bump grades, or forget attendance entirely. We still don't know exactly what they said. We're grateful they said it.</div>
-          </div>
-          <div class="bf-card" id="bfcard-walking_thesaurus" onclick="openAward('walking_thesaurus')">
-            <div class="bf-card-check">✓</div>
-            <div class="bf-card-num">Award 12</div>
-            <div class="bf-card-title">The Walking Thesaurus</div>
-            <div class="bf-card-desc">Could not send a simple message without it reading like a literary essay. "I concur with the aforementioned sentiment regarding the scheduling of our proposed assembly" in the GC at 9am. Every time.</div>
-          </div>
-          <div class="bf-card" id="bfcard-grammar_police" onclick="openAward('grammar_police')">
-            <div class="bf-card-check">✓</div>
-            <div class="bf-card-num">Award 13</div>
-            <div class="bf-card-title">Most Likely to Correct Your Grammar in a Casual Conversation</div>
-            <div class="bf-card-desc">And did it gently enough that you couldn't even be mad. A light touch. A raised eyebrow. A quiet "I think you mean 'whom'." You thanked them. You hated that you thanked them.</div>
-          </div>
-          <div class="bf-card" id="bfcard-liked_rizal" onclick="openAward('liked_rizal')">
-            <div class="bf-card-check">✓</div>
-            <div class="bf-card-num">Award 14</div>
-            <div class="bf-card-title">The One Who Actually Liked the Required Reading</div>
-            <div class="bf-card-desc">Read Beowulf voluntarily. Asked follow-up questions. Had opinions about the monster Grendel that went beyond "it was confusing." Beloved and slightly feared.</div>
-          </div>
-          <div class="bf-card" id="bfcard-method_actor" onclick="openAward('method_actor')">
-            <div class="bf-card-check">✓</div>
-            <div class="bf-card-num">Award 15</div>
-            <div class="bf-card-title">The Method Actor</div>
-            <div class="bf-card-desc">Committed fully to every oral presentation, role-play, and dramatic reading. Theater kid energy, no theater degree. The class was their stage. Every recitation was opening night.</div>
-          </div>
-          <div class="bf-card" id="bfcard-class_mother" onclick="openAward('class_mother')">
-            <div class="bf-card-check">✓</div>
-            <div class="bf-card-num">Award 16</div>
-            <div class="bf-card-title">The Class Mother</div>
-            <div class="bf-card-desc">Reminded everyone of deadlines, brought food, mediated conflicts, asked if you've eaten. Did not sign up for this role. Accepted it anyway. The class ran on their organizational energy.</div>
-          </div>
-          <div class="bf-card" id="bfcard-plot_twist" onclick="openAward('plot_twist')">
-            <div class="bf-card-check">✓</div>
-            <div class="bf-card-num">Award 17</div>
-            <div class="bf-card-title">The Plot Twist</div>
-            <div class="bf-card-desc">Quiet for years, then did something completely unexpected after graduation. Nobody saw it coming. The most interesting character in the story, and they saved their arc for the sequel.</div>
-          </div>
-          <div class="bf-card" id="bfcard-most_changed" onclick="openAward('most_changed')">
-            <div class="bf-card-check">✓</div>
-            <div class="bf-card-num">Award 18</div>
-            <div class="bf-card-title">Most Changed (For the Better)</div>
-            <div class="bf-card-desc">Glowed up so hard that the graduation photo looks like a different person. Ten years did something remarkable. We're all very happy about it and slightly intimidated.</div>
-          </div>
-          <div class="bf-card" id="bfcard-most_same" onclick="openAward('most_same')">
-            <div class="bf-card-check">✓</div>
-            <div class="bf-card-num">Award 19</div>
-            <div class="bf-card-title">Most Exactly the Same</div>
-            <div class="bf-card-desc">And that's a compliment. Consistent. Reliable. Exactly who they were in first year. Some people find themselves early and just stay there. Icon behavior.</div>
-          </div>
-          <div class="bf-card" id="bfcard-reunion_mvp" onclick="openAward('reunion_mvp')">
-            <div class="bf-card-check">✓</div>
-            <div class="bf-card-num">Award 20</div>
-            <div class="bf-card-title">The Reunion MVP</div>
-            <div class="bf-card-desc">Somehow knows what everyone is up to, who got married, who moved abroad, who changed careers. A walking alumni directory. The reason this reunion is as complete as it is.</div>
-          </div>
-          <div class="bf-card" id="bfcard-journal_writer" onclick="openAward('journal_writer')">
-            <div class="bf-card-check">✓</div>
-            <div class="bf-card-num">Award 21</div>
-            <div class="bf-card-title">Most Likely to Have Already Written This Night Into Their Journal</div>
-            <div class="bf-card-desc">Probably has a chapter about tonight already drafted. The opening line is good. There's a metaphor in the second paragraph. They brought a pen just in case.</div>
-          </div>
-          <div class="bf-card" id="bfcard-class_sigaw" onclick="openAward('class_sigaw')">
-            <div class="bf-card-check">✓</div>
-            <div class="bf-card-num">Award 22</div>
-            <div class="bf-card-title">Class Sigaw</div>
-            <div class="bf-card-desc">The one whose laugh you could hear from another building. From the corridor. Possibly from Cebu City. The classroom wasn't the same without it. Neither was any room they walked into.</div>
-          </div>
-          <div class="bf-card" id="bfcard-dramatic_pause" onclick="openAward('dramatic_pause')">
-            <div class="bf-card-check">✓</div>
-            <div class="bf-card-num">Award 23</div>
-            <div class="bf-card-title">The Dramatic Pause</div>
-            <div class="bf-card-desc">Knew exactly when to stop mid-sentence for effect. During recitations. During arguments. During text messages. The three dots lasted longer than necessary. Every time. On purpose.</div>
-          </div>
-          <div class="bf-card" id="bfcard-one_take_wonder" onclick="openAward('one_take_wonder')">
-            <div class="bf-card-check">✓</div>
-            <div class="bf-card-num">Award 24</div>
-            <div class="bf-card-title">The One-Take Wonder</div>
-            <div class="bf-card-desc">Only needed to rehearse once for any oral presentation, sounded like they'd been preparing for weeks. The rest of us were on take twelve. They were already done and calm.</div>
-          </div>
-          <div class="bf-card" id="bfcard-hype_person" onclick="openAward('hype_person')">
-            <div class="bf-card-check">✓</div>
-            <div class="bf-card-num">Award 25</div>
-            <div class="bf-card-title">The Hype Person</div>
-            <div class="bf-card-desc">Front row energy for everyone else's presentations, even when half asleep. The original hypebeast. Nobody bombed a report with this person in the audience. Impossible.</div>
-          </div>
-          <div class="bf-card" id="bfcard-narrator" onclick="openAward('narrator')">
-            <div class="bf-card-check">✓</div>
-            <div class="bf-card-num">Award 26</div>
-            <div class="bf-card-title">The Narrator</div>
-            <div class="bf-card-desc">Could make a story out of anything. Going to the canteen, waiting for a jeep, a two-minute delay. Always a story. Always. The mundane became a chronicle in their hands.</div>
-          </div>
-          <div class="bf-card" id="bfcard-most_quotable" onclick="openAward('most_quotable')">
-            <div class="bf-card-check">✓</div>
-            <div class="bf-card-num">Award 27</div>
-            <div class="bf-card-title">Most Quotable</div>
-            <div class="bf-card-desc">There are at least three things this person said in college that people still repeat. Without context. Out loud. In group chats. Ten years later and the line still lands.</div>
-          </div>
-          <div class="bf-card" id="bfcard-ultimo" onclick="openAward('ultimo')">
-            <div class="bf-card-check">✓</div>
-            <div class="bf-card-num">Award 28</div>
-            <div class="bf-card-title">The Last Laugh</div>
-            <div class="bf-card-desc">Always the last one standing at any event, long after everyone else has gone home. Last to submit, last to leave, and somehow last to stop having fun. Not because they were slow — because they knew how to make the most of every last minute. The real winner every time.</div>
-          </div>
-          <div class="bf-card" id="bfcard-screenshot_archivist" onclick="openAward('screenshot_archivist')">
-            <div class="bf-card-check">✓</div>
-            <div class="bf-card-num">Award 29</div>
-            <div class="bf-card-title">The Screenshot Archivist</div>
-            <div class="bf-card-desc">Screenshotted everything. Has receipts going back to 2012. The GC, the complaints, the announcements, the drama. Do not cross them. They have the evidence. All of it.</div>
-          </div>
-
-          <div class="bf-card" id="bfcard-face_of_class" onclick="openAward('face_of_class')">
-            <div class="bf-card-check">✓</div>
-            <div class="bf-card-num">Award 30</div>
-            <div class="bf-card-title">The Face of the Class</div>
-            <div class="bf-card-desc">Not just beautiful — architecturally unfair. Always the one put forward when the department needed a representative, a candidate, a poster face. Probably won something. The rest of us cheered. We also knew we never stood a chance.</div>
-          </div>
-          <div class="bf-card" id="bfcard-the_dancer" onclick="openAward('the_dancer')">
-            <div class="bf-card-check">✓</div>
-            <div class="bf-card-num">Award 31</div>
-            <div class="bf-card-title">The Dancer</div>
-            <div class="bf-card-desc">Could hear a beat from three buildings away and their body would just respond. Cheerdance practice? First to know the choreography. Last to stop. Every event had a performance. Every performance had this person front and center. Born for the stage, enrolled in English by technicality.</div>
-          </div>
-          <div class="bf-card" id="bfcard-campus_wanderer" onclick="openAward('campus_wanderer')">
-            <div class="bf-card-check">✓</div>
-            <div class="bf-card-num">Award 32</div>
-            <div class="bf-card-title">The Campus Wanderer</div>
-            <div class="bf-card-desc">Cheerdance? Present. Sports fest? Present. Outreach? Present. University week committee? Present. You wondered when they actually attended class — and somehow their grades were fine. Living proof that you can be in six places at once if you are committed enough.</div>
-          </div>
-          <div class="bf-card" id="bfcard-hot_partner" onclick="openAward('hot_partner')">
-            <div class="bf-card-check">✓</div>
-            <div class="bf-card-num">Award 33</div>
-            <div class="bf-card-title">The One With the Hot Partner</div>
-            <div class="bf-card-desc">We don't know how they did it. We've never known. Every ex, every partner, every 'oh we're just talking' — inexplicably, unfairly attractive. This person has a type and the type is: out of everyone's league. We're not mad. We're taking notes.</div>
-          </div>
-          <div class="bf-card" id="bfcard-class_cook" onclick="openAward('class_cook')">
-            <div class="bf-card-check">✓</div>
-            <div class="bf-card-num">Award 34</div>
-            <div class="bf-card-title">The Class Cook</div>
-            <div class="bf-card-desc">Whenever there was an outreach, a Christmas party, a department event, or any situation involving food — this person was already in the kitchen. Did not complain. Did not ask for credit. Just cooked. And it was always good. The class ate well because of them and they deserve a formal award for it.</div>
-          </div>
-          <div class="bf-card" id="bfcard-conyo_kid" onclick="openAward('conyo_kid')">
-            <div class="bf-card-check">✓</div>
-            <div class="bf-card-num">Award 35</div>
-            <div class="bf-card-title">The Conyo Kid</div>
-            <div class="bf-card-desc">The fanciest accent in the room. Could not finish a single sentence without switching lanes — Bisaya start, English finish, occasionally Tagalog in the middle for dramatic effect. An art form. A lifestyle. A full personality.</div>
-          </div>
-          </div>
+          <div class="bf-card" id="bfcard-recitation_mvp" onclick="openAward('recitation_mvp')"><div class="bf-card-check">✓</div><div class="bf-card-num">Award 01</div><div class="bf-card-title">The Recitation MVP</div><div class="bf-card-desc">First to raise a hand, even when they had no idea what the answer was. Confidence unmatched. The professor called on them anyway. It worked out more than it should have.</div></div>
+          <div class="bf-card" id="bfcard-most_makeup_ready" onclick="openAward('most_makeup_ready')"><div class="bf-card-check">✓</div><div class="bf-card-num">Award 02</div><div class="bf-card-title">Most Make-up Ready</div><div class="bf-card-desc">Arrived at 7am looking like a photoshoot. Left at 5pm looking like a photoshoot. Class pictures, oral exams, random Tuesday — always ready. The rest of us were just in the background.</div></div>
+          <div class="bf-card" id="bfcard-student_liaison" onclick="openAward('student_liaison')"><div class="bf-card-check">✓</div><div class="bf-card-num">Award 03</div><div class="bf-card-title">The Student Liaison</div><div class="bf-card-desc">The diplomat who negotiated class cancellations on everyone's behalf. Walked into the professor's office with nothing but charm and a rehearsed excuse. Walked out with a free period. We owe them everything.</div></div>
+          <div class="bf-card" id="bfcard-most_silent" onclick="openAward('most_silent')"><div class="bf-card-check">✓</div><div class="bf-card-num">Award 04</div><div class="bf-card-title">Most Silent</div><div class="bf-card-desc">Was physically present for four years. Verbally? Unconfirmed. Their attendance record says they were there. Their voice? A mystery the linguistics department could not solve.</div></div>
+          <div class="bf-card" id="bfcard-thesis_survivor" onclick="openAward('thesis_survivor')"><div class="bf-card-check">✓</div><div class="bf-card-num">Award 05</div><div class="bf-card-title">The Last-Minute Thesis Survivor</div><div class="bf-card-desc">Submitted at 11:58pm, passed with flying colors. We don't talk about what happened between 10pm and 11:57.</div></div>
+          <div class="bf-card" id="bfcard-creative_excuse" onclick="openAward('creative_excuse')"><div class="bf-card-check">✓</div><div class="bf-card-num">Award 06</div><div class="bf-card-title">Most Creative Excuse for an Absent</div><div class="bf-card-desc">A rotating hall of legends. A funeral every midterms. The creativity was, objectively, more impressive than some of the outputs.</div></div>
+          <div class="bf-card" id="bfcard-human_recorder" onclick="openAward('human_recorder')"><div class="bf-card-check">✓</div><div class="bf-card-num">Award 07</div><div class="bf-card-title">The Human Recorder</div><div class="bf-card-desc">Always had the notes, the readings, the handouts, the past exams. The class would not have graduated without them.</div></div>
+          <div class="bf-card" id="bfcard-gc_moderator" onclick="openAward('gc_moderator')"><div class="bf-card-check">✓</div><div class="bf-card-num">Award 08</div><div class="bf-card-title">The GC Moderator</div><div class="bf-card-desc">Created the GC. Kept it alive, organized, and on-topic. Sent reminders nobody asked for but everyone needed.</div></div>
+          <div class="bf-card" id="bfcard-read_the_novel" onclick="openAward('read_the_novel')"><div class="bf-card-check">✓</div><div class="bf-card-num">Award 09</div><div class="bf-card-title">Most Likely to Actually Read the Novel</div><div class="bf-card-desc">And then explain it to everyone five minutes before the oral exam. Voluntarily. With genuine enthusiasm.</div></div>
+          <div class="bf-card" id="bfcard-sleeper_agent" onclick="openAward('sleeper_agent')"><div class="bf-card-check">✓</div><div class="bf-card-num">Award 10</div><div class="bf-card-title">The Sleeper Agent</div><div class="bf-card-desc">Appeared to be asleep for four years. Got grades nobody expected. Still undefeated.</div></div>
+          <div class="bf-card" id="bfcard-prof_whisperer" onclick="openAward('prof_whisperer')"><div class="bf-card-check">✓</div><div class="bf-card-num">Award 11</div><div class="bf-card-title">The Professor Whisperer</div><div class="bf-card-desc">Had a natural gift for making any professor like them enough to extend deadlines, bump grades, or forget attendance entirely.</div></div>
+          <div class="bf-card" id="bfcard-walking_thesaurus" onclick="openAward('walking_thesaurus')"><div class="bf-card-check">✓</div><div class="bf-card-num">Award 12</div><div class="bf-card-title">The Walking Thesaurus</div><div class="bf-card-desc">Could not send a simple message without it reading like a literary essay. "I concur with the aforementioned sentiment" in the GC at 9am.</div></div>
+          <div class="bf-card" id="bfcard-grammar_police" onclick="openAward('grammar_police')"><div class="bf-card-check">✓</div><div class="bf-card-num">Award 13</div><div class="bf-card-title">Most Likely to Correct Your Grammar in a Casual Conversation</div><div class="bf-card-desc">And did it gently enough that you couldn't even be mad. A light touch. A raised eyebrow. You thanked them. You hated that you thanked them.</div></div>
+          <div class="bf-card" id="bfcard-liked_beowulf" onclick="openAward('liked_beowulf')"><div class="bf-card-check">✓</div><div class="bf-card-num">Award 14</div><div class="bf-card-title">The One Who Actually Liked the Required Reading</div><div class="bf-card-desc">Read Beowulf voluntarily. Asked follow-up questions. Had opinions about the monster Grendel that went beyond "it was confusing." Beloved and slightly feared.</div></div>
+          <div class="bf-card" id="bfcard-method_actor" onclick="openAward('method_actor')"><div class="bf-card-check">✓</div><div class="bf-card-num">Award 15</div><div class="bf-card-title">The Method Actor</div><div class="bf-card-desc">Committed fully to every oral presentation, role-play, and dramatic reading. Theater kid energy, no theater degree.</div></div>
+          <div class="bf-card" id="bfcard-class_mother" onclick="openAward('class_mother')"><div class="bf-card-check">✓</div><div class="bf-card-num">Award 16</div><div class="bf-card-title">The Class Mother</div><div class="bf-card-desc">Reminded everyone of deadlines, brought food, mediated conflicts, asked if you've eaten.</div></div>
+          <div class="bf-card" id="bfcard-plot_twist" onclick="openAward('plot_twist')"><div class="bf-card-check">✓</div><div class="bf-card-num">Award 17</div><div class="bf-card-title">The Plot Twist</div><div class="bf-card-desc">Quiet for years, then did something completely unexpected after graduation. Nobody saw it coming.</div></div>
+          <div class="bf-card" id="bfcard-most_changed" onclick="openAward('most_changed')"><div class="bf-card-check">✓</div><div class="bf-card-num">Award 18</div><div class="bf-card-title">Most Changed (For the Better)</div><div class="bf-card-desc">Glowed up so hard that the graduation photo looks like a different person. Ten years did something remarkable.</div></div>
+          <div class="bf-card" id="bfcard-most_same" onclick="openAward('most_same')"><div class="bf-card-check">✓</div><div class="bf-card-num">Award 19</div><div class="bf-card-title">Most Exactly the Same</div><div class="bf-card-desc">And that's a compliment. Consistent. Reliable. Icon.</div></div>
+          <div class="bf-card" id="bfcard-reunion_mvp" onclick="openAward('reunion_mvp')"><div class="bf-card-check">✓</div><div class="bf-card-num">Award 20</div><div class="bf-card-title">The Reunion MVP</div><div class="bf-card-desc">Somehow knows what everyone is up to. A walking alumni directory. The reason this reunion is as complete as it is.</div></div>
+          <div class="bf-card" id="bfcard-journal_writer" onclick="openAward('journal_writer')"><div class="bf-card-check">✓</div><div class="bf-card-num">Award 21</div><div class="bf-card-title">Most Likely to Have Already Written This Night Into Their Journal</div><div class="bf-card-desc">Probably has a chapter about tonight already drafted. The opening line is good.</div></div>
+          <div class="bf-card" id="bfcard-class_sigaw" onclick="openAward('class_sigaw')"><div class="bf-card-check">✓</div><div class="bf-card-num">Award 22</div><div class="bf-card-title">Class Sigaw</div><div class="bf-card-desc">The one whose laugh you could hear from another building. The classroom was not the same without it.</div></div>
+          <div class="bf-card" id="bfcard-dramatic_pause" onclick="openAward('dramatic_pause')"><div class="bf-card-check">✓</div><div class="bf-card-num">Award 23</div><div class="bf-card-title">The Dramatic Pause</div><div class="bf-card-desc">Knew exactly when to stop mid-sentence for effect. During recitations. During arguments. During text messages.</div></div>
+          <div class="bf-card" id="bfcard-one_take_wonder" onclick="openAward('one_take_wonder')"><div class="bf-card-check">✓</div><div class="bf-card-num">Award 24</div><div class="bf-card-title">The One-Take Wonder</div><div class="bf-card-desc">Only needed to rehearse once for any oral presentation, sounded like they had been preparing for weeks.</div></div>
+          <div class="bf-card" id="bfcard-hype_person" onclick="openAward('hype_person')"><div class="bf-card-check">✓</div><div class="bf-card-num">Award 25</div><div class="bf-card-title">The Hype Person</div><div class="bf-card-desc">Front row energy for everyone else's presentations, even when half asleep. The original hypebeast.</div></div>
+          <div class="bf-card" id="bfcard-narrator" onclick="openAward('narrator')"><div class="bf-card-check">✓</div><div class="bf-card-num">Award 26</div><div class="bf-card-title">The Narrator</div><div class="bf-card-desc">Could make a story out of anything. Going to the canteen, waiting for a jeep, a two-minute delay. Always a story.</div></div>
+          <div class="bf-card" id="bfcard-most_quotable" onclick="openAward('most_quotable')"><div class="bf-card-check">✓</div><div class="bf-card-num">Award 27</div><div class="bf-card-title">Most Quotable</div><div class="bf-card-desc">There are at least three things this person said in college that people still repeat. Ten years later and the line still lands.</div></div>
+          <div class="bf-card" id="bfcard-last_laugh" onclick="openAward('last_laugh')"><div class="bf-card-check">✓</div><div class="bf-card-num">Award 28</div><div class="bf-card-title">The Last Laugh</div><div class="bf-card-desc">Always the last one standing at any event, long after everyone else had gone home. Not because they were slow — because they knew how to make the most of every last minute.</div></div>
+          <div class="bf-card" id="bfcard-screenshot_archivist" onclick="openAward('screenshot_archivist')"><div class="bf-card-check">✓</div><div class="bf-card-num">Award 29</div><div class="bf-card-title">The Screenshot Archivist</div><div class="bf-card-desc">Screenshotted everything. Has receipts going back to 2012. Do not cross them. They have the evidence. All of it.</div></div>
+          <div class="bf-card" id="bfcard-face_of_class" onclick="openAward('face_of_class')"><div class="bf-card-check">✓</div><div class="bf-card-num">Award 30</div><div class="bf-card-title">The Face of the Class</div><div class="bf-card-desc">Not just beautiful — architecturally unfair. Always the one put forward when the department needed a representative, a candidate, a poster face. Probably won something.</div></div>
+          <div class="bf-card" id="bfcard-the_dancer" onclick="openAward('the_dancer')"><div class="bf-card-check">✓</div><div class="bf-card-num">Award 31</div><div class="bf-card-title">The Dancer</div><div class="bf-card-desc">Could hear a beat from three buildings away and their body would just respond. Born for the stage, enrolled in English by technicality.</div></div>
+          <div class="bf-card" id="bfcard-campus_wanderer" onclick="openAward('campus_wanderer')"><div class="bf-card-check">✓</div><div class="bf-card-num">Award 32</div><div class="bf-card-title">The Campus Wanderer</div><div class="bf-card-desc">Cheerdance? Present. Sports fest? Present. Outreach? Present. University week committee? Present. Living proof you can be in six places at once.</div></div>
+          <div class="bf-card" id="bfcard-hot_partner" onclick="openAward('hot_partner')"><div class="bf-card-check">✓</div><div class="bf-card-num">Award 33</div><div class="bf-card-title">The One With the Hot Partner</div><div class="bf-card-desc">We do not know how they did it. This person has a type and the type is: out of everyone's league. We are not mad. We are taking notes.</div></div>
+          <div class="bf-card" id="bfcard-class_cook" onclick="openAward('class_cook')"><div class="bf-card-check">✓</div><div class="bf-card-num">Award 34</div><div class="bf-card-title">The Class Cook</div><div class="bf-card-desc">Whenever there was an outreach or a Christmas party, this person was already in the kitchen. Did not complain. Did not ask for credit. Just cooked. And it was always good.</div></div>
+          <div class="bf-card" id="bfcard-conyo_kid" onclick="openAward('conyo_kid')"><div class="bf-card-check">✓</div><div class="bf-card-num">Award 35</div><div class="bf-card-title">The Conyo Kid</div><div class="bf-card-desc">The fanciest accent in the room. Bisaya start, English finish, occasionally Tagalog in the middle for dramatic effect. An art form. A lifestyle. A full personality.</div></div>
   </div>
 </div>
 
-<!-- Voting overlay -->
 <div class="bf-overlay" id="bfOverlay">
   <div class="bf-blur-bg" onclick="closeOverlay()"></div>
   <button class="bf-overlay-close" onclick="closeOverlay()">✕</button>
@@ -2920,7 +1881,6 @@ async function showHintChart(key) {
       <div class="bf-award-title-big" id="bfOverlayTitle">Award Title</div>
       <div class="bf-award-desc-big" id="bfOverlayDesc">Description</div>
     </div>
-
     <div id="bfVoteSection">
       <div class="bf-vote-prompt">Who gets this award?</div>
       <div class="bf-name-grid">
@@ -2952,7 +1912,6 @@ async function showHintChart(key) {
           <button class="bf-name-btn" onclick="selectNominee('Sarah')">Sarah</button>
       </div>
     </div>
-
     <div class="bf-hint-wrap" id="bfHintWrap">
       <div class="bf-hint-title">⚡ The votes are in — results blurred until reunion party</div>
       <div id="bfHintChart"></div>
@@ -2962,7 +1921,6 @@ async function showHintChart(key) {
   </div>
 </div>
 
-<!-- Confirmation popup -->
 <div class="bf-confirm-wrap" id="bfConfirmWrap">
   <div class="bf-confirm-bg" onclick="cancelVote()"></div>
   <div class="bf-confirm-box">
@@ -2975,5 +1933,469 @@ async function showHintChart(key) {
   </div>
 </div>
 
+<!-- Persistent Batch Files ribbon -->
+<div class="bf-ribbon-wrap" id="bfRibbonWrap">
+  <div class="bf-ribbon" onclick="enterBatchFiles()">
+    <span class="bf-ribbon-line1">The Batch Files</span>
+    <span class="bf-ribbon-line2">Vote Now</span>
+  </div>
+</div>
+
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script>
+const ORGANIZERS = ['Marneh', 'D-G', 'Mickey', 'Cecil', 'Apyang', 'Rosegel', 'Sarah'];
+const DATE_OPTS = ['jun13','jun20','jun27'];
+const VENUE_OPTS = ['v1','v2','v3'];
+let currentUser = null;
+
+// ── SUPABASE ────────────────────────────────────────────────
+const SB_URL = 'https://auhkazxubjczgcusamxq.supabase.co';
+const SB_KEY = 'sb_publishable_boKVP7k36iEFYikPRz3spA_d196OI1i';
+const sb = {
+  headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+  async get(table, params='') {
+    try { const r = await fetch(`${SB_URL}/rest/v1/${table}?${params}`, { headers: this.headers }); return r.ok ? await r.json() : []; } catch(e) { return []; }
+  },
+  async upsert(table, body) {
+    try { const r = await fetch(`${SB_URL}/rest/v1/${table}`, { method: 'POST', headers: { ...this.headers, 'Prefer': 'resolution=merge-duplicates,return=representation' }, body: JSON.stringify(body) }); return r.ok ? await r.json() : null; } catch(e) { return null; }
+  },
+  async delete(table, params) {
+    try { const r = await fetch(`${SB_URL}/rest/v1/${table}?${params}`, { method: 'DELETE', headers: this.headers }); return r.ok; } catch(e) { return false; }
+  },
+  async insert(table, body) {
+    try { const r = await fetch(`${SB_URL}/rest/v1/${table}`, { method: 'POST', headers: this.headers, body: JSON.stringify(body) }); return r.ok ? await r.json() : null; } catch(e) { return null; }
+  },
+  async update(table, params, body) {
+    try { const r = await fetch(`${SB_URL}/rest/v1/${table}?${params}`, { method: 'PATCH', headers: this.headers, body: JSON.stringify(body) }); return r.ok; } catch(e) { return false; }
+  }
+};
+
+// ── NAME SELECTION ──────────────────────────────────────────
+function selectName(name) {
+  currentUser = name;
+  document.getElementById('userLabel').textContent = name;
+  document.getElementById('screen-select').style.display = 'none';
+  document.getElementById('screen-main').style.display = 'block';
+  const isEditor = ORGANIZERS.includes(name);
+  if (isEditor) document.body.classList.add('is-editor');
+  else document.body.classList.remove('is-editor');
+  document.querySelectorAll('.editor-only-input').forEach(el => {
+    if (isEditor) el.removeAttribute('readonly'); else el.setAttribute('readonly', true);
+  });
+  document.querySelectorAll('.btn-vote').forEach(b => b.disabled = false);
+  const vh = document.getElementById('venueVoteStatus');
+  const ds = document.getElementById('dateVoteStatus');
+  if (ds) ds.textContent = 'Voting as ' + name;
+  if (vh) vh.textContent = 'Voting as ' + name;
+  const rsvpBar = document.getElementById('rsvpBar');
+  if (rsvpBar) rsvpBar.style.display = 'flex';
+  loadPledges(); loadSuggestions(); loadHype(); loadRSVP(); loadMyBatchVotes(); loadRollCall(); subscribeRollRealtime();
+  restoreFormFields().then(() => { hookProfCheckboxes(); loadHeadcount(); });
+  window.scrollTo(0, 0);
+}
+
+function switchUser() {
+  currentUser = null;
+  document.body.classList.remove('is-editor');
+  document.getElementById('screen-main').style.display = 'none';
+  document.getElementById('screen-select').style.display = 'block';
+  window.scrollTo(0, 0);
+}
+
+// ── VOTER THUMBS ────────────────────────────────────────────
+function renderVoterThumbs(names) {
+  const colors = ['#b8860b','#5a6e4a','#8b3a2a','#4a6e8a','#7a5c8a','#6e7a4a','#8a6e3a'];
+  return '<div class="voter-thumbs">' + names.map((n,i) => {
+    const ini = n.split(/[\s-]/).map(w=>w[0]||'').join('').toUpperCase().slice(0,2) || n[0].toUpperCase();
+    const me = n === currentUser;
+    return '<span class="voter-thumb' + (me?' voter-thumb-me':'') + '" style="background:' + colors[i%colors.length] + '" title="' + n + '" data-name="' + n + '">' + ini + '</span>';
+  }).join('') + '</div>';
+}
+
+// ── PLEDGES ─────────────────────────────────────────────────
+async function loadPledges() {
+  const rows = await sb.get('pledges', 'order=id.asc');
+  renderPledgesFromRows(rows || []);
+}
+function renderPledgesFromRows(rows) {
+  const c = document.getElementById('pledge-bring');
+  if (!c) return;
+  c.innerHTML = '';
+  rows.forEach(row => c.appendChild(makePledgeRow(row.id, row.name||'', row.item||'')));
+}
+function makePledgeRow(id, name, item) {
+  const row = document.createElement('div');
+  row.className = 'pledge-row';
+  row.dataset.id = id;
+  row.innerHTML = '<input type="text" placeholder="Your name" value="' + name + '" onblur="updatePledge(' + id + ',\'name\',this.value)"><input type="text" placeholder="What are you bringing?" value="' + item + '" onblur="updatePledge(' + id + ',\'item\',this.value)"><button type="button" class="pledge-del" onclick="deletePledge(' + id + ',this)">×</button>';
+  return row;
+}
+async function addPledgeRow() {
+  const rows = await sb.insert('pledges', { name: currentUser||'', item: '' });
+  if (rows && rows[0]) {
+    const c = document.getElementById('pledge-bring');
+    const newRow = makePledgeRow(rows[0].id, currentUser||'', '');
+    c.appendChild(newRow);
+    const inputs = newRow.querySelectorAll('input');
+    (inputs[1]||inputs[0]).focus();
+  }
+}
+async function updatePledge(id, field, value) { await sb.update('pledges', `id=eq.${id}`, { [field]: value }); }
+async function deletePledge(id, btn) { await sb.delete('pledges', `id=eq.${id}`); btn.closest('.pledge-row').remove(); }
+
+// ── SUGGESTIONS ─────────────────────────────────────────────
+async function loadSuggestions() {
+  const rows = await sb.get('suggestions', 'order=created_at.desc');
+  renderSuggestionsFromRows(rows || []);
+}
+function renderSuggestionsFromRows(rows) {
+  const list = document.getElementById('suggList');
+  if (!list) return;
+  if (!rows.length) { list.innerHTML = '<div style="font-size:11px;color:rgba(26,18,8,0.3);font-style:italic;">No suggestions yet.</div>'; return; }
+  list.innerHTML = rows.map(s => {
+    const d = new Date(s.created_at);
+    const time = d.toLocaleDateString('en-PH', {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'});
+    return '<div class="sugg-entry"><div style="display:flex;justify-content:space-between;align-items:baseline;"><span class="sugg-author">' + s.author + '</span><span class="sugg-time">' + time + '</span></div><div class="sugg-text">' + s.text + '</div></div>';
+  }).join('');
+}
+async function submitSuggestion() {
+  const input = document.getElementById('suggInput');
+  const text = input ? input.value.trim() : '';
+  if (!text || !currentUser) return;
+  await sb.insert('suggestions', { author: currentUser, text });
+  input.value = '';
+  loadSuggestions();
+}
+
+// ── HYPE WALL ───────────────────────────────────────────────
+async function loadHype() {
+  const rows = await sb.get('hype_wall', 'order=created_at.desc&limit=50');
+  renderHype(rows || []);
+}
+function renderHype(rows) {
+  const feed = document.getElementById('hypeFeed');
+  if (!feed) return;
+  if (!rows.length) { feed.innerHTML = '<div class="hype-empty">Nobody\'s hyped yet — be the first one to go off! 🎤</div>'; return; }
+  feed.innerHTML = rows.map(r => {
+    const d = new Date(r.created_at);
+    const time = d.toLocaleDateString('en-PH', {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'});
+    return '<div class="hype-entry"><div class="hype-entry-top"><span class="hype-author">' + r.author + '</span><span class="hype-time">' + time + '</span></div><div class="hype-text">' + r.text + '</div></div>';
+  }).join('');
+}
+async function submitHype() {
+  const input = document.getElementById('hypeInput');
+  const text = input ? input.value.trim() : '';
+  if (!text || !currentUser) return;
+  await sb.insert('hype_wall', { author: currentUser, text });
+  input.value = '';
+  loadHype();
+}
+
+// ── RSVP ────────────────────────────────────────────────────
+async function loadRSVP() {
+  if (!currentUser) return;
+  const rows = await sb.get('rsvp', `name=eq.${encodeURIComponent(currentUser)}`);
+  if (rows && rows.length) applyRSVPState(rows[0].status, rows[0].plus);
+  const bar = document.getElementById('rsvpBar');
+  if (bar) bar.style.display = 'flex';
+  loadHeadcount();
+}
+function applyRSVPState(status, plus) {
+  ['yes','tent','no'].forEach(k => {
+    const btn = document.getElementById('rsvp-' + (k==='tent'?'tent':k));
+    if (btn) btn.className = 'rsvp-btn' + (status===(k==='tent'?'tentative':k)?' active-'+(k==='tent'?'tent':k):'');
+  });
+  const tentBtn = document.getElementById('rsvp-tent');
+  if (tentBtn) tentBtn.className = 'rsvp-btn' + (status==='tentative'?' active-tent':'');
+  ['0','1','2'].forEach(p => {
+    const btn = document.getElementById('rsvp-plus' + p);
+    if (btn) btn.className = 'rsvp-plus-btn' + (plus===p?' active':'');
+  });
+}
+async function setRSVP(status) {
+  if (!currentUser) return;
+  const existing = await sb.get('rsvp', `name=eq.${encodeURIComponent(currentUser)}`);
+  const plus = (existing && existing[0]) ? existing[0].plus : '0';
+  await sb.upsert('rsvp', { name: currentUser, status, plus });
+  applyRSVPState(status, plus);
+  loadHeadcount(); loadRollCall();
+}
+async function setPlus(plus) {
+  if (!currentUser) return;
+  const existing = await sb.get('rsvp', `name=eq.${encodeURIComponent(currentUser)}`);
+  const status = (existing && existing[0]) ? existing[0].status : null;
+  await sb.upsert('rsvp', { name: currentUser, status: status || 'tentative', plus });
+  applyRSVPState(status || 'tentative', plus);
+  loadHeadcount(); loadRollCall();
+}
+
+// ── HEADCOUNT ───────────────────────────────────────────────
+async function loadHeadcount() {
+  const rows = await sb.get('rsvp');
+  renderHeadcount(rows || []);
+}
+function renderHeadcount(rows) {
+  let goingAB=0, tentAB=0, noAB=0, goingGuests=0, tentGuests=0;
+  rows.forEach(r => {
+    const plus = parseInt(r.plus || '0');
+    if (r.status==='yes') { goingAB++; goingGuests+=plus; }
+    else if (r.status==='tentative') { tentAB++; tentGuests+=plus; }
+    else if (r.status==='no') noAB++;
+  });
+  const total = goingAB+goingGuests+tentAB+tentGuests;
+  const profChecked = document.querySelectorAll('input[name="teacher[]"]:checked').length;
+  const set = (id,v) => { const el=document.getElementById(id); if(el) el.textContent=v; };
+  set('hcTotal', total > 0 ? total : '—');
+  set('hcGoing', goingAB); set('hcGoingGuests', goingGuests);
+  set('hcTent', tentAB); set('hcTentGuests', tentGuests); set('hcNo', noAB);
+  set('hcProf', profChecked > 0 ? profChecked : '—');
+  const badge = document.getElementById('profConfirmedBadge');
+  if (badge) badge.textContent = profChecked > 0 ? '(confirmed: ' + profChecked + ')' : '';
+  const bar = document.getElementById('headcountBar');
+  if (bar) bar.style.display = 'block';
+}
+function hookProfCheckboxes() {
+  document.querySelectorAll('input[name="teacher[]"]').forEach(cb => cb.addEventListener('change', () => loadHeadcount()));
+}
+
+// ── FORM FIELDS ─────────────────────────────────────────────
+async function saveField(name, value) { await sb.upsert('form_fields', { key: name, value: value || '' }); }
+async function saveFormFields() {
+  const fields = [];
+  document.querySelectorAll('#screen-main input[name], #screen-main select[name], #screen-main textarea[name]').forEach(el => {
+    if (el.type==='checkbox') fields.push({ key: el.name+':'+el.value, value: el.checked?'true':'false' });
+    else if (el.type==='radio') { if (el.checked) fields.push({ key: el.name, value: el.value }); }
+    else if (el.value) fields.push({ key: el.name, value: el.value });
+  });
+  if (fields.length) await sb.upsert('form_fields', fields);
+}
+async function restoreFormFields() {
+  const rows = await sb.get('form_fields');
+  if (!rows || !rows.length) return;
+  const map = {};
+  rows.forEach(r => map[r.key] = r.value);
+  document.querySelectorAll('#screen-main input[name], #screen-main select[name], #screen-main textarea[name]').forEach(el => {
+    if (el.type==='checkbox') el.checked = map[el.name+':'+el.value]==='true';
+    else if (el.type==='radio') { if (map[el.name]===el.value) el.checked=true; }
+    else if (map[el.name]!==undefined) el.value = map[el.name];
+  });
+  document.getElementById('screen-main').addEventListener('change', saveFormFields);
+  document.getElementById('screen-main').addEventListener('input', () => { clearTimeout(window._saveTimer); window._saveTimer = setTimeout(saveFormFields, 800); });
+}
+
+// ── ROLL CALL ───────────────────────────────────────────────
+const ROLL_NAMES = ['Aileen', 'Apyang', 'Arjane', 'Cecil', 'Cindy', 'D-G', 'Didi', 'Ebing', 'Ekon', 'Fatima', 'Grace', 'Honey', 'Jen Bom', 'Jen Om', 'Jenny Leen', 'Jera', 'Joyce', 'Lovely', 'Marneh', 'Melanie', 'Melinda', 'Mickey', 'Mia', 'Rosegel', 'Rosemarie', 'Sarah'];
+const ROLL_TOTAL = 35;
+function rollId(n) { return n.replace(/ /g,'-').replace(/'/g,''); }
+async function loadRollCall() {
+  const [rsvpRows, dateRows, venueRows, bfRows] = await Promise.all([
+    sb.get('rsvp'), sb.get('date_votes'), sb.get('venue_votes'), sb.get('batch_file_votes')
+  ]);
+  const rsvpMap = {};
+  (rsvpRows||[]).forEach(r => rsvpMap[r.name]=r.status);
+  const dateSet = new Set((dateRows||[]).map(r=>r.name));
+  const venueSet = new Set((venueRows||[]).map(r=>r.name));
+  const bfCount = {};
+  (bfRows||[]).forEach(r => { bfCount[r.voter]=(bfCount[r.voter]||0)+1; });
+  ROLL_NAMES.forEach(name => {
+    const id = rollId(name);
+    const card = document.getElementById('roll-'+id);
+    if (!card) return;
+    card.classList.toggle('is-me', name===currentUser);
+    const rsvpEl = document.getElementById('roll-rsvp-'+id);
+    if (rsvpEl) {
+      const s = rsvpMap[name];
+      rsvpEl.className = 'rsvp-pill';
+      if (s==='yes') { rsvpEl.classList.add('going'); rsvpEl.textContent='Going'; }
+      else if (s==='tentative') { rsvpEl.classList.add('tentative'); rsvpEl.textContent='Maybe'; }
+      else if (s==='no') { rsvpEl.classList.add('no'); rsvpEl.textContent="Can't make it"; }
+      else { rsvpEl.classList.add('none'); rsvpEl.textContent='—'; }
+    }
+    const dateEl = document.getElementById('roll-date-'+id);
+    if (dateEl) { const v=dateSet.has(name); dateEl.className='roll-check '+(v?'yes':'no'); dateEl.textContent=v?'✓':'—'; }
+    const venueEl = document.getElementById('roll-venue-'+id);
+    if (venueEl) { const v=venueSet.has(name); venueEl.className='roll-check '+(v?'yes':'no'); venueEl.textContent=v?'✓':'—'; }
+    const bfBar = document.getElementById('roll-bf-bar-'+id);
+    const bfNum = document.getElementById('roll-bf-num-'+id);
+    const cnt = bfCount[name]||0;
+    if (bfBar) bfBar.style.width = Math.round(cnt/ROLL_TOTAL*100)+'%';
+    if (bfNum) bfNum.textContent = cnt+'/'+ROLL_TOTAL;
+  });
+  const ts = document.getElementById('rollLastUpdated');
+  if (ts) ts.textContent = 'Last updated: ' + new Date().toLocaleTimeString('en-PH',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}
+function subscribeRollRealtime() {
+  const wsUrl = 'https://auhkazxubjczgcusamxq.supabase.co'.replace('https://','wss://') + '/realtime/v1/websocket?apikey=sb_publishable_boKVP7k36iEFYikPRz3spA_d196OI1i&vsn=1.0.0';
+  let ws, heartbeat, reconnectTimer;
+  function connect() {
+    try { ws = new WebSocket(wsUrl); } catch(e) { scheduleReconnect(); return; }
+    ws.onopen = () => {
+      ['rsvp','date_votes','venue_votes','batch_file_votes'].forEach((table,i) => {
+        ws.send(JSON.stringify({ topic:'realtime:public:'+table, event:'phx_join', payload:{ config:{ broadcast:{self:true}, presence:{key:''}, postgres_changes:[{event:'*',schema:'public',table}] } }, ref:String(i+1) }));
+      });
+      heartbeat = setInterval(() => { if(ws.readyState===WebSocket.OPEN) ws.send(JSON.stringify({topic:'phoenix',event:'heartbeat',payload:{},ref:'0'})); }, 25000);
+    };
+    ws.onmessage = evt => {
+      try { const msg=JSON.parse(evt.data); if(msg.event==='postgres_changes'||(msg.payload&&msg.payload.data&&msg.payload.data.type)) loadRollCall(); } catch(e) {}
+    };
+    ws.onclose = () => { clearInterval(heartbeat); scheduleReconnect(); };
+    ws.onerror = () => ws.close();
+  }
+  function scheduleReconnect() { clearTimeout(reconnectTimer); reconnectTimer=setTimeout(connect,5000); }
+  connect();
+}
+
+// ── BATCH FILES ─────────────────────────────────────────────
+const BF_AWARDS = {"recitation_mvp": {"title": "The Recitation MVP", "desc": "First to raise a hand, even when they had no idea what the answer was. Confidence unmatched. The professor called on them anyway. It worked out more than it should have.", "num": "01"}, "most_makeup_ready": {"title": "Most Make-up Ready", "desc": "Arrived at 7am looking like a photoshoot. Left at 5pm looking like a photoshoot. Always ready. The rest of us were just in the background.", "num": "02"}, "student_liaison": {"title": "The Student Liaison", "desc": "The diplomat who negotiated class cancellations on everyone's behalf. Walked into the professor's office with nothing but charm. Walked out with a free period. We owe them everything.", "num": "03"}, "most_silent": {"title": "Most Silent", "desc": "Was physically present for four years. Verbally? Unconfirmed. Their voice? A mystery the linguistics department could not solve.", "num": "04"}, "thesis_survivor": {"title": "The Last-Minute Thesis Survivor", "desc": "Submitted at 11:58pm, passed with flying colors. We do not talk about what happened between 10pm and 11:57.", "num": "05"}, "creative_excuse": {"title": "Most Creative Excuse for an Absent", "desc": "A rotating hall of legends. A funeral every midterms. The creativity was, objectively, more impressive than some of the outputs.", "num": "06"}, "human_recorder": {"title": "The Human Recorder", "desc": "Always had the notes, the readings, the handouts, the past exams. The class would not have graduated without them.", "num": "07"}, "gc_moderator": {"title": "The GC Moderator", "desc": "Created the GC. Kept it alive, organized, and on-topic. Sent reminders nobody asked for but everyone needed.", "num": "08"}, "read_the_novel": {"title": "Most Likely to Actually Read the Novel", "desc": "And then explain it to everyone five minutes before the oral exam. Voluntarily. With genuine enthusiasm.", "num": "09"}, "sleeper_agent": {"title": "The Sleeper Agent", "desc": "Appeared to be asleep for four years. Got grades nobody expected. Still undefeated.", "num": "10"}, "prof_whisperer": {"title": "The Professor Whisperer", "desc": "Had a natural gift for making any professor like them enough to extend deadlines, bump grades, or forget attendance entirely.", "num": "11"}, "walking_thesaurus": {"title": "The Walking Thesaurus", "desc": "Could not send a simple message without it reading like a literary essay. I concur with the aforementioned sentiment in the GC at 9am. Every time.", "num": "12"}, "grammar_police": {"title": "Most Likely to Correct Your Grammar in a Casual Conversation", "desc": "And did it gently enough that you could not even be mad. A light touch. A raised eyebrow. You thanked them. You hated that you thanked them.", "num": "13"}, "liked_beowulf": {"title": "The One Who Actually Liked the Required Reading", "desc": "Read Beowulf voluntarily. Asked follow-up questions. Had opinions about the monster Grendel that went beyond \u2014 it was confusing. Beloved and slightly feared.", "num": "14"}, "method_actor": {"title": "The Method Actor", "desc": "Committed fully to every oral presentation, role-play, and dramatic reading. Theater kid energy, no theater degree.", "num": "15"}, "class_mother": {"title": "The Class Mother", "desc": "Reminded everyone of deadlines, brought food, mediated conflicts, asked if you have eaten.", "num": "16"}, "plot_twist": {"title": "The Plot Twist", "desc": "Quiet for years, then did something completely unexpected after graduation. Nobody saw it coming.", "num": "17"}, "most_changed": {"title": "Most Changed (For the Better)", "desc": "Glowed up so hard that the graduation photo looks like a different person. Ten years did something remarkable.", "num": "18"}, "most_same": {"title": "Most Exactly the Same", "desc": "And that is a compliment. Consistent. Reliable. Icon.", "num": "19"}, "reunion_mvp": {"title": "The Reunion MVP", "desc": "Somehow knows what everyone is up to. A walking alumni directory. The reason this reunion is as complete as it is.", "num": "20"}, "journal_writer": {"title": "Most Likely to Have Already Written This Night Into Their Journal", "desc": "Probably has a chapter about tonight already drafted. The opening line is good.", "num": "21"}, "class_sigaw": {"title": "Class Sigaw", "desc": "The one whose laugh you could hear from another building. The classroom was not the same without it.", "num": "22"}, "dramatic_pause": {"title": "The Dramatic Pause", "desc": "Knew exactly when to stop mid-sentence for effect. During recitations. During arguments. During text messages.", "num": "23"}, "one_take_wonder": {"title": "The One-Take Wonder", "desc": "Only needed to rehearse once for any oral presentation, sounded like they had been preparing for weeks.", "num": "24"}, "hype_person": {"title": "The Hype Person", "desc": "Front row energy for everyone else's presentations, even when half asleep. The original hypebeast.", "num": "25"}, "narrator": {"title": "The Narrator", "desc": "Could make a story out of anything. Going to the canteen, waiting for a jeep, a two-minute delay. Always a story.", "num": "26"}, "most_quotable": {"title": "Most Quotable", "desc": "There are at least three things this person said in college that people still repeat. Ten years later and the line still lands.", "num": "27"}, "last_laugh": {"title": "The Last Laugh", "desc": "Always the last one standing at any event, long after everyone else had gone home. Not because they were slow \u2014 because they knew how to make the most of every last minute.", "num": "28"}, "screenshot_archivist": {"title": "The Screenshot Archivist", "desc": "Screenshotted everything. Has receipts going back to 2012. Do not cross them. They have the evidence. All of it.", "num": "29"}, "face_of_class": {"title": "The Face of the Class", "desc": "Not just beautiful \u2014 architecturally unfair. Always the one put forward when the department needed a representative or a poster face. Probably won something.", "num": "30"}, "the_dancer": {"title": "The Dancer", "desc": "Could hear a beat from three buildings away and their body would just respond. Born for the stage, enrolled in English by technicality.", "num": "31"}, "campus_wanderer": {"title": "The Campus Wanderer", "desc": "Cheerdance? Present. Sports fest? Present. Outreach? Present. University week committee? Present. Living proof you can be in six places at once.", "num": "32"}, "hot_partner": {"title": "The One With the Hot Partner", "desc": "We do not know how they did it. This person has a type and the type is: out of everyone's league. We are not mad. We are taking notes.", "num": "33"}, "class_cook": {"title": "The Class Cook", "desc": "Whenever there was an outreach or a Christmas party, this person was already in the kitchen. Did not complain. Did not ask for credit. Just cooked. And it was always good.", "num": "34"}, "conyo_kid": {"title": "The Conyo Kid", "desc": "The fanciest accent in the room. Bisaya start, English finish, occasionally Tagalog in the middle for dramatic effect. An art form. A lifestyle. A full personality.", "num": "35"}};
+const BF_NAMES = ['Aileen', 'Apyang', 'Arjane', 'Cecil', 'Cindy', 'D-G', 'Didi', 'Ebing', 'Ekon', 'Fatima', 'Grace', 'Honey', 'Jen Bom', 'Jen Om', 'Jenny Leen', 'Jera', 'Joyce', 'Lovely', 'Marneh', 'Melanie', 'Melinda', 'Mickey', 'Mia', 'Rosegel', 'Rosemarie', 'Sarah'];
+let bfCurrentAward=null, bfPendingNominee=null, bfMyVotes={};
+async function loadMyBatchVotes() {
+  if (!currentUser) return;
+  const rows = await sb.get('batch_file_votes', `voter=eq.${encodeURIComponent(currentUser)}`);
+  bfMyVotes = {};
+  (rows||[]).forEach(r => bfMyVotes[r.award_key]=r.nominee);
+  updateBatchCards();
+}
+function updateBatchCards() {
+  const total=Object.keys(BF_AWARDS).length, voted=Object.keys(bfMyVotes).length;
+  Object.keys(BF_AWARDS).forEach(key => {
+    const card=document.getElementById('bfcard-'+key);
+    if(card) card.classList.toggle('voted',!!bfMyVotes[key]);
+  });
+  const pct=Math.round(voted/total*100);
+  const bar=document.getElementById('bfProgressBar'), txt=document.getElementById('bfProgressText');
+  if(bar) bar.style.width=pct+'%';
+  if(txt) txt.textContent=voted+' of '+total+' voted';
+}
+function enterBatchFiles() {
+  document.getElementById('screen-select').style.display='none';
+  document.getElementById('screen-main').style.display='none';
+  document.getElementById('screen-batch').style.display='block';
+  const r=document.getElementById('bfRibbonWrap'); if(r) r.style.display='none';
+  const lbl=document.getElementById('bfVoterLabel'); if(lbl) lbl.textContent=currentUser||'—';
+  loadMyBatchVotes(); window.scrollTo(0,0);
+}
+function exitBatchFiles() {
+  document.getElementById('screen-batch').style.display='none';
+  const r=document.getElementById('bfRibbonWrap'); if(r) r.style.display='block';
+  if(currentUser) document.getElementById('screen-main').style.display='block';
+  else document.getElementById('screen-select').style.display='block';
+  window.scrollTo(0,0);
+}
+function openAward(key) {
+  const award=BF_AWARDS[key]; if(!award) return;
+  bfCurrentAward=key;
+  document.getElementById('bfOverlayNum').textContent='Award '+award.num;
+  document.getElementById('bfOverlayTitle').textContent=award.title;
+  document.getElementById('bfOverlayDesc').textContent=award.desc;
+  document.querySelectorAll('.bf-name-btn').forEach(btn => btn.classList.toggle('my-pick',btn.textContent.trim()===bfMyVotes[key]));
+  if(bfMyVotes[key]) showHintChart(key); else showNameGrid();
+  document.getElementById('bfOverlay').classList.add('active');
+  document.body.style.overflow='hidden';
+}
+function closeOverlay() { document.getElementById('bfOverlay').classList.remove('active'); document.body.style.overflow=''; bfCurrentAward=null; }
+function showNameGrid() { document.getElementById('bfVoteSection').style.display='block'; document.getElementById('bfHintWrap').classList.remove('active'); }
+function selectNominee(name) {
+  bfPendingNominee=name;
+  const award=BF_AWARDS[bfCurrentAward];
+  document.getElementById('bfConfirmName').textContent=name;
+  document.getElementById('bfConfirmAward').textContent=award?award.title:'—';
+  document.getElementById('bfConfirmWrap').classList.add('active');
+}
+function cancelVote() { bfPendingNominee=null; document.getElementById('bfConfirmWrap').classList.remove('active'); }
+async function confirmVote() {
+  if(!currentUser||!bfCurrentAward||!bfPendingNominee) return;
+  document.getElementById('bfConfirmWrap').classList.remove('active');
+  await sb.upsert('batch_file_votes',{voter:currentUser,award_key:bfCurrentAward,nominee:bfPendingNominee});
+  bfMyVotes[bfCurrentAward]=bfPendingNominee;
+  document.querySelectorAll('.bf-name-btn').forEach(btn => btn.classList.toggle('my-pick',btn.textContent.trim()===bfPendingNominee));
+  updateBatchCards(); bfPendingNominee=null; showHintChart(bfCurrentAward);
+}
+async function showHintChart(key) {
+  document.getElementById('bfVoteSection').style.display='none';
+  document.getElementById('bfHintWrap').classList.add('active');
+  const rows = await sb.get('batch_file_votes',`award_key=eq.${key}`);
+  const counts={};
+  BF_NAMES.forEach(n=>counts[n]=0);
+  (rows||[]).forEach(r=>{if(counts[r.nominee]!==undefined)counts[r.nominee]++;});
+  const max=Math.max(...Object.values(counts),1);
+  const totalVotes=Object.values(counts).reduce((a,b)=>a+b,0);
+  const sorted=BF_NAMES.map(n=>[n,counts[n]]).sort((a,b)=>b[1]-a[1]).filter(x=>x[1]>0);
+  const chart=document.getElementById('bfHintChart');
+  if(!chart) return;
+  const myPick=bfMyVotes[key];
+  const myVoteHtml=myPick?'<div style="text-align:center;margin-bottom:16px;padding:8px 16px;background:rgba(184,134,11,0.12);border:1px solid rgba(184,134,11,0.3);font-size:12px;color:#d4a017;letter-spacing:0.05em;">Your vote: <strong style="color:#f5f0e8;">'+myPick+'</strong></div>':'';
+  if(!sorted.length){chart.innerHTML=myVoteHtml+'<div style="text-align:center;font-size:12px;color:rgba(245,240,232,0.25);padding:20px 0;">Be the first to vote for this award.</div>';return;}
+  const letters='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  let vibe='';
+  if(sorted.length===1) vibe="— unanimous. 👀";
+  else if(sorted[0][1]>=max*0.7) vibe="— there's a clear frontrunner.";
+  else if(sorted.length>=4&&sorted[0][1]===sorted[sorted.length-1][1]) vibe="— completely split. Nobody agrees.";
+  else vibe="— it's closer than you think.";
+  const anonRows=sorted.map(([name,count],i)=>{
+    const pct=Math.round(count/max*100);
+    return '<div class="bf-chart-row"><div class="bf-chart-label" style="font-size:10px;color:rgba(245,240,232,0.3);letter-spacing:0.05em;">Classmate '+letters[i]+'</div><div class="bf-chart-bar-wrap"><div class="bf-chart-bar" style="width:'+pct+'%"></div><div class="bf-chart-blur-overlay"></div></div></div>';
+  }).join('');
+  chart.innerHTML=myVoteHtml+'<div style="font-size:10px;color:rgba(245,240,232,0.2);letter-spacing:0.08em;text-align:center;margin-bottom:10px;font-style:italic;">'+totalVotes+(totalVotes===1?' vote':' votes')+' cast '+vibe+'</div>'+anonRows;
+}
+
+// ── GOOGLE DRIVE ────────────────────────────────────────────
+const GD_CLIENT_ID='74852158092-1pt5lup8o1f0p5bgccv19ne6pqmvajo7.apps.googleusercontent.com', GD_FOLDER_ID='1SPXhPIbyTkjgBAgHNfmCOYlJk3b2KEXx', GD_SCOPE='https://www.googleapis.com/auth/drive.file';
+let gdAccessToken=null, gdTokenClient=null;
+function initGoogleDrive() {
+  if(!window.google) return;
+  gdTokenClient=google.accounts.oauth2.initTokenClient({ client_id:GD_CLIENT_ID, scope:GD_SCOPE, callback:(resp)=>{
+    if(resp.error){setUploadStatus('Google sign-in failed: '+resp.error,true);return;}
+    gdAccessToken=resp.access_token;
+    const badge=document.getElementById('driveUserBadge');
+    if(badge){badge.textContent='✓ Signed in — select your files!';badge.style.display='block';}
+    const sb2=document.getElementById('driveSignInBtn'), sel=document.getElementById('driveSelectBtn');
+    if(sb2)sb2.style.display='none'; if(sel)sel.style.display='inline-block';
+    document.getElementById('throwbackUpload').click();
+  } });
+}
+function signInAndUpload() {
+  if(!gdTokenClient) initGoogleDrive();
+  if(!gdTokenClient){setUploadStatus('Google sign-in not ready yet — try again.',true);return;}
+  if(gdAccessToken) document.getElementById('throwbackUpload').click();
+  else gdTokenClient.requestAccessToken({prompt:'consent'});
+}
+async function handleUpload(input) {
+  const files=Array.from(input.files); if(!files.length) return;
+  if(!gdAccessToken){setUploadStatus('Please sign in with Google first.',true);return;}
+  const list=document.getElementById('uploadList'); list.innerHTML='';
+  setUploadStatus('Uploading '+files.length+' file(s)...');
+  let done=0;
+  for(const file of files) {
+    const row=document.createElement('div');
+    row.style.cssText='padding:4px 0;border-bottom:1px solid rgba(26,18,8,0.08);display:flex;justify-content:space-between;align-items:center;';
+    row.innerHTML='<span>📎 '+file.name+' <span style="color:rgba(26,18,8,0.35);">('+( file.size/1024).toFixed(0)+' KB)</span></span><span id="row-'+encodeURIComponent(file.name)+'" style="color:var(--gold);font-size:10px;">uploading...</span>';
+    list.appendChild(row);
+    try {
+      await uploadFileToDrive(file);
+      const ind=document.getElementById('row-'+encodeURIComponent(file.name));
+      if(ind){ind.textContent='✓ done';ind.style.color='var(--sage)';}
+      done++;
+    } catch(e) {
+      const ind=document.getElementById('row-'+encodeURIComponent(file.name));
+      if(ind){ind.textContent='✗ failed';ind.style.color='var(--rust)';}
+    }
+  }
+  setUploadStatus('✓ '+done+' of '+files.length+' file(s) uploaded to Google Drive!');
+  input.value='';
+}
+async function uploadFileToDrive(file) {
+  const meta=JSON.stringify({name:(currentUser||'unknown')+'_'+file.name,parents:[GD_FOLDER_ID]});
+  const form=new FormData(); form.append('metadata',new Blob([meta],{type:'application/json'})); form.append('file',file);
+  const res=await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',{method:'POST',headers:{Authorization:'Bearer '+gdAccessToken},body:form});
+  if(!res.ok) throw new Error('Upload failed: '+res.status);
+  return res.json();
+}
+function setUploadStatus(msg,isError) {
+  const el=document.getElementById('uploadStatus');
+  if(el){el.textContent=msg;el.style.color=isError?'var(--rust)':'var(--sage)';}
+}
+window.addEventListener('load',()=>setTimeout(initGoogleDrive,1000));
+</script>
 </body>
 </html>
